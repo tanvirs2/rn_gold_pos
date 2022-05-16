@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ScrollView, Text, View, StyleSheet, TextInput, Button, Pressable} from 'react-native';
+import {ScrollView, Text, View, StyleSheet, TextInput, Button, Pressable, Modal, Alert} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import CustomInput from '../../components/CustomInput';
 import {useEffect, useState} from 'react';
@@ -15,7 +15,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const checkCameraPermission = async () => {
     let status = await Camera.getCameraPermissionStatus();
-    alert(status);
+    //alert(status);
     if (status !== 'authorized') {
         await Camera.requestCameraPermission();
         status = await Camera.getCameraPermissionStatus();
@@ -32,6 +32,8 @@ function SalesEntry() {
     const [stMobileNumber, setMobileNumber] = useState();
     const [stAddress, setAddress] = useState();
     const [stComment, setComment] = useState();
+    const [modalVisible, setModalVisible] = useState(false);
+
     const [stTable, setTable] = useState({
         tableData: [
             ['Product’s Name', ':', 'Ear Ring'],
@@ -47,6 +49,7 @@ function SalesEntry() {
 
         checkCameraPermission();
 
+
     }, []);
 
     const SubComponentForInput = ({title, ...props}) => (
@@ -55,6 +58,9 @@ function SalesEntry() {
             <CustomInput {...props} />
         </View>
     );
+
+    const devices = useCameraDevices()
+    const device = devices.back;
 
     return (
         <ScrollView>
@@ -86,6 +92,38 @@ function SalesEntry() {
                 />
 
 
+                <View>
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View>
+                            <Button title=" &#x274C; Close Scanner" onPress={() => setModalVisible(!modalVisible)}/>
+                        </View>
+
+                        <View style={styles.centeredView}>
+
+                            <View style={styles.modalView}>
+
+                                <Camera
+                                    style={StyleSheet.absoluteFill}
+                                    device={device}
+                                    isActive={modalVisible}
+                                />
+
+                            </View>
+                        </View>
+                    </Modal>
+
+                </View>
+
+
                 <View style={styles.container}>
 
                     <Text>Barcode</Text>
@@ -100,7 +138,7 @@ function SalesEntry() {
                         </View>
 
                         <View style={{flex: 1}}>
-                            <Pressable style={styles.barcodeIcon} onPress={alert}>
+                            <Pressable style={styles.barcodeIcon} onPress={() => setModalVisible(!modalVisible)}>
                                 <Ionicons
                                     name="barcode-outline"
                                     size={30}
@@ -208,6 +246,51 @@ const styles = StyleSheet.create({
     flexRow: {flex: 1, flexDirection: 'row', justifyContent: 'center', padding: 10},
     fontBold: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
     text: {margin: 6},
+
+
+
+
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        width: '90%',
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    }
 });
 
 export default Sales;
