@@ -4,13 +4,28 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView, Text, View, StyleSheet, TextInput, Button, Pressable} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import CustomInput from '../../components/CustomInput';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import CustomButton from '../../components/CustomButton';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Table, Row, Rows} from 'react-native-table-component';
+import {Camera, useCameraDevices} from "react-native-vision-camera";
 
 const Tab = createMaterialTopTabNavigator();
+
+const checkCameraPermission = async () => {
+    let status = await Camera.getCameraPermissionStatus();
+    alert(status);
+    if (status !== 'authorized') {
+        await Camera.requestCameraPermission();
+        status = await Camera.getCameraPermissionStatus();
+        if (status === 'denied') {
+            alert(
+                'You will not be able to scan if you do not allow camera access',
+            );
+        }
+    }
+};
 
 function SalesEntry() {
     const [stCustomerName, setCustomerName] = useState();
@@ -27,6 +42,12 @@ function SalesEntry() {
             ['Barcode', ':', '111029H88N12'],
         ],
     });
+
+    useEffect(()=>{
+
+        checkCameraPermission();
+
+    }, []);
 
     const SubComponentForInput = ({title, ...props}) => (
         <View style={styles.container}>
