@@ -21,6 +21,7 @@
     "react-native-collapsible": "^1.6.0",
     "react-native-element-dropdown": "^1.8.10",
     "react-native-gesture-handler": "~2.2.0",
+    "react-native-hole-view": "^2.1.0",
     "react-native-material-menu": "^2.0.0",
     "react-native-menu": "^0.23.0",
     "react-native-pager-view": "^5.4.15",
@@ -31,7 +32,8 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^9.1.0",
-    "react-native-vision-camera": "^2.13.3"
+    "react-native-vision-camera": "^2.13.3",
+    "vision-camera-code-scanner": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

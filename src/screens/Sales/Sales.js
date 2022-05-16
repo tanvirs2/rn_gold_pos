@@ -9,7 +9,10 @@ import CustomButton from '../../components/CustomButton';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Table, Row, Rows} from 'react-native-table-component';
+
 import {Camera, useCameraDevices} from "react-native-vision-camera";
+import {useScanBarcodes, BarcodeFormat} from 'vision-camera-code-scanner';
+import {RNHoleView} from 'react-native-hole-view';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -61,6 +64,14 @@ function SalesEntry() {
 
     const devices = useCameraDevices()
     const device = devices.back;
+
+    const [frameProcessor, barcodes] = useScanBarcodes([
+        BarcodeFormat.ALL_FORMATS, // You can only specify a particular format
+    ]);
+
+    const [barcode, setBarcode] = useState('');
+    const [hasPermission, setHasPermission] = useState(false);
+    const [isScanned, setIsScanned] = useState(false);
 
     return (
         <ScrollView>
