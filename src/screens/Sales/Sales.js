@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import 'react-native-reanimated'
 import {ScrollView, Text, View, StyleSheet, TextInput, Button, Pressable, Modal, Alert} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import CustomInput from '../../components/CustomInput';
@@ -16,19 +17,7 @@ import {RNHoleView} from 'react-native-hole-view';
 
 const Tab = createMaterialTopTabNavigator();
 
-const checkCameraPermission = async () => {
-    let status = await Camera.getCameraPermissionStatus();
-    //alert(status);
-    if (status !== 'authorized') {
-        await Camera.requestCameraPermission();
-        status = await Camera.getCameraPermissionStatus();
-        if (status === 'denied') {
-            alert(
-                'You will not be able to scan if you do not allow camera access',
-            );
-        }
-    }
-};
+
 
 function SalesEntry() {
     const [stCustomerName, setCustomerName] = useState();
@@ -48,9 +37,25 @@ function SalesEntry() {
         ],
     });
 
+    const checkCameraPermissionFirst = async () => {
+        let status = await Camera.getCameraPermissionStatus();
+        //alert(status);
+        if (status !== 'authorized') {
+            await Camera.requestCameraPermission();
+            status = await Camera.getCameraPermissionStatus();
+            if (status === 'denied') {
+                alert(
+                    'You will not be able to scan if you do not allow camera access',
+                );
+            }
+        }
+
+        setHasPermission(status === 'authorized');
+    };
+
     useEffect(()=>{
 
-        checkCameraPermission();
+        checkCameraPermissionFirst();
 
 
     }, []);
@@ -72,6 +77,52 @@ function SalesEntry() {
     const [barcode, setBarcode] = useState('');
     const [hasPermission, setHasPermission] = useState(false);
     const [isScanned, setIsScanned] = useState(false);
+
+
+    const toggleActiveState = async () => {
+        if (barcodes && barcodes.length > 0 && isScanned === false) {
+            //console.log(barcode)
+            setIsScanned(true);
+            setModalVisible(false)
+
+            /*barcodes.map((barcode, idx) => {
+                    //console.log(barcode.displayValue)
+                    return (
+                        <Text key={idx} style={{color:'red', fontSize: 50}}>
+                            {barcode.displayValue}
+                        </Text>
+                    )
+                }
+            )*/
+
+            // setBarcode('');
+            barcodes.forEach((scannedBarcode) => {
+                if (scannedBarcode.rawValue !== '') {
+                    setBarcode(scannedBarcode.content.data);
+                    //Alert.alert(barcode);
+                    //console.log(barcode)
+                }
+            });
+        }
+    };
+
+    useEffect(() => {
+
+        if (barcodes[0]) {
+            setModalVisible(false)
+            setBarcode(barcodes[0].content.data);
+            //console.log(barcodes[0].content.data);
+        }
+
+
+
+        toggleActiveState();
+
+        /*return () => {
+            barcodes;
+        };*/
+
+    }, [barcodes]);
 
     return (
         <ScrollView>
@@ -110,23 +161,63 @@ function SalesEntry() {
                         transparent={true}
                         visible={modalVisible}
                         onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
+                            //Alert.alert("Modal has been closed.");
                             setModalVisible(!modalVisible);
+                            setIsScanned(false);
                         }}
                     >
                         <View>
-                            <Button title=" &#x274C; Close Scanner" onPress={() => setModalVisible(!modalVisible)}/>
+                            <Button title=" &#x274C; Close Scanner" onPress={() => {
+                                setModalVisible(!modalVisible);
+                                setIsScanned(false);
+                            }}/>
                         </View>
 
                         <View style={styles.centeredView}>
 
                             <View style={styles.modalView}>
 
-                                <Camera
+
+                                {
+                                    device && hasPermission && (<Camera
                                     style={StyleSheet.absoluteFill}
                                     device={device}
                                     isActive={modalVisible}
-                                />
+                                    frameProcessor={frameProcessor}
+                                    frameProcessorFps={5}
+                                    audio={false}
+                                />)
+                                }
+
+
+                                <View style={{width:'124.5%', height: '100%'}}>
+
+                                </View>
+
+
+                                {/*{isScanned === false && barcodes.map((barcode, idx) => {
+
+                                    //console.log(barcode.displayValue)
+
+                                        return (
+                                            <Text key={idx} style={{color:'red', fontSize: 50}}>
+
+                                                {barcode.displayValue}
+
+                                            </Text>
+
+                                        )
+                                    }
+                                )}*/}
+
+
+                                {/*<RNHoleView
+                                    holes={[
+                                        { x: 150, y: 100, width: 220, height: 220, borderRadius: 10 },
+                                    ]}
+                                    style={styles.rnholeView}
+                                />*/}
+
 
                             </View>
                         </View>
@@ -145,6 +236,7 @@ function SalesEntry() {
                             <TextInput
                                 style={styles.barcodeInput}
                                 placeholder="Input Manually"
+                                value={barcode}
                             />
                         </View>
 
@@ -300,8 +392,15 @@ const styles = StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
-        textAlign: "center"
-    }
+        textAlign: 'center',
+    },
+    rnholeView: {
+        width: 500,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
 });
 
 export default Sales;
