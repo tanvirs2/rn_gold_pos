@@ -31,9 +31,9 @@ const InvoiceScreen = () => {
       <ScrollView>
           <View style={{flex: 1, alignItems: 'center'}}>
 
-              <View style={{flex: 1, width: '90%', backgroundColor: 'white'}}>
+              <View style={{flex: 1, width: '90%'}}>
 
-                  <View style={{alignItems: 'flex-end', }}>
+                  <View style={{alignItems: 'flex-end', marginTop:20 }}>
                       <Text style={{fontWeight:'bold', fontSize:25}}>Gold Sale</Text>
                   </View>
 
@@ -59,7 +59,7 @@ const InvoiceScreen = () => {
                   {/*Table*/}
 
                   <View>
-                      <View style={{backgroundColor: '#fdf2e6'}}>
+                      <View>
 
 
                           {
@@ -87,7 +87,7 @@ const InvoiceScreen = () => {
                   </View>
 
                   <View>
-                      <View style={{backgroundColor: '#fdf2e6'}}>
+                      <View >
 
 
                           {
@@ -113,7 +113,7 @@ const InvoiceScreen = () => {
                   </View>
 
                   <View>
-                      <View style={{backgroundColor: '#fdf2e6'}}>
+                      <View >
 
 
                           {
@@ -150,7 +150,7 @@ const InvoiceScreen = () => {
                       </View>
 
                   </View>
-                  
+
 
               </View>
 
