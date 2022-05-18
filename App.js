@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {LogBox, StyleSheet, Text, View} from 'react-native';
 import Navigation from './src/navigationDrawer';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
@@ -11,6 +11,7 @@ export default function App() {
   /*const [loaded] = useFonts({
       MulishRegular: require('./assets/fonts/Mulish-Regular.ttf'),
   });*/
+  LogBox.ignoreLogs(['Warning: Failed prop type: Invalid prop `textStyle` of type `array` supplied to `Cell`, expected `object`.'])
 
   return <Navigation />;
 }

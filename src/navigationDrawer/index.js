@@ -20,11 +20,11 @@ import Collapsible from 'react-native-collapsible';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Sales from '../screens/Sales';
+import InvoiceScreen from '../screens/Sales/SubPages/InvoiceScreen';
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-
   const [isSalesCollapsed, isSetSalesCollapsed] = useState(true);
   const [isPurchaseCollapsed, isSetPurchaseCollapsed] = useState(true);
   const [isDepositCollapsed, isSetDepositCollapsed] = useState(true);
@@ -57,10 +57,7 @@ function CustomDrawerContent(props) {
               />
           </View>*/}
         <View>
-          <SubCustomDrawerItem
-            label="SaleRetail/Wholesale"
-            route="Sales"
-          />
+          <SubCustomDrawerItem label="SaleRetail/Wholesale" route="Sales" />
           <SubCustomDrawerItem label="Issue/Gift" />
           <SubCustomDrawerItem label="Sales Return" />
           <SubCustomDrawerItem label="List of sales" />
@@ -91,11 +88,10 @@ function CustomDrawerContent(props) {
 
       <Collapsible collapsed={isPurchaseCollapsed}>
         <View>
-          <SubCustomDrawerItem label="SaleRetail/Wholesale" />
-          <SubCustomDrawerItem label="Issue/Gift" />
-          <SubCustomDrawerItem label="Sales Return" />
-          <SubCustomDrawerItem label="List of sales" />
-          <SubCustomDrawerItem label="Due bill receive" />
+          <SubCustomDrawerItem label="New Gold Purchase" />
+          <SubCustomDrawerItem label="New Gold Purchase List" />
+          <SubCustomDrawerItem label="Old Gold Purchase" />
+          <SubCustomDrawerItem label="Old Gold Purchase List" />
         </View>
       </Collapsible>
 
@@ -113,11 +109,8 @@ function CustomDrawerContent(props) {
       />
       <Collapsible collapsed={isDepositCollapsed}>
         <View>
-          <SubCustomDrawerItem label="SaleRetail/Wholesale" />
-          <SubCustomDrawerItem label="Issue/Gift" />
-          <SubCustomDrawerItem label="Sales Return" />
-          <SubCustomDrawerItem label="List of sales" />
-          <SubCustomDrawerItem label="Due bill receive" />
+          <SubCustomDrawerItem label="Deposit /Withdraw Entry" />
+          <SubCustomDrawerItem label="Deposit /Withdraw List" />
         </View>
       </Collapsible>
 
@@ -135,31 +128,92 @@ function CustomDrawerContent(props) {
       />
       <Collapsible collapsed={isExpenseCollapsed}>
         <View>
-          <SubCustomDrawerItem label="SaleRetail/Wholesale" />
-          <SubCustomDrawerItem label="Issue/Gift" />
-          <SubCustomDrawerItem label="Sales Return" />
-          <SubCustomDrawerItem label="List of sales" />
-          <SubCustomDrawerItem label="Due bill receive" />
+          <SubCustomDrawerItem label="Expense Entry" />
+          <SubCustomDrawerItem label="Expense List" />
         </View>
       </Collapsible>
 
-      <CustomDrawerItem
-        label="Expense"
+        <CustomDrawerItem
+        label="Inventory"
         icon={
           <Ionicons
-            name={isSettingsCollapsed ? 'settings-outline' : 'settings'}
+            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
             size={24}
             color="black"
           />
         }
-        isSetCollapsed={isSetSettingsCollapsed}
-        isCollapsed={isSettingsCollapsed}
+        isSetCollapsed={isSetExpenseCollapsed}
+        isCollapsed={isExpenseCollapsed}
       />
-      <Collapsible collapsed={isSettingsCollapsed}>
+      <Collapsible collapsed={isExpenseCollapsed}>
         <View>
-          <SubCustomDrawerItem label="Camera Test" route="Camera" />
+          <SubCustomDrawerItem label="Product List" />
+          <SubCustomDrawerItem label="Product Categories" />
         </View>
       </Collapsible>
+
+        <CustomDrawerItem
+        label="CRM (Wholesale)"
+        icon={
+          <Ionicons
+            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            size={24}
+            color="black"
+          />
+        }
+        isSetCollapsed={isSetExpenseCollapsed}
+        isCollapsed={isExpenseCollapsed}
+      />
+      <Collapsible collapsed={isExpenseCollapsed}>
+        <View>
+          <SubCustomDrawerItem label="Wholesaler Entry" />
+          <SubCustomDrawerItem label="Wholesaler List" />
+        </View>
+      </Collapsible>
+
+        <CustomDrawerItem
+        label="Report"
+        icon={
+          <Ionicons
+            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            size={24}
+            color="black"
+          />
+        }
+        isSetCollapsed={isSetExpenseCollapsed}
+        isCollapsed={isExpenseCollapsed}
+      />
+      <Collapsible collapsed={isExpenseCollapsed}>
+        <View>
+          <SubCustomDrawerItem label="Daily Report" />
+          <SubCustomDrawerItem label="Category Wise Report" />
+        </View>
+      </Collapsible>
+
+        <CustomDrawerItem
+        label="Settings"
+        icon={
+          <Ionicons
+            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            size={24}
+            color="black"
+          />
+        }
+        isSetCollapsed={isSetExpenseCollapsed}
+        isCollapsed={isExpenseCollapsed}
+      />
+      <Collapsible collapsed={isExpenseCollapsed}>
+        <View>
+          <SubCustomDrawerItem label="VAT/TAX" />
+          <SubCustomDrawerItem label="Category" />
+          <SubCustomDrawerItem label="Carats" />
+          <SubCustomDrawerItem label="Users" />
+        </View>
+      </Collapsible>
+
+
+
+
     </DrawerContentScrollView>
   );
 }
@@ -236,7 +290,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Sales">
+        initialRouteName="Invoice">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -253,6 +307,7 @@ const Navigation = () => {
         <Drawer.Screen name="SignUp" component={SignUpScreen} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Sales" component={Sales} />
+        <Drawer.Screen name="Invoice" component={InvoiceScreen} />
         {/*<Drawer.Screen name="Camera" component={CameraScreen} />*/}
       </Drawer.Navigator>
     </NavigationContainer>
