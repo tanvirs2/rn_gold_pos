@@ -1,7 +1,18 @@
 /* eslint-disable */
 import {useEffect, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
-import {Button, LogBox, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+    Button,
+    LogBox,
+    Modal,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    useWindowDimensions,
+    View,
+} from 'react-native';
 import CustomInput from '../../../components/CustomInput';
 import {BarcodeFormat, useScanBarcodes} from 'vision-camera-code-scanner';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -12,7 +23,7 @@ import * as React from 'react';
 
 export default function SalesEntry() {
 
-
+    const {height, width} = useWindowDimensions();
 
     const [stCustomerName, setCustomerName] = useState();
     const [stMobileNumber, setMobileNumber] = useState();
@@ -169,12 +180,12 @@ export default function SalesEntry() {
 
                         <View style={styles.centeredView}>
 
-                            <View style={styles.modalView}>
+                            <View style={[styles.modalView, {height: height*0.45, width: width*0.9}]}>
 
 
                                 {
                                     device && hasPermission && (<Camera
-                                        style={StyleSheet.absoluteFill}
+                                        style={{height:'100%',width:'100%',}}
                                         device={device}
                                         isActive={modalVisible}
                                         frameProcessor={frameProcessor}
@@ -184,9 +195,9 @@ export default function SalesEntry() {
                                 }
 
 
-                                <View style={{width:'124.5%', height: '100%'}}>
+                                {/*<View style={{width:'124.5%', height: '100%'}}>
 
-                                </View>
+                                </View>*/}
 
 
                                 {/*{isScanned === false && barcodes.map((barcode, idx) => {
@@ -209,7 +220,13 @@ export default function SalesEntry() {
                                     holes={[
                                         { x: 150, y: 100, width: 220, height: 220, borderRadius: 10 },
                                     ]}
-                                    style={styles.rnholeView}
+                                    style={{
+                                        width: width,
+                                        height: height,
+                                        position: 'absolute',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'rgba(0,0,0,0.5)'}}
                                 />*/}
 
 
@@ -329,11 +346,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     modalView: {
-        width: '90%',
-        margin: 20,
+        borderRadius: 3,
+        borderWidth: 2,
+        borderColor: 'red',
         backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
+        margin: 30,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {

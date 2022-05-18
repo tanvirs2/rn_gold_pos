@@ -1,11 +1,14 @@
 /* eslint-disable */
 
-import {Button, ScrollView, Text, View} from 'react-native';
+import {Button, Image, ScrollView, Text, useWindowDimensions, View} from 'react-native';
 import React, {useState} from 'react';
 import {Rows, Table} from 'react-native-table-component';
 import IconButton from '../../../components/IconButton/IconButton';
+import logo from '../../../../assets/images/logo.png';
 
 const InvoiceScreen = () => {
+
+    const {height} = useWindowDimensions();
 
     const [stTable, setTable] = useState({
         tableData: [
@@ -34,7 +37,12 @@ const InvoiceScreen = () => {
               <View style={{flex: 1, width: '90%'}}>
 
                   <View style={{alignItems: 'flex-end', marginTop:20 }}>
-                      <Text style={{fontWeight:'bold', fontSize:25}}>Gold Sale</Text>
+                      {/*<Text style={{fontWeight:'bold', fontSize:25}}>Gold Sale</Text>*/}
+                      <Image
+                          source={logo}
+                          style={{height: height * 0.1, width:'50%'}}
+                          resizeMode="contain"
+                      />
                   </View>
 
                   <View style={{ marginTop: 25}}>
