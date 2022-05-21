@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, {Fragment, useState} from 'react';
 import {View, Text, Button} from 'react-native';
 
@@ -21,6 +22,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Sales from '../screens/Sales';
 import InvoiceScreen from '../screens/Sales/SubPages/InvoiceScreen';
+import ListOfSales from '../screens/Sales/SubPages/ListOfSales';
+import withLoaderScreen from '../HOC/withLoaderScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -29,14 +32,18 @@ function CustomDrawerContent(props) {
   const [isPurchaseCollapsed, isSetPurchaseCollapsed] = useState(true);
   const [isDepositCollapsed, isSetDepositCollapsed] = useState(true);
   const [isExpenseCollapsed, isSetExpenseCollapsed] = useState(true);
+  const [isInventoryCollapsed, isSetInventoryCollapsed] = useState(true);
+  const [isCrmCollapsed, isSetCrmCollapsed] = useState(true);
+  const [isReportCollapsed, isSetReportCollapsed] = useState(true);
   const [isSettingsCollapsed, isSetSettingsCollapsed] = useState(true);
+
 
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
 
       <CustomDrawerItem
-        label="Sales"
+        label="Sell Management"
         icon={
           <Ionicons
             name={isSalesCollapsed ? 'reader-outline' : 'reader'}
@@ -58,7 +65,6 @@ function CustomDrawerContent(props) {
           </View>*/}
         <View>
           <SubCustomDrawerItem label="SaleRetail/Wholesale" route="Sales" />
-          <SubCustomDrawerItem label="Issue/Gift" />
           <SubCustomDrawerItem label="Sales Return" />
           <SubCustomDrawerItem label="List of sales" />
           <SubCustomDrawerItem label="Due bill receive" />
@@ -137,15 +143,15 @@ function CustomDrawerContent(props) {
         label="Inventory"
         icon={
           <Ionicons
-            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            name={isInventoryCollapsed ? 'file-tray-stacked-outline' : 'file-tray-stacked'}
             size={24}
             color="black"
           />
         }
-        isSetCollapsed={isSetExpenseCollapsed}
-        isCollapsed={isExpenseCollapsed}
+        isSetCollapsed={isSetInventoryCollapsed}
+        isCollapsed={isInventoryCollapsed}
       />
-      <Collapsible collapsed={isExpenseCollapsed}>
+      <Collapsible collapsed={isInventoryCollapsed}>
         <View>
           <SubCustomDrawerItem label="Product List" />
           <SubCustomDrawerItem label="Product Categories" />
@@ -156,15 +162,15 @@ function CustomDrawerContent(props) {
         label="CRM (Wholesale)"
         icon={
           <Ionicons
-            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            name={isCrmCollapsed ? 'people-outline' : 'people'}
             size={24}
             color="black"
           />
         }
-        isSetCollapsed={isSetExpenseCollapsed}
-        isCollapsed={isExpenseCollapsed}
+        isSetCollapsed={isSetCrmCollapsed}
+        isCollapsed={isCrmCollapsed}
       />
-      <Collapsible collapsed={isExpenseCollapsed}>
+      <Collapsible collapsed={isCrmCollapsed}>
         <View>
           <SubCustomDrawerItem label="Wholesaler Entry" />
           <SubCustomDrawerItem label="Wholesaler List" />
@@ -175,15 +181,15 @@ function CustomDrawerContent(props) {
         label="Report"
         icon={
           <Ionicons
-            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            name={isReportCollapsed ? 'newspaper-outline' : 'newspaper'}
             size={24}
             color="black"
           />
         }
-        isSetCollapsed={isSetExpenseCollapsed}
-        isCollapsed={isExpenseCollapsed}
+        isSetCollapsed={isSetReportCollapsed}
+        isCollapsed={isReportCollapsed}
       />
-      <Collapsible collapsed={isExpenseCollapsed}>
+      <Collapsible collapsed={isReportCollapsed}>
         <View>
           <SubCustomDrawerItem label="Daily Report" />
           <SubCustomDrawerItem label="Category Wise Report" />
@@ -194,15 +200,15 @@ function CustomDrawerContent(props) {
         label="Settings"
         icon={
           <Ionicons
-            name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
+            name={isSettingsCollapsed ? 'settings-outline' : 'settings'}
             size={24}
             color="black"
           />
         }
-        isSetCollapsed={isSetExpenseCollapsed}
-        isCollapsed={isExpenseCollapsed}
+        isSetCollapsed={isSetSettingsCollapsed}
+        isCollapsed={isSettingsCollapsed}
       />
-      <Collapsible collapsed={isExpenseCollapsed}>
+      <Collapsible collapsed={isSettingsCollapsed}>
         <View>
           <SubCustomDrawerItem label="VAT/TAX" />
           <SubCustomDrawerItem label="Category" />
@@ -210,9 +216,6 @@ function CustomDrawerContent(props) {
           <SubCustomDrawerItem label="Users" />
         </View>
       </Collapsible>
-
-
-
 
     </DrawerContentScrollView>
   );
@@ -290,7 +293,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Invoice">
+        initialRouteName="SignIn">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -302,12 +305,13 @@ const Navigation = () => {
             ),
           }}
           name="SignIn"
-          component={SignInScreen}
+          component={withLoaderScreen(SignInScreen, {loader: false})}
         />
         <Drawer.Screen name="SignUp" component={SignUpScreen} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Sales" component={Sales} />
         <Drawer.Screen name="Invoice" component={InvoiceScreen} />
+        <Drawer.Screen name="Sale List" component={ListOfSales} />
         {/*<Drawer.Screen name="Camera" component={CameraScreen} />*/}
       </Drawer.Navigator>
     </NavigationContainer>

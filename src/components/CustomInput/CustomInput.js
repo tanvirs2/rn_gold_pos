@@ -14,7 +14,7 @@ export default function CustomInput(props, {
         placeholder={placeholder}
         value={value}
         onChangeText={setValue}
-        style={styles.input}
+        style={[styles.input]}
         secureTextEntry={secureTextEntry}
         {...props}
       />
@@ -35,5 +35,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
-  input: {},
+  input: {
+    height: 35,
+    padding: 10,
+  },
 });

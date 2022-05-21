@@ -32,7 +32,7 @@ const InvoiceScreen = () => {
 
   return (
       <ScrollView>
-          <View style={{flex: 1, alignItems: 'center'}}>
+          <View style={{flex: 1, alignItems: 'center', color: '#fff'}}>
 
               <View style={{flex: 1, width: '90%'}}>
 

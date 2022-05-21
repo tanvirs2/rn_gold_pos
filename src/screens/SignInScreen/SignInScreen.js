@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import {
   StyleSheet,
@@ -21,8 +22,8 @@ export default function SignInScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState('');
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState('admin'); //'admin'
+  const [password, setPassword] = useState('Admin@1'); //'Admin@1'
 
   const navigation = useNavigation();
 
@@ -35,16 +36,17 @@ export default function SignInScreen() {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
+          'content-type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
-          firstParam: 'yourValue',
-          secondParam: 'yourOtherValue',
+          username: 'admin',
+          password: 'Admin@1',
         }),
       },
     )
       .then(res => res.json())
       .then(json => {
+        //alert('dd');
         setIsLoading(false);
 
         if (json.accessToken) {
@@ -52,9 +54,13 @@ export default function SignInScreen() {
           setUserToken(json.accessToken);
         }
 
-        console.log(json, json.accessToken);
+        //console.log(json, json.accessToken);
       })
-      .catch(err => alert(err));
+      .catch(err => {
+        setIsLoading(false);
+
+        alert(err);
+      });
   };
   /*const onSignInWithFacebookPressed = () => {
         console.warn('Hello')
