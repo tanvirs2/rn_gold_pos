@@ -21,6 +21,13 @@ import {Rows, Table} from 'react-native-table-component';
 import {RNHoleView} from 'react-native-hole-view';
 import * as React from 'react';
 
+export const SubComponentForInput = ({title, ...props}) => (
+    <View style={styles.container}>
+        <Text>{title}</Text>
+        <CustomInput {...props} />
+    </View>
+);
+
 export default function SalesEntry() {
 
     const {height, width} = useWindowDimensions();
@@ -65,12 +72,7 @@ export default function SalesEntry() {
 
     }, []);
 
-    const SubComponentForInput = ({title, ...props}) => (
-        <View style={styles.container}>
-            <Text>{title}</Text>
-            <CustomInput {...props} />
-        </View>
-    );
+
 
     const devices = useCameraDevices()
     const device = devices.back;
@@ -303,6 +305,8 @@ export default function SalesEntry() {
         </ScrollView>
     );
 }
+
+
 
 const styles = StyleSheet.create({
     container: {

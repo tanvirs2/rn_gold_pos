@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,11 +11,14 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {apiUrl} from '../../settings/networking';
+import loaderContext from '../../contexts/loaderContext';
 
 export default function SignInScreen() {
   const {height} = useWindowDimensions();
@@ -25,10 +28,24 @@ export default function SignInScreen() {
   const [username, setUsername] = useState('admin'); //'admin'
   const [password, setPassword] = useState('Admin@1'); //'Admin@1'
 
+  useEffect(()=>{
+    return ()=>{
+      setIsLoading(null)
+      setUserToken(null)
+      setUsername(null)
+      setPassword(null)
+    }
+  });
+
+  const loadContext = useContext(loaderContext);
+
+
   const navigation = useNavigation();
 
   const onSignInPressed = () => {
-    setIsLoading(true);
+    //setIsLoading(true);
+
+    loadContext.loaderDispatch('loading');
 
     fetch(
       apiUrl + `Device/Authenticate?userName=${username}&password=${password}`,
@@ -45,13 +62,19 @@ export default function SignInScreen() {
       },
     )
       .then(res => res.json())
-      .then(json => {
+      .then(async json => {
         //alert('dd');
         setIsLoading(false);
 
         if (json.accessToken) {
-          navigation.navigate('Home');
+
+          loadContext.loaderDispatch('loaded');
+
           setUserToken(json.accessToken);
+
+          await storeToken(json.accessToken);
+
+          navigation.navigate('Home');
         }
 
         //console.log(json, json.accessToken);
@@ -62,6 +85,14 @@ export default function SignInScreen() {
         alert(err);
       });
   };
+
+  const storeToken = async (value) => {
+    try {
+      await AsyncStorage.setItem('@storage_token', value)
+    } catch (e) {
+      // saving error
+    }
+  }
   /*const onSignInWithFacebookPressed = () => {
         console.warn('Hello')
     }
@@ -79,13 +110,13 @@ export default function SignInScreen() {
         navigation.navigate('SignUp');
     }*/
 
-  if (isLoading) {
+  /*if (isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
-  }
+  }*/
 
   return (
     <SafeAreaView>

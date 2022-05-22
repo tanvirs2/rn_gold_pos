@@ -1,53 +1,67 @@
 /*eslint-disable*/
 
-import React, {useState} from 'react';
-import {Text, View} from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
+import React, {Fragment, useState} from 'react';
+import {Button, Text, View, Pressable} from 'react-native';
+import DatePicker from 'react-native-date-picker'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
-const DepositEntryScreen = () => {
+const Tab = createMaterialTopTabNavigator();
 
-    const [stDepositName, setDepositName] = useState('');
-    const [stAmount, setAmount] = useState('');
-    const [stComment, setComment] = useState('');
+const DepositListScreen = () => {
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
 
     return (
         <View>
-            <View style={{marginTop:30,padding:20}}>
+            <View style={{marginTop:10,padding:20, justifyContent:'center', alignItems:'center'}}>
+                <Text style={{fontSize:25, fontWeight:'bold'}}>Deposit & Withdraw</Text>
+
                 <View>
-                    <Text style={{fontSize:20, marginBottom:10}}>Deposit Name</Text>
-                    <CustomInput
-                        value={stDepositName}
-                        setValue={setDepositName}
-                        placeholder="Deposit Name"
+                    <Pressable onPress={() => setOpen(true)} >
+                        <View style={{backgroundColor:'#000', paddingHorizontal:10, paddingVertical:5, borderRadius:10, flexDirection:'row', marginTop:30}}>
+
+
+                            <View>
+                                <Ionicons name="calendar-outline" size={24} color="#fff"/>
+                            </View>
+
+                            <View>
+                                <Text style={{color: 'gray', fontWeight:'bold', fontSize:15}}> {moment().diff(date, 'days') === 0 ? 'Today':'Day' } &nbsp;</Text>
+                            </View>
+
+                            <View>
+                                <Text style={{color: '#fff', fontWeight:'bold', fontSize:15}}>{moment(date).format('MMMM Do')} &nbsp;</Text>
+                            </View>
+
+                            <View>
+                                <Ionicons name="chevron-down-outline" size={20} color="#fff"/>
+                            </View>
+
+
+                        </View>
+                    </Pressable>
+
+
+                    <DatePicker
+                        mode="date"
+
+                        modal
+                        open={open}
+                        date={date}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setDate(date)
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
                     />
                 </View>
 
-                <View style={{marginTop:30}}>
-                    <Text style={{fontSize:20, marginBottom:10}}>Amount</Text>
-                    <CustomInput
-                        value={stAmount}
-                        setValue={setAmount}
-                        placeholder="Amount"
-                    />
-                </View>
-
-                <View style={{marginTop:30}}>
-                    <Text style={{fontSize:20, marginBottom:10}}>Comment</Text>
-                    <CustomInput
-                        value={stComment}
-                        setValue={setComment}
-                        multiline={true}
-                        numberOfLines={4}
-                    />
-                </View>
-
-                <View style={{marginTop:30}}>
-
-                    <CustomButton
-                        text="Add"
-                        bgColor="gold"
-                    />
+                <View>
 
                 </View>
 
@@ -56,4 +70,75 @@ const DepositEntryScreen = () => {
     );
 }
 
-export default DepositEntryScreen;
+const WithdrawListScreen = () => {
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+
+    return (
+        <View>
+            <View style={{marginTop:10,padding:20, justifyContent:'center', alignItems:'center'}}>
+                <Text style={{fontSize:25, fontWeight:'bold'}}>Deposit & Withdraw</Text>
+
+                <View>
+                    <Pressable onPress={() => setOpen(true)} >
+                        <View style={{backgroundColor:'#000', paddingHorizontal:10, paddingVertical:5, borderRadius:10, flexDirection:'row', marginTop:30}}>
+
+
+                            <View>
+                                <Ionicons name="calendar-outline" size={24} color="#fff"/>
+                            </View>
+
+                            <View>
+                                <Text style={{color: 'gray', fontWeight:'bold', fontSize:15}}> {moment().diff(date, 'days') === 0 ? 'Today':'Day' } &nbsp;</Text>
+                            </View>
+
+                            <View>
+                                <Text style={{color: '#fff', fontWeight:'bold', fontSize:15}}>{moment(date).format('MMMM Do')} &nbsp;</Text>
+                            </View>
+
+                            <View>
+                                <Ionicons name="chevron-down-outline" size={20} color="#fff"/>
+                            </View>
+
+
+                        </View>
+                    </Pressable>
+
+
+                    <DatePicker
+                        mode="date"
+
+                        modal
+                        open={open}
+                        date={date}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setDate(date)
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
+                    />
+                </View>
+
+                <View>
+
+                </View>
+
+            </View>
+        </View>
+    );
+}
+
+const DepositAndWithdraw = () => {
+
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Deposit List" component={DepositListScreen}/>
+            <Tab.Screen name="Withdraw List" component={WithdrawListScreen}/>
+        </Tab.Navigator>
+    );
+};
+
+export default DepositAndWithdraw;

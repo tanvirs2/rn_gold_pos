@@ -2,8 +2,8 @@
 
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
+import CustomInput from '../../../components/CustomInput';
+import CustomButton from '../../../components/CustomButton';
 
 const DepositEntryScreen = () => {
 

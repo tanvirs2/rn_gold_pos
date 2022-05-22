@@ -24,6 +24,9 @@ import Sales from '../screens/Sales';
 import InvoiceScreen from '../screens/Sales/SubPages/InvoiceScreen';
 import ListOfSales from '../screens/Sales/SubPages/ListOfSales';
 import withLoaderScreen from '../HOC/withLoaderScreen';
+import DepositEntryScreen from '../screens/Deposit/DepositEntryScreen/DepositEntryScreen';
+//import DepositListScreen from '../screens/Deposit/DepositListScreen/DepositListScreen';
+import DepositAndWithdraw from '../screens/Deposit/DepositAndWithdraw/DepositAndWithdraw';
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +44,12 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
+
+        {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
+            <View>
+                <Text style={{fontSize:50, fontWeight:'bold', color: 'red'}}>d</Text>
+            </View>
+        </View>*/}
 
       <CustomDrawerItem
         label="Sell Management"
@@ -293,7 +302,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="SignIn">
+        initialRouteName="Deposit & Withdraw">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -305,13 +314,15 @@ const Navigation = () => {
             ),
           }}
           name="SignIn"
-          component={withLoaderScreen(SignInScreen, {loader: false})}
+          component={withLoaderScreen(SignInScreen, {token: false})}
         />
         <Drawer.Screen name="SignUp" component={SignUpScreen} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Sales" component={Sales} />
         <Drawer.Screen name="Invoice" component={InvoiceScreen} />
         <Drawer.Screen name="Sale List" component={ListOfSales} />
+        <Drawer.Screen name="Deposit Entry" component={DepositEntryScreen} />
+        <Drawer.Screen name="Deposit & Withdraw" component={DepositAndWithdraw} />
         {/*<Drawer.Screen name="Camera" component={CameraScreen} />*/}
       </Drawer.Navigator>
     </NavigationContainer>
