@@ -27,6 +27,7 @@ import withLoaderScreen from '../HOC/withLoaderScreen';
 import DepositEntryScreen from '../screens/Deposit/DepositEntryScreen/DepositEntryScreen';
 //import DepositListScreen from '../screens/Deposit/DepositListScreen/DepositListScreen';
 import DepositAndWithdraw from '../screens/Deposit/DepositAndWithdraw/DepositAndWithdraw';
+import DepositAndWithdrawEntry from '../screens/Deposit/DepositNwithdrawEntryScreen/DepositAndWithdrawEntry';
 
 const Drawer = createDrawerNavigator();
 
@@ -302,7 +303,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Deposit & Withdraw">
+        initialRouteName="Deposit & Withdraw Entry">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -322,7 +323,8 @@ const Navigation = () => {
         <Drawer.Screen name="Invoice" component={InvoiceScreen} />
         <Drawer.Screen name="Sale List" component={ListOfSales} />
         <Drawer.Screen name="Deposit Entry" component={DepositEntryScreen} />
-        <Drawer.Screen name="Deposit & Withdraw" component={DepositAndWithdraw} />
+        <Drawer.Screen name="Deposit & Withdraw List" component={DepositAndWithdraw} />
+        <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
         {/*<Drawer.Screen name="Camera" component={CameraScreen} />*/}
       </Drawer.Navigator>
     </NavigationContainer>

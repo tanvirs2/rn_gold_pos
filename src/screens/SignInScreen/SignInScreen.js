@@ -27,15 +27,17 @@ export default function SignInScreen() {
   const [userToken, setUserToken] = useState('');
   const [username, setUsername] = useState('admin'); //'admin'
   const [password, setPassword] = useState('Admin@1'); //'Admin@1'
+  const [stMenu, setMenu] = useState({}); //'Admin@1'
 
   useEffect(()=>{
     return ()=>{
       setIsLoading(null)
       setUserToken(null)
-      setUsername(null)
-      setPassword(null)
+      /*setUsername(null)
+      setPassword(null)*/
     }
-  });
+  }, []);
+
 
   const loadContext = useContext(loaderContext);
 
@@ -74,6 +76,7 @@ export default function SignInScreen() {
 
           await storeToken(json.accessToken);
 
+
           navigation.navigate('Home');
         }
 
@@ -89,8 +92,34 @@ export default function SignInScreen() {
   const storeToken = async (value) => {
     try {
       await AsyncStorage.setItem('@storage_token', value)
+      let loginToken = await AsyncStorage.getItem('@storage_token');
+
+      const getMenu = () => {
+        fetch(apiUrl + `ApplicationSettings/GetConfigurationMenuSettings`, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            'authorization': `Bearer ${loginToken}`,
+          },
+        })
+            .then(response => response.json())
+            .then(async result=>{
+              //console.log('----cccccccc',result.menuItems[0].items.length,result.menuItems[0].items)
+
+              AsyncStorage.setItem('@storage_menu', JSON.stringify(result.menuItems[0].items))
+                  .then(value=>console.log(value))
+
+              /*let gg = await AsyncStorage.getItem('@storage_menu');
+              console.log(gg)*/
+              //setMenu(result.menuItems[0].items);
+            })
+      }
+
+      getMenu();
+
     } catch (e) {
       // saving error
+
     }
   }
   /*const onSignInWithFacebookPressed = () => {

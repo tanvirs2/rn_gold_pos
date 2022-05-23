@@ -2,7 +2,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 
-export default function CustomInput(props, {
+export default function CustomInput({
   value,
   setValue,
   placeholder,
@@ -16,7 +16,6 @@ export default function CustomInput(props, {
         onChangeText={setValue}
         style={[styles.input]}
         secureTextEntry={secureTextEntry}
-        {...props}
       />
     </View>
   );

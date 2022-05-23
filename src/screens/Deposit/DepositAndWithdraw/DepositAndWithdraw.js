@@ -1,36 +1,44 @@
 /*eslint-disable*/
 
-import React, {Fragment, useEffect, useState} from 'react';
-import {Button, Text, View, Pressable, StyleSheet, ScrollView} from 'react-native';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {Button, Text, View, Pressable, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import DatePicker from 'react-native-date-picker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import { Table, Row, Rows } from 'react-native-table-component';
+import { useIsFocused } from "@react-navigation/native";
+
 import {apiUrl} from '../../../settings/networking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {taka} from '../../../assets/symbols';
+import loaderContext from '../../../contexts/loaderContext';
 
 const Tab = createMaterialTopTabNavigator();
 
 const DepositListScreen = () => {
 
+    const isFocused = useIsFocused();
+
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [stDeposits, setDeposits] = useState({
-        tableHead: ['Deposit Name', 'Amount', 'Comment'],
+        tableHead: ['Deposit Name', 'Amount', 'Comment', 'Date'],
         tableData: [
-            ['', '', ''],
+            ['', '', '', ''],
         ]
     })
+
+    const loadContext = useContext(loaderContext);
 
     useEffect( ()=>{
         //alert('1')
         //alert(loginToken);
+        loadContext.loaderDispatch('loading');
         async function getStorageData() {
             let loginToken = await AsyncStorage.getItem('@storage_token');
 
-            fetch(apiUrl + `Deposit/GetAll?pageIndex=0&pageSize=10&date=2022-05-15`,
+            fetch(apiUrl + `Deposit/GetAll?pageIndex=0&pageSize=20`,
                 {
                     method: 'GET',
                     headers: {
@@ -43,6 +51,8 @@ const DepositListScreen = () => {
                 .then(response=> response.json())
                 .then(result=>{
 
+                    loadContext.loaderDispatch('loaded');
+
                     let listArray = result.data.map((data)=>{
                         /*return {
                             depositName: data.name,
@@ -54,30 +64,45 @@ const DepositListScreen = () => {
 
                             `${taka} ${data.amount}`,
 
-                            data.description
+                            data.description,
+
+                            moment(data.date).format('MMMM Do'),
                         ];
                     })
 
                     //console.log('------ddd---->',result.data)
 
-                    setDeposits(
-                        {
-                            tableHead: ['Deposit Name', 'Amount', 'Comment'],
+
+                    setDeposits((prevState)=>{
+                        return {
+                            ...prevState,
                             tableData: [
                                 ...listArray
                             ]
-                        }
-                    )
+                        };
+                    })
 
                 }).catch((err)=>{
                 //alert('4')
+                loadContext.loaderDispatch('loaded');
                 console.log('---------->', err)
             })
         }
 
         getStorageData();
 
-    }, []);
+        /*return ()=>{
+
+            alert('d');
+            /!*setDeposits({
+                tableHead: ['Deposit Name', 'Amount', 'Comment'],
+                tableData: [
+                    ['', '', ''],
+                ]
+            })*!/
+        }*/
+
+    }, [isFocused]);
 
     return (
         <View>
@@ -130,11 +155,25 @@ const DepositListScreen = () => {
                 </View>
 
                 <View>
+                    {loadContext.loader && <View style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(196,196,196,0.72)',
+                        zIndex: 1,
+                    }}>
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <ActivityIndicator size="large" color="#0000ff"/>
+                        </View>
+                    </View>}
+
                     <View style={styles.container}>
+
                         <Table>
                             <Row data={stDeposits.tableHead} style={styles.head} textStyle={styles.text}/>
                             <Rows data={stDeposits.tableData} textStyle={styles.cell}/>
                         </Table>
+
                     </View>
                 </View>
             </ScrollView>
@@ -172,7 +211,7 @@ const DepositAndWithdraw = () => {
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, paddingTop: 30 },
-    head: { height: 40, backgroundColor: '#cccccc' },
+    head: { height: 60, backgroundColor: '#cccccc' },
     text: { margin: 6, fontWeight:'bold' },
     cell: { margin: 6 }
 });
