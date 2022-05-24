@@ -14,9 +14,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {taka} from '../../assets/symbols';
 import moment from 'moment';
 import CustomButton from '../../components/CustomButton';
+import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
+import {useIsFocused} from '@react-navigation/native';
 
 const ProductListScreen = () => {
 
+    const isFocused = useIsFocused();
+
+    const [stLoader, setLoader] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
 
     const [stProducts, setProducts] = useState({
@@ -44,6 +49,9 @@ const ProductListScreen = () => {
 
     useEffect(()=>{
         async function fetchData() {
+
+            setLoader(true);
+
             let loginToken = await AsyncStorage.getItem('@storage_token');
 
             fetch(apiUrl + `Product/GetAll?pageIndex=0&pageSize=20`, {
@@ -56,7 +64,7 @@ const ProductListScreen = () => {
                 .then(response=>response.json())
                 .then(result=>{
 
-                    console.log(result.data);
+                    //console.log(result.data);
 
 
                     let listArray = result.data.map((data)=>{
@@ -86,11 +94,13 @@ const ProductListScreen = () => {
                         };
                     })
 
+                    setLoader(false);
+
                 })
         }
 
         fetchData();
-    }, []);
+    }, [isFocused]);
 
     function alertIndex(index) {
         Alert.alert(`This is row ${index + 1}`);
@@ -112,6 +122,8 @@ const ProductListScreen = () => {
             Product List
           </Text>
         </View>
+
+          <LoaderViewScreen viewThisComp={stLoader}/>
 
           <ScrollView>
               <View>

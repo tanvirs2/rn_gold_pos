@@ -31,11 +31,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
 
     marginVertical: 5,
-    padding: 10,
+    padding: 9,
   },
 
   input: {
     height: 35,
-    padding: 10,
+    padding: 8,
   },
 });
