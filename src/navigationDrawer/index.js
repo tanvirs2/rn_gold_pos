@@ -34,14 +34,6 @@ import NavMenu from '../components/NavMenu/NavMenu';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  const [isSalesCollapsed, isSetSalesCollapsed] = useState(true);
-  const [isPurchaseCollapsed, isSetPurchaseCollapsed] = useState(true);
-  const [isDepositCollapsed, isSetDepositCollapsed] = useState(true);
-  const [isExpenseCollapsed, isSetExpenseCollapsed] = useState(true);
-  const [isInventoryCollapsed, isSetInventoryCollapsed] = useState(true);
-  const [isCrmCollapsed, isSetCrmCollapsed] = useState(true);
-  const [isReportCollapsed, isSetReportCollapsed] = useState(true);
-  const [isSettingsCollapsed, isSetSettingsCollapsed] = useState(true);
 
 
     return (
@@ -55,7 +47,7 @@ function CustomDrawerContent(props) {
         </View>*/}
 
             {
-                menuObject.menuItems.map((mainMenu,mainMenuIndex) => {
+                menuObject.menuItems.map((mainMenu, mainMenuIndex) => {
 
                     return (
                         <NavMenu key={mainMenuIndex} mainMenu={mainMenu}/>
@@ -63,180 +55,6 @@ function CustomDrawerContent(props) {
                 })
             }
 
-            <CustomDrawerItem
-                label="Sell Management"
-                icon={
-                    <Ionicons
-                        name={isSalesCollapsed ? 'reader-outline' : 'reader'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetSalesCollapsed}
-                isCollapsed={isSalesCollapsed}
-            />
-
-            <Collapsible collapsed={isSalesCollapsed}>
-                {/*<View>
-              <Text>ddd</Text>
-              <Button
-                  onPress={() => navigation.navigate('Sales')}
-                  title="Go to notifications"
-              />
-          </View>*/}
-                <View>
-                    <SubCustomDrawerItem label="SaleRetail/Wholesale" route="Sales"/>
-                    <SubCustomDrawerItem label="Sales Return"/>
-                    <SubCustomDrawerItem label="List of sales"/>
-                    <SubCustomDrawerItem label="Due bill receive"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Stock Search"
-                icon={
-                    <Ionicons name="file-tray-full-outline" size={24} color="black"/>
-                }
-                dropdown={false}
-            />
-            {/*Puchase*/}
-            <CustomDrawerItem
-                label="Purchase"
-                icon={
-                    <Ionicons
-                        name={isPurchaseCollapsed ? 'cart-outline' : 'cart'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetPurchaseCollapsed}
-                isCollapsed={isPurchaseCollapsed}
-            />
-
-            <Collapsible collapsed={isPurchaseCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="New Gold Purchase"/>
-                    <SubCustomDrawerItem label="New Gold Purchase List"/>
-                    <SubCustomDrawerItem label="Old Gold Purchase"/>
-                    <SubCustomDrawerItem label="Old Gold Purchase List"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Deposit/Withdraw"
-                icon={
-                    <Ionicons
-                        name={isDepositCollapsed ? 'card-outline' : 'card'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetDepositCollapsed}
-                isCollapsed={isDepositCollapsed}
-            />
-            <Collapsible collapsed={isDepositCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="Deposit /Withdraw Entry"/>
-                    <SubCustomDrawerItem label="Deposit /Withdraw List"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Expense"
-                icon={
-                    <Ionicons
-                        name={isExpenseCollapsed ? 'cash-outline' : 'cash'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetExpenseCollapsed}
-                isCollapsed={isExpenseCollapsed}
-            />
-            <Collapsible collapsed={isExpenseCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="Expense Entry"/>
-                    <SubCustomDrawerItem label="Expense List"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Inventory"
-                icon={
-                    <Ionicons
-                        name={isInventoryCollapsed ? 'file-tray-stacked-outline' : 'file-tray-stacked'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetInventoryCollapsed}
-                isCollapsed={isInventoryCollapsed}
-            />
-            <Collapsible collapsed={isInventoryCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="Product List"/>
-                    <SubCustomDrawerItem label="Product Categories"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="CRM (Wholesale)"
-                icon={
-                    <Ionicons
-                        name={isCrmCollapsed ? 'people-outline' : 'people'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetCrmCollapsed}
-                isCollapsed={isCrmCollapsed}
-            />
-            <Collapsible collapsed={isCrmCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="Wholesaler Entry"/>
-                    <SubCustomDrawerItem label="Wholesaler List"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Report"
-                icon={
-                    <Ionicons
-                        name={isReportCollapsed ? 'newspaper-outline' : 'newspaper'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetReportCollapsed}
-                isCollapsed={isReportCollapsed}
-            />
-            <Collapsible collapsed={isReportCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="Daily Report"/>
-                    <SubCustomDrawerItem label="Category Wise Report"/>
-                </View>
-            </Collapsible>
-
-            <CustomDrawerItem
-                label="Settings"
-                icon={
-                    <Ionicons
-                        name={isSettingsCollapsed ? 'settings-outline' : 'settings'}
-                        size={24}
-                        color="black"
-                    />
-                }
-                isSetCollapsed={isSetSettingsCollapsed}
-                isCollapsed={isSettingsCollapsed}
-            />
-            <Collapsible collapsed={isSettingsCollapsed}>
-                <View>
-                    <SubCustomDrawerItem label="VAT/TAX"/>
-                    <SubCustomDrawerItem label="Category"/>
-                    <SubCustomDrawerItem label="Carats"/>
-                    <SubCustomDrawerItem label="Users"/>
-                </View>
-            </Collapsible>
 
         </DrawerContentScrollView>
     );

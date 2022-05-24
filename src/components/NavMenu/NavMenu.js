@@ -29,13 +29,7 @@ const SubCustomDrawerItem = ({label, route}) => {
     );
 };
 
-const CustomDrawerItem = ({
-                              label,
-                              isSetCollapsed,
-                              isCollapsed,
-                              icon,
-                              dropdown = true,
-                          }) => {
+const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = true}) => {
     return (
         <DrawerItem
             label={label}
@@ -75,32 +69,32 @@ const CustomDrawerItem = ({
 
 const NavMenu = ({mainMenu}) => {
 
-    const [isSalesCollapsed, isSetSalesCollapsed] = useState(true);
+    const [isCollapsed, isSetCollapsed] = useState(true);
 
     return (
         <Fragment>
             <CustomDrawerItem
-                label="Sell Management"
+                label={mainMenu.mainMenuLabel}
                 icon={
                     <Ionicons
-                        name={isSalesCollapsed ? 'reader-outline' : 'reader'}
+                        name={isCollapsed ? `${mainMenu.mainIcon}-outline` : mainMenu.mainIcon}
                         size={24}
                         color="black"
                     />
                 }
-                isSetCollapsed={isSetSalesCollapsed}
-                isCollapsed={isSalesCollapsed}
+                isSetCollapsed={isSetCollapsed}
+                isCollapsed={isCollapsed}
             />
 
 
-            <Collapsible collapsed={isSalesCollapsed}>
+            <Collapsible collapsed={isCollapsed}>
                 <View>
                     {
-                        mainMenu.subMenu.map((subMenu, subMenuIndex)=>{
+                        mainMenu.subMenu.map((subMenu, subMenuIndex) => {
 
                             return (
                                 <Fragment key={subMenuIndex}>
-                                    <SubCustomDrawerItem label="SaleRetail/Wholesale" route="Sales"/>
+                                    <SubCustomDrawerItem label={subMenu.name} route={subMenu.route}/>
                                 </Fragment>
                             );
                         })
@@ -110,6 +104,6 @@ const NavMenu = ({mainMenu}) => {
 
         </Fragment>
     );
-}
+};
 
 export default NavMenu;
