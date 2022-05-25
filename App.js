@@ -25,7 +25,10 @@ export default function App() {
   /*const [loaded] = useFonts({
       MulishRegular: require('./assets/fonts/Mulish-Regular.ttf'),
   });*/
-  LogBox.ignoreLogs(['Warning: Failed prop type: Invalid prop `textStyle` of type `array` supplied to `Cell`, expected `object`.'])
+  LogBox.ignoreLogs([
+      'Warning: Failed prop type: Invalid prop `textStyle` of type `array` supplied to `Cell`, expected `object`',
+      'Ended a touch event which was not counted in `trackedTouchCount`'
+  ])
 
   const [loaderState, loaderDispatchMethod] = useReducer(reducer, initState);
 

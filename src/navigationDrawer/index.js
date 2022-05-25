@@ -5,7 +5,7 @@ import {View, Text, Button} from 'react-native';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
-/*import CameraScreen from '../screens/CameraScreen';*/
+import CameraScreen from '../screens/CameraScreen';
 
 import {
   createDrawerNavigator,
@@ -89,7 +89,7 @@ const Navigation = () => {
         <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
         <Drawer.Screen name="Product List" component={ProductListScreen} />
         <Drawer.Screen name="Product Entry" component={ProductEntryScreen} />
-        {/*<Drawer.Screen name="Camera" component={CameraScreen} />*/}
+        <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

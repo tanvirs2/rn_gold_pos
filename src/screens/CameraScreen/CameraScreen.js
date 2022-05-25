@@ -1,26 +1,47 @@
-
-import {StyleSheet, Text, View, ScrollView, ActivityIndicator} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {useEffect, useState} from "react";
-import {Camera, useCameraDevices} from "react-native-vision-camera";
 
 
-const checkCameraPermission = async () => {
-    let status = await Camera.getCameraPermissionStatus();
-    if (status !== 'authorized') {
-        await Camera.requestCameraPermission();
-        status = await Camera.getCameraPermissionStatus();
-        if (status === 'denied') {
-            alert(
-                'You will not be able to scan if you do not allow camera access',
-            );
-        }
+class RefreshableList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            refreshing: false,
+        };
     }
-};
+
+    _onRefresh = () => {
+        this.setState({refreshing: true});
+
+        setTimeout(()=>{
+            alert('ddd')
+
+            this.setState({refreshing: false});
+        }, 2000);
+
+    }
+
+    render() {
+        return (
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh}
+                    />
+                }
+            />
+        );
+    }
+
+}
 
 
-export default function CameraScreen() {
+
+function CameraScreen() {
 
     /*const devices = useCameraDevices()
     const device = devices.back
@@ -36,7 +57,6 @@ export default function CameraScreen() {
 
     useEffect(()=>{
 
-        checkCameraPermission();
 
     }, []);
 
@@ -87,3 +107,6 @@ const styles = StyleSheet.create({
     }
 
 });
+
+
+export default RefreshableList;

@@ -1,6 +1,16 @@
 /*eslint-disable*/
 import React, {Fragment, useEffect, useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Alert, Pressable, Modal, ScrollView} from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    Alert,
+    Pressable,
+    Modal,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import {
   Table,
   Row,
@@ -16,10 +26,12 @@ import moment from 'moment';
 import CustomButton from '../../components/CustomButton';
 import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
 import {useIsFocused} from '@react-navigation/native';
+import loginToken from '../../settings/loginToken';
 
 const ProductListScreen = () => {
 
     const isFocused = useIsFocused();
+    const [stRefreshing, setRefreshing] = useState(false);
 
     const [stLoader, setLoader] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -46,19 +58,22 @@ const ProductListScreen = () => {
     });
 
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+    }, []);
+
+
 
     useEffect(()=>{
         async function fetchData() {
 
             setLoader(true);
 
-            let loginToken = await AsyncStorage.getItem('@storage_token');
-
-            fetch(apiUrl + `Product/GetAll?pageIndex=0&pageSize=20`, {
+            fetch(apiUrl + `Product/GetAll?pageIndex=0&pageSize=200`, {
                 method: 'GET',
                 headers: {
                     'content-type': 'application/json',
-                    'Authorization': `Bearer ${loginToken}`,
+                    'Authorization': `Bearer ${await loginToken()}`,
                 }
             })
                 .then(response=>response.json())
@@ -72,7 +87,7 @@ const ProductListScreen = () => {
                         return [
                             data.name,
 
-                            `cat`,
+                            data.categoryName,
 
                             `${taka} `+data.buyingPrice,
 
@@ -94,13 +109,15 @@ const ProductListScreen = () => {
                         };
                     })
 
+                    setRefreshing(false);
                     setLoader(false);
+
 
                 })
         }
 
         fetchData();
-    }, [isFocused]);
+    }, [isFocused, stRefreshing]);
 
     function alertIndex(index) {
         Alert.alert(`This is row ${index + 1}`);
@@ -116,7 +133,7 @@ const ProductListScreen = () => {
 
   return (
     <View>
-      <View style={{margin: 10}}>
+      <View style={{margin: 10, marginBottom:100}}>
         <View style={{alignItems: 'center'}}>
           <Text style={{fontWeight: 'bold', fontSize: 25, paddingBottom: 15}}>
             Product List
@@ -125,7 +142,14 @@ const ProductListScreen = () => {
 
           <LoaderViewScreen viewThisComp={stLoader}/>
 
-          <ScrollView>
+          <ScrollView
+              refreshControl={
+                  <RefreshControl
+                      refreshing={stRefreshing}
+                      onRefresh={onRefresh}
+                  />
+              }
+          >
               <View>
                   <View style={styles.container}>
 
