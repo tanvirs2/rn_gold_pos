@@ -3,9 +3,6 @@ apply plugin: "com.android.application"
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
-/* project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf' ] // Name of the font files you want to copy
-] */
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
@@ -263,11 +260,6 @@ android {
 
         }
     }
-
-    //tnv
-    buildFeatures {
-            viewBinding = true
-    }
 }
 
 dependencies {
@@ -275,7 +267,6 @@ dependencies {
 
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

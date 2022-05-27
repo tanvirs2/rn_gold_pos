@@ -78,7 +78,7 @@ export default function SalesEntry() {
     const device = devices.back;
 
     const [frameProcessor, barcodes] = useScanBarcodes([
-        BarcodeFormat.ALL_FORMATS, // You can only specify a particular format
+        BarcodeFormat.CODE_128, // You can only specify a particular format
     ]);
 
     const [barcode, setBarcode] = useState('');
@@ -195,6 +195,11 @@ export default function SalesEntry() {
                                         audio={false}
                                     />)
                                 }
+                                {/*<View style={{position:'absolute', top:'40%' }}>
+                                    <View style={{ backgroundColor: '#fff', borderWidth:1, borderRadius:10, padding: 10}}>
+                                        <Text style={{fontSize:20, fontWeight:'bold'}}>No Barcode</Text>
+                                    </View>
+                                </View>*/}
 
 
                                 {/*<View style={{width:'124.5%', height: '100%'}}>
@@ -358,12 +363,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-            width: 0,
-            height: 2
+            width: 10,
+            height: 10
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
+        shadowOpacity: 0.01,
+        shadowRadius: 10,
+        elevation: 50
     },
     button: {
         borderRadius: 20,
