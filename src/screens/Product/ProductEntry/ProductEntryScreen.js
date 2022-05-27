@@ -11,6 +11,7 @@ import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import SelectDropdown from 'react-native-select-dropdown';
 import moment from 'moment';
 import {taka} from '../../../assets/symbols';
+import {LocalInput} from '../../../settings/ComponentLib';
 
 
 let today = (
@@ -26,16 +27,6 @@ const countries = [
     {name: 'Ireland', id: 4}
 ];
 
-const LocalInput = ({inputProps}) => {
-
-    return (
-        <View style={{marginTop:30}}>
-            <Text style={{fontSize:20, marginBottom:10}}>{inputProps.placeholder}</Text>
-
-            <CustomInput {...inputProps} />
-        </View>
-    );
-}
 
 const LocalSelect = ({selectProps, data}) => {
 
