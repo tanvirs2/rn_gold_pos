@@ -33,6 +33,7 @@ import ExpenseEntryScreen from '../screens/Expense/ExpenseEntryScreen';
 import ExpenseListScreen from '../screens/Expense/ExpenseListScreen';
 import ProductCategoryListScreen from '../screens/ProductCategory/ProductCategoryListScreen';
 import ProductCategoryEntryScreen from '../screens/ProductCategory/ProductCategoryEntryScreen';
+import TabListOfSales from '../screens/Sales/SubPages/TabListOfSales';
 
 const Drawer = createDrawerNavigator();
 
@@ -70,7 +71,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Product List">
+        initialRouteName="Sale List">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -88,7 +89,6 @@ const Navigation = () => {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Sales" component={Sales} />
         <Drawer.Screen name="Invoice" component={InvoiceScreen} />
-        <Drawer.Screen name="Sale List" component={ListOfSales} />
         <Drawer.Screen name="Deposit & Withdraw List" component={DepositAndWithdraw} />
         <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
         <Drawer.Screen name="Product List" component={ProductListScreen} />
@@ -97,6 +97,7 @@ const Navigation = () => {
         <Drawer.Screen name="Expense List" component={ExpenseListScreen} />
         <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
         <Drawer.Screen name="Product Categories Entry" component={ProductCategoryEntryScreen} />
+        <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
         <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
