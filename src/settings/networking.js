@@ -4,7 +4,6 @@ export const apiUrl = "https://pos.newapanjewellers.com/api/";
 
 export const customFetch = ({url, method, body, callbackResponse, callbackResult, callbackError, navigation}) => {
 
-
     (async ()=>{
         body = (method === 'GET') ? false : JSON.stringify(body);
 
@@ -25,7 +24,6 @@ export const customFetch = ({url, method, body, callbackResponse, callbackResult
 
                 switch (response.status) {
                     case 401:
-                        //alert('from switch err');
                         navigation.navigate('SignIn')
                         break;
                     default:
