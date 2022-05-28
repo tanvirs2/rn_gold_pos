@@ -70,7 +70,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Product Categories Entry">
+        initialRouteName="Product List">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (

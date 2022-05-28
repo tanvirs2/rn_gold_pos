@@ -41,15 +41,7 @@ const ProductCategoryListScreen = () => {
 
     const [stProductModal, setProductModal] = useState({
         EditTableData: [
-            ['Product’s Name', ':', 'Ear Ring'],
-            ['Description ', ':', 'Gold Ear Ring Retail.'],
-            ['Karat', ':', '21k'],
-            ['Weight', ':', '11.5g'],
-            ['Price P/G', ':', '2300'],
-            ['Buying Price', ':', '5500'],
-            ['Selling Price', ':', '7500'],
-            ['TAX Effect', ':', 'Yes'],
-            ['Barcode', ':', '111029H88N12'],
+            ['', ':', ''],
         ],
     });
 

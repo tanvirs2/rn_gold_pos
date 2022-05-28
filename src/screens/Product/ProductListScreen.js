@@ -19,41 +19,137 @@ import {
   Cell,
 } from 'react-native-table-component';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {apiUrl} from '../../settings/networking';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
 import moment from 'moment';
 import CustomButton from '../../components/CustomButton';
 import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
-import {useIsFocused} from '@react-navigation/native';
-import loginToken from '../../settings/loginToken';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {globalButtonColor} from '../../settings/color';
 
-const ProductListScreen = () => {
+const DetailsModal = ({setModalVisible, stIdForModal, navigation}) => {
+
+    //const navigation = useNavigation();
+
+    const [stLoader, setLoader] = useState(false);
+    const [stProductModal, setProductModal] = useState([
+        ['Product’s Name', ':', 'Ear Ring'],
+        ['Description ', ':', 'Gold Ear Ring Retail.'],
+        ['Karat', ':', '21k'],
+        ['Weight', ':', '11.5g'],
+        ['Price P/G', ':', '2300'],
+        ['Buying Price', ':', '5500'],
+        ['Selling Price', ':', '7500'],
+        ['TAX Effect', ':', 'Yes'],
+        ['Barcode', ':', '111029H88N12'],
+    ]);
+
+    useEffect(()=>{
+
+        //console.log('stIdForModal', stIdForModal)
+        //console.log(props)
+
+        setLoader(true);
+
+        customFetch({
+            url:'Product/Get/' + stIdForModal,
+            method:'GET',
+            callbackResult: (result)=>{
+
+                //console.log(result.model)
+
+                let productModel = result.model;
+
+                setProductModal([
+                    ['Product’s Name',  ':', productModel.name],
+                    ['Description ',    ':', productModel.description],
+                    ['Karat',           ':', productModel.grade],
+                    ['Weight',          ':', productModel.weight],
+                    ['Price P/G',       ':', ''],
+                    ['Buying Price',    ':', productModel.buyingPrice],
+                    ['Selling Price',   ':', productModel.sellingPrice],
+                    ['TAX Effect',      ':', productModel.typeId],
+                    ['Barcode',         ':', productModel.code],
+                ]);
+
+                setLoader(false);
+            },
+            navigation,
+        })
+
+
+    }, [])
+
+    return (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={true}
+            onRequestClose={() => {
+                //Alert.alert("Modal has been closed.");
+                setModalVisible(prevState => !prevState);
+            }}
+        >
+            <View style={{
+                width: '100%', height:'100%',
+                backgroundColor: 'rgba(222,222,222,0.34)',
+                justifyContent:'center',
+                alignItems:'center'
+            }}
+            >
+                <Pressable onPress={() => setModalVisible(prevState => !prevState)} style={{width: '90%', justifyContent:'center', alignItems:'flex-end'}}>
+                    <Ionicons name="close-circle" size={24} color="#000" style={{backgroundColor:'#fff', borderRadius: 60}}/>
+                </Pressable>
+
+                {/*<LoaderViewScreen viewThisComp={stLoader}/>*/}
+
+                <View style={{width: '80%', height:'63%',
+                    borderWidth: 1,
+                    borderColor: '#c5c5c5',
+                    backgroundColor: '#fff',
+                    borderRadius: 5,
+                    padding: 10,
+                    filter: 'blur',
+                    shadowColor: '#000',
+                    elevation: 30
+                }}>
+
+                    <View style={{position: 'absolute', width: '100%', height: '100%', margin:10}}>
+                        <LoaderViewScreen viewThisComp={stLoader}/>
+                    </View>
+
+
+
+                    <Table>
+                        <Rows data={stProductModal} textStyle={styles.text}/>
+                    </Table>
+
+                    <View style={{margin:40}}>
+                        <CustomButton
+                            text="Edit"
+                            bgColor={globalButtonColor}
+                        />
+                    </View>
+
+                </View>
+            </View>
+        </Modal>
+    );
+}
+
+const ProductListScreen = ({navigation}) => {
 
     const isFocused = useIsFocused();
     const [stRefreshing, setRefreshing] = useState(false);
 
     const [stLoader, setLoader] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    const [stIdForModal, setIdForModal] = useState(0);
 
     const [stProducts, setProducts] = useState({
         tableHead: ['Product', 'Category', 'B/P', 'Barcode', 'Status', 'Action'],
         tableData: [
             ['', '', '', '', '', ''],
-        ],
-    });
-
-    const [stProductModal, setProductModal] = useState({
-        tableData: [
-            ['Product’s Name', ':', 'Ear Ring'],
-            ['Description ', ':', 'Gold Ear Ring Retail.'],
-            ['Karat', ':', '21k'],
-            ['Weight', ':', '11.5g'],
-            ['Price P/G', ':', '2300'],
-            ['Buying Price', ':', '5500'],
-            ['Selling Price', ':', '7500'],
-            ['TAX Effect', ':', 'Yes'],
-            ['Barcode', ':', '111029H88N12'],
         ],
     });
 
@@ -63,11 +159,55 @@ const ProductListScreen = () => {
     }, []);
 
 
-
     useEffect(()=>{
-        async function fetchData() {
 
-            setLoader(true);
+        setLoader(true);
+
+
+        customFetch({
+            url: 'Product/GetAll?pageIndex=0&pageSize=200',
+            method: 'GET',
+            callbackResult: (result)=>{
+
+                let listArray = result.data.map((data)=>{
+
+                    return [
+
+                        data.name,
+
+                        data.categoryName,
+
+                        `${taka} `+data.buyingPrice,
+
+                        data.code,
+
+                        data.isActive !== 'No',
+
+                        data.id,
+
+                    ];
+                })
+
+                setProducts((prevState)=>{
+                    return {
+                        ...prevState,
+                        tableData: [
+                            ...listArray
+                        ]
+                    };
+                })
+
+                setRefreshing(false);
+                setLoader(false);
+            },
+            navigation
+        });
+
+        /*async function fetchData() {
+
+
+
+
 
             fetch(apiUrl + `Product/GetAll?pageIndex=0&pageSize=200`, {
                 method: 'GET',
@@ -82,41 +222,11 @@ const ProductListScreen = () => {
                     //console.log(result.data);
 
 
-                    let listArray = result.data.map((data)=>{
-
-                        return [
-                            data.name,
-
-                            data.categoryName,
-
-                            `${taka} `+data.buyingPrice,
-
-                            data.code,
-
-                            data.isActive !== 'No',
-
-                            'Action'
-
-                        ];
-                    })
-
-                    setProducts((prevState)=>{
-                        return {
-                            ...prevState,
-                            tableData: [
-                                ...listArray
-                            ]
-                        };
-                    })
-
-                    setRefreshing(false);
-                    setLoader(false);
-
-
                 })
         }
 
-        fetchData();
+        fetchData();*/
+
     }, [isFocused, stRefreshing]);
 
     function alertIndex(index) {
@@ -153,42 +263,9 @@ const ProductListScreen = () => {
               <View>
                   <View style={styles.container}>
 
-                      <Modal
-                          animationType="slide"
-                          transparent={true}
-                          visible={modalVisible}
-                          onRequestClose={() => {
-                              //Alert.alert("Modal has been closed.");
-                              setModalVisible(prevState => !prevState);
-                          }}
-                      >
-                          <View style={{width: '100%', height:'100%',
-                              backgroundColor: 'rgba(222,222,222,0.34)', justifyContent:'center', alignItems:'center'}}>
-                              <Pressable onPress={() => setModalVisible(prevState => !prevState)} style={{width: '90%', justifyContent:'center', alignItems:'flex-end'}}>
-                                  <Ionicons name="close-circle" size={24} color="#000" style={{backgroundColor:'#fff', borderRadius: 60}}/>
-                              </Pressable>
-                              <View style={{width: '80%', height:'60%',
-                                  borderWidth: 1,
-                                  borderColor: '#c5c5c5',
-                                  backgroundColor: '#fff',
-                                  borderRadius: 5,
-                                  padding: 10,
-                                  filter: 'blur',
-                              }}>
-
-
-                                  <Table>
-                                      <Rows data={stProductModal.tableData} textStyle={styles.text}/>
-                                  </Table>
-
-                                  <CustomButton
-                                      text="Edit"
-                                      bgColor="gold"
-                                  />
-
-                              </View>
-                          </View>
-                      </Modal>
+                      {
+                          modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal}/>
+                      }
 
                       <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>
                           <Row
@@ -251,9 +328,15 @@ const ProductListScreen = () => {
                                                                   </View>
                                                               );
                                                           case 5:
+
+                                                              //console.log(cellData)
+
                                                               return (
                                                                   <Fragment>
-                                                                      <Pressable onPress={()=>{setModalVisible(true)}} style={{alignItems:'center'}}>
+                                                                      <Pressable onPress={()=>{
+                                                                          setModalVisible(true)
+                                                                          setIdForModal(cellData);
+                                                                      }} style={{alignItems:'center'}}>
 
                                                                           <Ionicons name="ellipsis-vertical" size={24} color="#000"/>
 

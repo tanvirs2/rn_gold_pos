@@ -2,30 +2,18 @@
 
 import React, {Fragment, useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {apiUrl} from '../../../settings/networking';
 import loginToken from '../../../settings/loginToken';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import SelectDropdown from 'react-native-select-dropdown';
-import moment from 'moment';
-import {taka} from '../../../assets/symbols';
+
 import {LocalInput} from '../../../settings/ComponentLib';
 
 
-let today = (
-    <Fragment>
-        <Text >Today</Text>
-    </Fragment>
-);
 
-const countries = [
-    {name: 'Egypt', id: 1},
-    {name: 'Canada', id: 2},
-    {name: 'Australia', id: 3},
-    {name: 'Ireland', id: 4}
-];
+
 
 
 const LocalSelect = ({selectProps, data}) => {
@@ -60,7 +48,6 @@ const LocalSelect = ({selectProps, data}) => {
                             size={28}
                             color="#988686FF"
                         />}
-                        defaultValue={today}
                         data={data}
                         onSelect={(selectedItem, index) => {
                             //console.log(selectedItem.name, index);
