@@ -9,6 +9,7 @@ import {customFetch} from '../../../settings/networking';
 import {taka} from '../../../assets/symbols';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import {Cell, Row, Table, TableWrapper} from 'react-native-table-component';
+import {DetailsModal} from '../../../settings/ComponentLib';
 
 
 const CustomDataTable = ({navigation}) => {
@@ -112,7 +113,7 @@ const CustomDataTable = ({navigation}) => {
                         <View style={styles.container}>
 
                             {
-                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal}/>
+                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url="Sale/Get/"/>
                             }
 
                             <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>
@@ -176,9 +177,6 @@ const CustomDataTable = ({navigation}) => {
                                                                         </View>
                                                                     );
                                                                 case 5:
-
-                                                                    //console.log(cellData)
-
                                                                     return (
                                                                         <Fragment>
                                                                             <Pressable onPress={()=>{

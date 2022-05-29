@@ -21,121 +21,11 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
-import moment from 'moment';
-import CustomButton from '../../components/CustomButton';
 import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {globalButtonColor} from '../../settings/color';
-
-const DetailsModal = ({setModalVisible, stIdForModal, navigation}) => {
-
-    //const navigation = useNavigation();
-
-    const [stLoader, setLoader] = useState(false);
-    const [stProductModal, setProductModal] = useState([
-        ['Product’s Name', ':', 'Ear Ring'],
-        ['Description ', ':', 'Gold Ear Ring Retail.'],
-        ['Karat', ':', '21k'],
-        ['Weight', ':', '11.5g'],
-        ['Price P/G', ':', '2300'],
-        ['Buying Price', ':', '5500'],
-        ['Selling Price', ':', '7500'],
-        ['TAX Effect', ':', 'Yes'],
-        ['Barcode', ':', '111029H88N12'],
-    ]);
-
-    useEffect(()=>{
-
-        //console.log('stIdForModal', stIdForModal)
-        //console.log(props)
-
-        setLoader(true);
-
-        customFetch({
-            url:'Product/Get/' + stIdForModal,
-            method:'GET',
-            callbackResult: (result)=>{
-
-                //console.log(result.model)
-
-                let productModel = result.model;
-
-                setProductModal([
-                    ['Product’s Name',  ':', productModel.name],
-                    ['Description ',    ':', productModel.description],
-                    ['Karat',           ':', productModel.grade],
-                    ['Weight',          ':', productModel.weight],
-                    ['Price P/G',       ':', ''],
-                    ['Buying Price',    ':', productModel.buyingPrice],
-                    ['Selling Price',   ':', productModel.sellingPrice],
-                    ['TAX Effect',      ':', productModel.typeId],
-                    ['Barcode',         ':', productModel.code],
-                ]);
-
-                setLoader(false);
-            },
-            navigation,
-        })
+import {useIsFocused} from '@react-navigation/native';
+import {DetailsModal} from '../../settings/ComponentLib';
 
 
-    }, [])
-
-    return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={true}
-            onRequestClose={() => {
-                //Alert.alert("Modal has been closed.");
-                setModalVisible(prevState => !prevState);
-            }}
-        >
-            <View style={{
-                width: '100%', height:'100%',
-                backgroundColor: 'rgba(222,222,222,0.34)',
-                justifyContent:'center',
-                alignItems:'center'
-            }}
-            >
-                <Pressable onPress={() => setModalVisible(prevState => !prevState)} style={{width: '90%', justifyContent:'center', alignItems:'flex-end'}}>
-                    <Ionicons name="close-circle" size={24} color="#000" style={{backgroundColor:'#fff', borderRadius: 60}}/>
-                </Pressable>
-
-                {/*<LoaderViewScreen viewThisComp={stLoader}/>*/}
-
-                <View style={{width: '80%', height:'63%',
-                    borderWidth: 1,
-                    borderColor: '#c5c5c5',
-                    backgroundColor: '#fff',
-                    borderRadius: 5,
-                    padding: 10,
-                    filter: 'blur',
-                    shadowColor: '#000',
-                    elevation: 30
-                }}>
-
-                    <View style={{position: 'absolute', width: '100%', height: '100%', margin:10}}>
-                        <LoaderViewScreen viewThisComp={stLoader}/>
-                    </View>
-
-
-
-                    <Table>
-                        <Rows data={stProductModal} textStyle={styles.text}/>
-                    </Table>
-
-                    <View style={{margin:40}}>
-                        <CustomButton
-                            text="Edit"
-                            bgColor={globalButtonColor}
-                        />
-                    </View>
-
-                </View>
-            </View>
-        </Modal>
-    );
-}
 
 const ProductListScreen = ({navigation}) => {
 
@@ -203,29 +93,6 @@ const ProductListScreen = ({navigation}) => {
             navigation
         });
 
-        /*async function fetchData() {
-
-
-
-
-
-            fetch(apiUrl + `Product/GetAll?pageIndex=0&pageSize=200`, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${await loginToken()}`,
-                }
-            })
-                .then(response=>response.json())
-                .then(result=>{
-
-                    //console.log(result.data);
-
-
-                })
-        }
-
-        fetchData();*/
 
     }, [isFocused, stRefreshing]);
 
@@ -264,7 +131,23 @@ const ProductListScreen = ({navigation}) => {
                   <View style={styles.container}>
 
                       {
-                          modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal}/>
+                          modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url="Product/Get/" tableCallback={
+                              (setTable, model)=>{
+
+                                  setTable([
+                                      ['Product’s Name',  ':', model.name],
+                                      ['Description ',    ':', model.description],
+                                      ['Karat',           ':', model.grade],
+                                      ['Weight',          ':', model.weight],
+                                      ['Price P/G',       ':', ''],
+                                      ['Buying Price',    ':', model.buyingPrice],
+                                      ['Selling Price',   ':', model.sellingPrice],
+                                      ['TAX Effect',      ':', model.typeId],
+                                      ['Barcode',         ':', model.code],
+                                  ]);
+
+                              }
+                          }/>
                       }
 
                       <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>
