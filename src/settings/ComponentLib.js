@@ -303,31 +303,6 @@ export const TransactionalEntryScreen = ({type, navigation}) => {
             },
             navigation
         });
-
-        /**********************************/
-
-        /*let loginToken = await AsyncStorage.getItem('@storage_token');
-
-        fetch(apiUrl + `Deposit/Upsert`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'authorization': `Bearer ${loginToken}`,
-            },
-            body: JSON.stringify({
-                "id": stId,
-                "description": stComment,
-                "name": stDepositName,
-                "comment": stComment,
-                "amount": stAmount,
-                "date": moment(date).format('Y-MM-DD'),
-                "shopId": stShopId
-            })
-        })
-            .then(response => response.json())
-            .then(result => {
-
-            })*/
     }
 
     return (

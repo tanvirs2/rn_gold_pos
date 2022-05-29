@@ -20,10 +20,11 @@ import CustomButton from '../../../components/CustomButton';
 import {Rows, Table} from 'react-native-table-component';
 import {RNHoleView} from 'react-native-hole-view';
 import * as React from 'react';
+import {globalButtonColor} from '../../../settings/color';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
-        <Text>{title}</Text>
+        <Text style={{fontSize:18, marginBottom:3}}>{title}</Text>
         <CustomInput {...props} />
     </View>
 );
@@ -250,13 +251,37 @@ export default function SalesEntry() {
 
                     <View style={{flexDirection: 'row', paddingTop: 10}}>
 
-                        <View style={{flex: 5}}>
-                            <TextInput
-                                style={styles.barcodeInput}
-                                placeholder="Input Manually"
-                                value={barcode}
-                            />
+                        <View style={{flex: 5, flexDirection:'row'}}>
+
+
+                            <View style={{flex: 4, justifyContent: 'center'}}>
+
+                                <TextInput
+                                    style={styles.barcodeInput}
+                                    placeholder="Input Manually"
+                                    value={barcode}
+                                />
+
+                            </View>
+
+                            <View style={{flex: 1, justifyContent: 'center'}}>
+
+                                <Pressable style={styles.addButton} onPress={() => {}}
+                                >
+                                    <Text style={{fontWeight:'bold', color:'#000'}}>Add</Text>
+                                </Pressable>
+
+                            </View>
+
                         </View>
+
+                        {/*<View style={{flex: 1, justifyContent: 'center'}}>
+
+                            <Pressable style={styles.barcodeIcon} onPress={() => setModalVisible(!modalVisible)}>
+                                <Text>Add</Text>
+                            </Pressable>
+
+                        </View>*/}
 
                         <View style={{flex: 1}}>
                             <Pressable style={styles.barcodeIcon} onPress={() => setModalVisible(!modalVisible)}>
@@ -272,12 +297,6 @@ export default function SalesEntry() {
                     </View>
                 </View>
 
-
-                <View style={styles.flexRow}>
-
-                    <CustomButton text="Add" bgColor="#d5b337"/>
-
-                </View>
 
             </View>
 
@@ -318,11 +337,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 10,
+        marginBottom: 3,
     },
     barcodeIcon: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#d5b337',
+        backgroundColor: globalButtonColor,
         padding: 10,
         borderRadius: 5,
         marginLeft: 5,
@@ -330,13 +350,32 @@ const styles = StyleSheet.create({
     },
 
     barcodeInput: {
+        width: '100%',
         marginRight: 20,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#2c2c2c',
+        borderLeftWidth: 1,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderBottomLeftRadius: 5,
+        borderTopLeftRadius: 5,
+        borderColor: '#777',
         backgroundColor: '#ffffff',
         height: 50,
         padding: 10,
+    },
+
+    addButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: globalButtonColor,
+        padding: 10,
+        borderColor: '#777777',
+        borderRightWidth: 1,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
+        marginLeft: 0,
+        height: 50,
     },
 
     productDetailsBorder: {borderWidth: 1, borderRadius: 5, borderColor: '#676666', padding: 15, marginBottom: 10},

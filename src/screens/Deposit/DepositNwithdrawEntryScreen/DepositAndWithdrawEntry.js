@@ -1,19 +1,8 @@
 /*eslint-disable*/
 
-import React, {Fragment, useState} from 'react';
-import {Pressable, ScrollView, Text, View} from 'react-native';
-import CustomInput from '../../../components/CustomInput';
-import CustomButton from '../../../components/CustomButton';
+import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {apiUrl, customFetch} from '../../../settings/networking';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
-import DatePicker from 'react-native-date-picker';
-import moment from 'moment';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {globalButtonColor} from '../../../settings/color';
 import {TransactionalEntryScreen} from '../../../settings/ComponentLib';
-import {taka} from '../../../assets/symbols';
 
 const Tab = createMaterialTopTabNavigator();
 

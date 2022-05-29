@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React, {Fragment, useState} from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, Image, useWindowDimensions, TouchableOpacity} from 'react-native';
 
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
@@ -20,7 +20,6 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Sales from '../screens/Sales';
 import InvoiceScreen from '../screens/Sales/SubPages/InvoiceScreen';
-import ListOfSales from '../screens/Sales/SubPages/ListOfSales';
 import withLoaderScreen from '../HOC/withLoaderScreen';
 //import DepositListScreen from '../screens/Deposit/DepositListScreen/DepositListScreen';
 import DepositAndWithdraw from '../screens/Deposit/DepositAndWithdraw/DepositAndWithdraw';
@@ -34,33 +33,72 @@ import ExpenseListScreen from '../screens/Expense/ExpenseListScreen';
 import ProductCategoryListScreen from '../screens/ProductCategory/ProductCategoryListScreen';
 import ProductCategoryEntryScreen from '../screens/ProductCategory/ProductCategoryEntryScreen';
 import TabListOfSales from '../screens/Sales/SubPages/TabListOfSales';
+import ProductDetailsInvoiceScreen from '../screens/Sales/SubPages/ProductDetailsInvoiceScreen';
+import {globalBackgroundColor} from '../settings/color';
+import logo from '../../assets/images/logo.png';
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
 
+    const {height} = useWindowDimensions();
 
     return (
-        <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
+        <Fragment>
 
-            {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
+            <View style={{height: 104, alignItems: 'center', shadowColor:'#000', elevation: 50, backgroundColor: '#3b3b3b'}}>
+                <Image
+                    source={logo}
+                    style={{height: height * 0.13, width: 170}}
+                    resizeMode="contain"
+                />
+            </View>
+
+            <DrawerContentScrollView {...props}>
+
+                <DrawerItemList {...props} />
+
+
+                {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
             <View>
                 <Text style={{fontSize:50, fontWeight:'bold', color: 'red'}}>d</Text>
             </View>
         </View>*/}
 
-            {
-                menuObject.menuItems.map((mainMenu, mainMenuIndex) => {
+                {
+                    menuObject.menuItems.map((mainMenu, mainMenuIndex) => {
 
-                    return (
-                        <NavMenu key={mainMenuIndex} mainMenu={mainMenu}/>
-                    );
-                })
-            }
+                        return (
+                            <NavMenu key={mainMenuIndex} mainMenu={mainMenu}/>
+                        );
+                    })
+                }
 
 
-        </DrawerContentScrollView>
+            </DrawerContentScrollView>
+
+            <View style={{
+                height: 50,
+                padding: 5,
+                alignItems: 'center',
+                shadowColor:'#000',
+                elevation: 50,
+                borderTopWidth: 1,
+                borderColor: '#888888',
+                backgroundColor: '#b2b2b2'
+            }}>
+                <TouchableOpacity style={{width:'100%'}}>
+                    <View style={{padding: 5, borderColor: '#545454',
+                        borderWidth: 1, borderRadius: 3, backgroundColor:'#fff', alignItems: 'center'}}>
+                        <Text style={{fontWeight:'bold', fontSize:20, color: '#000'}}>
+                            <Ionicons name="log-out-outline" size={24} color="black" />&nbsp;
+                            LOGOUT
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+        </Fragment>
     );
 }
 
@@ -71,7 +109,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Sale List">
+        initialRouteName="Sales">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
@@ -98,6 +136,7 @@ const Navigation = () => {
         <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
         <Drawer.Screen name="Product Categories Entry" component={ProductCategoryEntryScreen} />
         <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
+        <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
         <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
