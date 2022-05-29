@@ -56,7 +56,7 @@ function CustomDrawerContent(props) {
 
             <DrawerContentScrollView {...props}>
 
-                <DrawerItemList {...props} />
+                {/*<DrawerItemList {...props} />*/}
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
@@ -135,7 +135,7 @@ const Navigation = () => {
         <Drawer.Screen name="Expense Entry" component={ExpenseEntryScreen} />
         <Drawer.Screen name="Expense List" component={ExpenseListScreen} />
         <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
-        <Drawer.Screen name="Product Categories Entry" component={ProductCategoryEntryScreen} />
+        <Drawer.Screen name="Product Category Entry" component={ProductCategoryEntryScreen} />
         <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
         <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
         <Drawer.Screen name="Camera" component={CameraScreen} />

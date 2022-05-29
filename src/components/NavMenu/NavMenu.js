@@ -10,7 +10,9 @@ const SubCustomDrawerItem = ({label, route}) => {
     const navigation = useNavigation();
 
     const navigateRoute = () => {
-        navigation.navigate(route);
+        if (route) {
+            navigation.navigate(route);
+        }
     };
 
     return (

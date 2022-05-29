@@ -16,7 +16,7 @@ const menuObject = {
                 }, {
                     name: 'List of sales',
                     icon: '',
-                    route: '',
+                    route: 'List Of Sales',
                 }, {
                     name: 'Due bill receive',
                     icon: '',
@@ -60,14 +60,14 @@ const menuObject = {
             mainIcon: 'card',
             subMenu: [
                 {
-                    name: 'Deposit /Withdraw Entry',
+                    name: 'Deposit / Withdraw Entry',
                     icon: '',
-                    route: '',
+                    route: 'Deposit & Withdraw Entry',
                 },
                 {
-                    name: 'Deposit /Withdraw List',
+                    name: 'Deposit / Withdraw List',
                     icon: '',
-                    route: '',
+                    route: 'Deposit & Withdraw List',
                 },
 
             ],
@@ -78,12 +78,12 @@ const menuObject = {
                 {
                     name: 'Expense Entry',
                     icon: '',
-                    route: '',
+                    route: 'Expense Entry',
                 },
                 {
                     name: 'Expense List',
                     icon: '',
-                    route: '',
+                    route: 'Expense List',
                 },
 
             ],
@@ -94,12 +94,12 @@ const menuObject = {
                 {
                     name: 'Product List',
                     icon: '',
-                    route: '',
+                    route: 'Product List',
                 },
                 {
                     name: 'Product Categories',
                     icon: '',
-                    route: '',
+                    route: 'Product Categories',
                 },
 
             ],
@@ -110,12 +110,12 @@ const menuObject = {
                 {
                     name: 'Wholesaler Entry',
                     icon: '',
-                    route: '',
+                    route: 'Sales',
                 },
                 {
                     name: 'Wholesaler List',
                     icon: '',
-                    route: '',
+                    route: 'List Of Sales',
                 },
 
             ],
@@ -145,10 +145,16 @@ const menuObject = {
                     route: '',
                 },
                 {
-                    name: 'Category',
+                    name: 'Category Entry',
                     icon: '',
-                    route: '',
-                },{
+                    route: 'Product Category Entry',
+                },
+                {
+                    name: 'Category List',
+                    icon: '',
+                    route: 'Product Categories',
+                },
+                {
                     name: 'Carats',
                     icon: '',
                     route: '',
