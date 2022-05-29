@@ -24,6 +24,7 @@ import {globalButtonColor} from '../../../settings/color';
 import {customFetch} from '../../../settings/networking';
 import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
+import {useNavigation} from '@react-navigation/native';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -32,8 +33,9 @@ export const SubComponentForInput = ({title, ...props}) => (
     </View>
 );
 
-export default function SalesEntry({navigation}) {
+export default function SalesEntry() {
 
+    const navigation = useNavigation();
     const {height, width} = useWindowDimensions();
 
     const devices = useCameraDevices()
@@ -114,6 +116,11 @@ export default function SalesEntry({navigation}) {
                         'isStock': true,
                     };
                     */
+                },
+                callbackError: () => {
+                    setScannedBarcode([]);
+                    setBarcode('');
+                    setLoader(false);
                 },
                 navigation
             });

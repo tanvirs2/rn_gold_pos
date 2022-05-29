@@ -36,12 +36,14 @@ import TabListOfSales from '../screens/Sales/SubPages/TabListOfSales';
 import ProductDetailsInvoiceScreen from '../screens/Sales/SubPages/ProductDetailsInvoiceScreen';
 import {globalBackgroundColor} from '../settings/color';
 import logo from '../../assets/images/logo.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
 
     const {height} = useWindowDimensions();
+    const navigation = useNavigation();
 
     return (
         <Fragment>
@@ -88,7 +90,16 @@ function CustomDrawerContent(props) {
                 borderColor: '#888888',
                 backgroundColor: '#b2b2b2'
             }}>
-                <TouchableOpacity style={{width:'100%'}}>
+                <TouchableOpacity style={{width:'100%'}} onPress={()=>{
+                    (async ()=>{
+                        await AsyncStorage.setItem('@storage_token', '');
+
+                        navigation.navigate('SignIn', {
+                            token: false,
+                            msg: 'Logout !',
+                        })
+                    })()
+                }}>
                     <View style={{padding: 5, borderColor: '#545454',
                         borderWidth: 1, borderRadius: 3, backgroundColor:'#fff', alignItems: 'center'}}>
                         <Text style={{fontWeight:'bold', fontSize:20, color: '#000'}}>
@@ -110,7 +121,7 @@ const Navigation = () => {
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{headerShown: true}}
-        initialRouteName="Sales">
+        initialRouteName="SignIn">
         <Drawer.Screen
           options={{
             drawerIcon: ({focused, color, size}) => (
