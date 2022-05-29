@@ -9,7 +9,7 @@ import {
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
+    TextInput, ToastAndroid, TouchableOpacity,
     useWindowDimensions,
     View,
 } from 'react-native';
@@ -21,6 +21,9 @@ import {Rows, Table} from 'react-native-table-component';
 import {RNHoleView} from 'react-native-hole-view';
 import * as React from 'react';
 import {globalButtonColor} from '../../../settings/color';
+import {customFetch} from '../../../settings/networking';
+import collect from 'collect.js';
+import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -29,9 +32,22 @@ export const SubComponentForInput = ({title, ...props}) => (
     </View>
 );
 
-export default function SalesEntry() {
+export default function SalesEntry({navigation}) {
 
     const {height, width} = useWindowDimensions();
+
+    const devices = useCameraDevices()
+
+    const device = devices.back;
+    const [frameProcessor, barcodes] = useScanBarcodes([
+        BarcodeFormat.CODE_128, // You can only specify a particular format
+    ]);
+
+    const [stLoader, setLoader] = useState(false);
+    const [stScannedBarcode, setScannedBarcode] = useState([]);
+    const [barcode, setBarcode] = useState('');
+    const [hasPermission, setHasPermission] = useState(false);
+    const [isScanned, setIsScanned] = useState(false);
 
     const [stCustomerName, setCustomerName] = useState();
     const [stMobileNumber, setMobileNumber] = useState();
@@ -39,16 +55,76 @@ export default function SalesEntry() {
     const [stComment, setComment] = useState();
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [stTable, setTable] = useState({
-        tableData: [
-            ['Product’s Name', ':', 'Ear Ring'],
-            ['Description', ':', 'Gold Ear Ring Retail.'],
-            ['Karat', ':', '21k'],
-            ['Weight', ':', '11.5g'],
-            ['Price P/G', ':', '2300'],
-            ['Barcode', ':', '111029H88N12'],
-        ],
-    });
+    const [stTable, setTable] = useState([]);
+
+
+    const getProductByBarcode = () => {
+
+        setScannedBarcode(prevState => [...prevState, barcode]);
+
+        const collection = collect(stScannedBarcode);
+
+        const contains = collection.contains(barcode);
+
+        //console.log(contains);
+
+        if (!contains) {
+            setLoader(true);
+            customFetch({
+                url: 'Sale/GetProductByCode/' + barcode,
+                method: 'GET',
+                callbackResult: (result)=>{
+                    //console.log('GetProductByCode',result);
+
+                    setTable(prevState => {
+                        return [
+                            ...prevState,
+                            {
+                                table: [
+                                    ['Product’s Name',  ':', result.name],
+                                    ['Description',     ':', result.description],
+                                    ['Karat',           ':', result.grade],
+                                    ['category',        ':', result.category],
+                                    ['Weight',          ':', result.weight],
+                                    ['Price P/G',       ':', 'not found'],
+                                    ['Barcode',         ':', result.code],
+                                ]
+                            }
+                        ];
+                    });
+
+                    setLoader(false);
+
+                    /*let tt = {
+                        'id': 24,
+
+                        'name': 'Gold Bangle B-Design',
+                        'description': 'New shape 2022',
+                        'grade': '18k',
+                        'gradeId': 14801,
+                        'categoryId': 4,
+                        'category': 'Bangle',
+                        'weight': 5.60,
+                        'code': '637887663320736161',
+
+                        'isActive': true,
+                        'typeId': 14701,
+                        'buyingPrice': 2000.0000,
+                        'sellingPrice': null,
+                        'isStock': true,
+                    };
+                    */
+                },
+                navigation
+            });
+        } else {
+            ToastAndroid.show('already added !', ToastAndroid.SHORT)
+        }
+
+    }
+
+
+    /**************** Start Camera Function *****************/
 
     const checkCameraPermissionFirst = async () => {
         let status = await Camera.getCameraPermissionStatus();
@@ -74,24 +150,13 @@ export default function SalesEntry() {
     }, []);
 
 
-
-    const devices = useCameraDevices()
-    const device = devices.back;
-
-    const [frameProcessor, barcodes] = useScanBarcodes([
-        BarcodeFormat.CODE_128, // You can only specify a particular format
-    ]);
-
-    const [barcode, setBarcode] = useState('');
-    const [hasPermission, setHasPermission] = useState(false);
-    const [isScanned, setIsScanned] = useState(false);
-
-
     const toggleActiveState = async () => {
         if (barcodes && barcodes.length > 0 && isScanned === false) {
             //console.log(barcode)
             setIsScanned(true);
             setModalVisible(false)
+
+            //alert('ddddaaa')
 
             /*barcodes.map((barcode, idx) => {
                     //console.log(barcode.displayValue)
@@ -117,12 +182,21 @@ export default function SalesEntry() {
     useEffect(() => {
 
         if (barcodes[0]) {
-            setModalVisible(false)
-            setBarcode(barcodes[0].content.data);
+
+            const collection = collect(stScannedBarcode);
+
+            const contains = collection.contains(barcodes[0].content.data);
+
+            console.log(contains);
+
+            if (!contains) {
+                setModalVisible(false);
+                setBarcode(barcodes[0].content.data);
+            }
+
+            //console.log(duplicates.count());
             //console.log(barcodes[0].content.data);
         }
-
-
 
         toggleActiveState();
 
@@ -132,9 +206,22 @@ export default function SalesEntry() {
 
     }, [barcodes]);
 
+    /**************** End Camera Function *****************/
+
+
+    const collection = collect(stTable);
+
+    //console.log(collection);
+
+    const brTable = collection.count() > 0;
+
     return (
         <ScrollView>
+
+            <LoaderViewScreen viewThisComp={stLoader}/>
+
             <View>
+
                 <SubComponentForInput
                     title="Customer Name *"
                     placeholder="Customer Name"
@@ -260,28 +347,22 @@ export default function SalesEntry() {
                                     style={styles.barcodeInput}
                                     placeholder="Input Manually"
                                     value={barcode}
+                                    onChange={e=>setBarcode(e.target.value)}
                                 />
 
                             </View>
 
                             <View style={{flex: 1, justifyContent: 'center'}}>
 
-                                <Pressable style={styles.addButton} onPress={() => {}}
+                                <TouchableOpacity style={styles.addButton} onPress={getProductByBarcode}
                                 >
                                     <Text style={{fontWeight:'bold', color:'#000'}}>Add</Text>
-                                </Pressable>
+                                </TouchableOpacity>
 
                             </View>
 
                         </View>
 
-                        {/*<View style={{flex: 1, justifyContent: 'center'}}>
-
-                            <Pressable style={styles.barcodeIcon} onPress={() => setModalVisible(!modalVisible)}>
-                                <Text>Add</Text>
-                            </Pressable>
-
-                        </View>*/}
 
                         <View style={{flex: 1}}>
                             <Pressable style={styles.barcodeIcon} onPress={() => setModalVisible(!modalVisible)}>
@@ -293,26 +374,26 @@ export default function SalesEntry() {
                             </Pressable>
                         </View>
 
-
                     </View>
-                </View>
 
+                </View>
 
             </View>
 
-            <View>
+            { brTable && <View>
+
                 <View style={[styles.container, {backgroundColor: '#fdf2e6'}]}>
 
                     <Text style={styles.fontBold}>Product Detail</Text>
 
                     {
-                        [1, 2, 3].map((elm, index) => (
+                        stTable.map((elm, index) => (
                             <View key={index} style={styles.productDetailsBorder}>
 
                                 <View style={{marginBottom: 20}}>
 
                                     <Table>
-                                        <Rows data={stTable.tableData} textStyle={styles.text}/>
+                                        <Rows data={elm.table} textStyle={styles.text}/>
                                     </Table>
 
                                 </View>
@@ -321,9 +402,15 @@ export default function SalesEntry() {
                         ))
                     }
 
+                    <View>
+                        <CustomButton
+                            text="Proceed"
+                            bgColor={globalButtonColor}
+                        />
+                    </View>
 
                 </View>
-            </View>
+            </View>}
 
 
         </ScrollView>

@@ -7,7 +7,7 @@ import {
   Image,
   useWindowDimensions,
   ScrollView,
-  ActivityIndicator,
+  ActivityIndicator, ToastAndroid,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import {apiUrl} from '../../settings/networking';
 import loaderContext from '../../contexts/loaderContext';
 
-export default function SignInScreen() {
+export default function SignInScreen({route}) {
   const {height} = useWindowDimensions();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +30,21 @@ export default function SignInScreen() {
   const [stMenu, setMenu] = useState({}); //'Admin@1'
 
   useEffect(()=>{
+
+    if (route.params) {
+
+      //console.log(route.params);
+
+      const { msg, token } = route.params;
+
+      ToastAndroid.showWithGravity(
+          msg,
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM
+      );
+    }
+
+
     return ()=>{
       setIsLoading(null)
       setUserToken(null)

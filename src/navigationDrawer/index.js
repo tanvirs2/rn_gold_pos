@@ -74,6 +74,7 @@ function CustomDrawerContent(props) {
                     })
                 }
 
+                <View style={{height:10}}/>
 
             </DrawerContentScrollView>
 

@@ -24,7 +24,12 @@ export const customFetch = ({url, method, body, callbackResponse, callbackResult
 
                 switch (response.status) {
                     case 401:
-                        navigation.navigate('SignIn')
+                        if (navigation) {
+                            navigation.navigate('SignIn', {
+                                token: false,
+                                msg: 'Please Logging !',
+                            });
+                        }
                         break;
                     default:
                         //alert('ok');
