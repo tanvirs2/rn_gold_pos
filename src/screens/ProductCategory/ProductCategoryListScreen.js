@@ -10,8 +10,8 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
-import {apiUrl} from '../../settings/networking';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {apiUrl, customFetch} from '../../settings/networking';
 import loginToken from '../../settings/loginToken';
 import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -26,6 +26,9 @@ const CenterHeader = ({headerText}) => (
 );
 
 const ProductCategoryListScreen = () => {
+
+    const navigation = useNavigation();
+
     const isFocused = useIsFocused();
     const [stRefreshing, setRefreshing] = useState(false);
 
@@ -53,7 +56,7 @@ const ProductCategoryListScreen = () => {
 
 
     useEffect(()=>{
-        async function fetchData() {
+        /*async function fetchData() {
 
             setLoader(true);
 
@@ -69,37 +72,43 @@ const ProductCategoryListScreen = () => {
 
                     //console.log(result.data);
 
-
-                    let listArray = result.data.map((data)=>{
-
-                        return [
-
-                            data.name,
-
-                            data.isActive !== 'No',
-
-                            'Action'
-
-                        ];
-                    })
-
-                    setProducts((prevState)=>{
-                        return {
-                            ...prevState,
-                            tableData: [
-                                ...listArray
-                            ]
-                        };
-                    })
-
-                    setRefreshing(false);
-                    setLoader(false);
-
-
                 })
-        }
+        }*/
 
-        fetchData();
+        //fetchData();
+
+        customFetch({
+            url: 'ProductCategory/GetAll?pageIndex=0&pageSize=200',
+            method: 'GET',
+            callbackResult: (result)=>{
+                let listArray = result.data.map((data)=>{
+
+                    return [
+
+                        data.name,
+
+                        data.isActive !== 'No',
+
+                        'Action'
+
+                    ];
+                })
+
+                setProducts((prevState)=>{
+                    return {
+                        ...prevState,
+                        tableData: [
+                            ...listArray
+                        ]
+                    };
+                })
+
+                setRefreshing(false);
+                setLoader(false);
+            },
+            navigation
+        });
+
     }, [isFocused, stRefreshing]);
 
     function alertIndex(index) {

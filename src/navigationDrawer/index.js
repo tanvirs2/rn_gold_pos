@@ -37,6 +37,7 @@ import ProductDetailsInvoiceScreen from '../screens/Sales/SubPages/ProductDetail
 import {globalBackgroundColor} from '../settings/color';
 import logo from '../../assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {customFetch} from '../settings/networking';
 
 const Drawer = createDrawerNavigator();
 
@@ -58,7 +59,7 @@ function CustomDrawerContent(props) {
 
             <DrawerContentScrollView {...props}>
 
-                <DrawerItemList {...props} />
+                {/*<DrawerItemList {...props} />*/}
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
@@ -100,6 +101,15 @@ function CustomDrawerContent(props) {
                             ToastAndroid.BOTTOM
                         );
 
+                        /*customFetch({
+                            url: 'Device/Login',
+                            method: 'POST',
+                            callbackResult: (result)=>{
+
+                            },
+                            navigation
+                        });*/
+
                         navigation.navigate('SignIn');
                     })()
                 }}>
@@ -126,6 +136,7 @@ const Navigation = () => {
         screenOptions={{headerShown: true}}
         initialRouteName="SignIn">
         <Drawer.Screen
+
           options={{
             drawerIcon: ({focused, color, size}) => (
               <Ionicons
