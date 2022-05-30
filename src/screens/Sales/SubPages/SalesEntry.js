@@ -62,8 +62,6 @@ export default function SalesEntry() {
 
     const getProductByBarcode = () => {
 
-        setScannedBarcode(prevState => [...prevState, barcode]);
-
         const collection = collect(stScannedBarcode);
 
         const contains = collection.contains(barcode);
@@ -76,24 +74,34 @@ export default function SalesEntry() {
                 url: 'Sale/GetProductByCode/' + barcode,
                 method: 'GET',
                 callbackResult: (result)=>{
-                    //console.log('GetProductByCode',result);
 
-                    setTable(prevState => {
-                        return [
-                            ...prevState,
-                            {
-                                table: [
-                                    ['Product’s Name',  ':', result.name],
-                                    ['Description',     ':', result.description],
-                                    ['Karat',           ':', result.grade],
-                                    ['category',        ':', result.category],
-                                    ['Weight',          ':', result.weight],
-                                    ['Price P/G',       ':', 'not found'],
-                                    ['Barcode',         ':', result.code],
-                                ]
-                            }
-                        ];
-                    });
+                    console.log('GetProductByCode',result);
+
+                    if (result?.code) {
+
+                        setScannedBarcode(prevState => [...prevState, barcode]);
+
+                        setTable(prevState => {
+                            return [
+                                ...prevState,
+                                {
+                                    table: [
+                                        ['Product’s Name',  ':', result.name],
+                                        ['Description',     ':', result.description],
+                                        ['Karat',           ':', result.grade],
+                                        ['category',        ':', result.category],
+                                        ['Weight',          ':', result.weight],
+                                        ['Price P/G',       ':', 'not found'],
+                                        ['Barcode',         ':', result.code],
+                                    ]
+                                }
+                            ];
+                        });
+
+                    } else {
+                        ToastAndroid.show('Not found !', ToastAndroid.SHORT)
+                    }
+
 
                     setLoader(false);
 

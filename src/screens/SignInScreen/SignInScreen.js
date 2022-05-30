@@ -22,9 +22,9 @@ import {globalBlackColor, globalButtonColor} from '../../settings/color';
 export default function SignInScreen({route}) {
   const {height} = useWindowDimensions();
 
-  const screenMiddle = Math.floor(height / 2);
+  //const screenMiddle = Math.floor(height / 2);
 
-  console.log('screenMiddle', screenMiddle)
+  //console.log('screenMiddle', screenMiddle)
 
   const [username, setUsername] = useState('admin'); //'admin'
   const [password, setPassword] = useState('Admin@1'); //'Admin@1'
@@ -123,7 +123,7 @@ export default function SignInScreen({route}) {
             resizeMode="contain"
         />
 
-        <View style={{width:'100%', marginTop:100}}>
+        <View style={{width:'95%', marginTop:100}}>
           <CustomInput
               placeholder="Username"
               value={username}
