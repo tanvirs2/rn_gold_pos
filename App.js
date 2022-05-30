@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import React, {useReducer} from 'react';
 import {Button, LogBox, StyleSheet, Text, View} from 'react-native';
-import Navigation from './src/navigationDrawer';
+import Navigation from './src/navigation';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import HomeScreen from './src/screens/HomeScreen';

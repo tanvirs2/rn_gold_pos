@@ -1,9 +1,7 @@
-/*eslint-disable*/
-import React, {Fragment, useState} from 'react';
-import {View, Text, Button, Image, useWindowDimensions, TouchableOpacity, ToastAndroid} from 'react-native';
 
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
+import React, {Fragment} from 'react';
+import {View, Text, Image, useWindowDimensions, TouchableOpacity, ToastAndroid} from 'react-native';
+
 import HomeScreen from '../screens/HomeScreen';
 import CameraScreen from '../screens/CameraScreen';
 
@@ -13,14 +11,11 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-
-//import {Ionicons, AntDesign} from '../components/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Sales from '../screens/Sales';
 import InvoiceScreen from '../screens/Sales/SubPages/InvoiceScreen';
-import withLoaderScreen from '../HOC/withLoaderScreen';
 //import DepositListScreen from '../screens/Deposit/DepositListScreen/DepositListScreen';
 import DepositAndWithdraw from '../screens/Deposit/DepositAndWithdraw/DepositAndWithdraw';
 import DepositAndWithdrawEntry from '../screens/Deposit/DepositNwithdrawEntryScreen/DepositAndWithdrawEntry';
@@ -49,7 +44,7 @@ function CustomDrawerContent(props) {
     return (
         <Fragment>
 
-            <View style={{height: 104, alignItems: 'center', shadowColor:'#000', elevation: 50, backgroundColor: '#3b3b3b'}}>
+            <View style={{height: 104, alignItems: 'center', shadowColor:'#000', elevation: 50, backgroundColor: '#2a2a2a'}}>
                 <Image
                     source={logo}
                     style={{height: height * 0.13, width: 170}}
@@ -97,18 +92,9 @@ function CustomDrawerContent(props) {
 
                         ToastAndroid.showWithGravity(
                             'Logout !',
-                            ToastAndroid.SHORT,
+                            ToastAndroid.LONG,
                             ToastAndroid.BOTTOM
                         );
-
-                        /*customFetch({
-                            url: 'Device/Login',
-                            method: 'POST',
-                            callbackResult: (result)=>{
-
-                            },
-                            navigation
-                        });*/
 
                         navigation.navigate('SignIn');
                     })()
@@ -128,53 +114,27 @@ function CustomDrawerContent(props) {
 }
 
 
-const Navigation = () => {
+const DrawerNavigation = () => {
   return (
-    <NavigationContainer>
       <Drawer.Navigator
-        drawerContent={props => <CustomDrawerContent {...props} />}
-        screenOptions={{headerShown: true}}
-        initialRouteName="SignIn">
-        <Drawer.Screen
-
-          options={{
-            drawerIcon: ({focused, color, size}) => (
-              <Ionicons
-                color={color}
-                size={size}
-                name={focused ? 'heart-circle-outline' : 'heart-outline'}
-              />
-            ),
-          }}
-          name="SignIn"
-          component={withLoaderScreen(SignInScreen, {token: false})}
-        />
-        <Drawer.Screen name="SignUp" component={SignUpScreen} />
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Sales" component={Sales} />
-        <Drawer.Screen name="Invoice" component={InvoiceScreen} />
-        <Drawer.Screen name="Deposit & Withdraw List" component={DepositAndWithdraw} />
-        <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
-        <Drawer.Screen name="Product List" component={ProductListScreen} />
-        <Drawer.Screen name="Stock Entry" component={ProductEntryScreen} />
-        <Drawer.Screen name="Expense Entry" component={ExpenseEntryScreen} />
-        <Drawer.Screen name="Expense List" component={ExpenseListScreen} />
-        <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
-        <Drawer.Screen name="Product Category Entry" component={ProductCategoryEntryScreen} />
-        <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
-        <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
-        <Drawer.Screen name="Camera" component={CameraScreen} />
+          drawerContent={props => <CustomDrawerContent {...props} />}
+          screenOptions={{headerShown: true}}>
+          <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="Sales" component={Sales} />
+          <Drawer.Screen name="Invoice" component={InvoiceScreen} />
+          <Drawer.Screen name="Deposit & Withdraw List" component={DepositAndWithdraw} />
+          <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
+          <Drawer.Screen name="Product List" component={ProductListScreen} />
+          <Drawer.Screen name="Stock Entry" component={ProductEntryScreen} />
+          <Drawer.Screen name="Expense Entry" component={ExpenseEntryScreen} />
+          <Drawer.Screen name="Expense List" component={ExpenseListScreen} />
+          <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
+          <Drawer.Screen name="Product Category Entry" component={ProductCategoryEntryScreen} />
+          <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
+          <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
+          <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
-    </NavigationContainer>
   );
 };
-/*
-function TexComp() {
-  return (
-    <View>
-      <Text>dddd</Text>
-    </View>
-  );
-}*/
 
-export default Navigation;
+export default DrawerNavigation;

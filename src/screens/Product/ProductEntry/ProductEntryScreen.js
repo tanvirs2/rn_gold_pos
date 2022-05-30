@@ -1,7 +1,7 @@
 /*eslint-disable*/
 
 import React, {Fragment, useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {RefreshControl, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import CustomButton from '../../../components/CustomButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {apiUrl, customFetch} from '../../../settings/networking';
@@ -107,50 +107,12 @@ const ProductEntryScreen = () => {
 
     useEffect(()=>{
         setLoader(true);
-        const productDependency = async () => {
-
-
-            fetch(apiUrl + `Product/Get/0`, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${await loginToken()}`,
-                }
-            })
-                .then(response=>response.json())
-                .then(result=>{
-
-
-                    //console.log(result)
-                    const { grades, categories, types} = result;
-
-                    setProductDependency({
-                        grades,
-                        categories,
-                        types,
-                        status: [
-                            {id: 1, name: 'Yes'},
-                            {id: 2, name: 'No'},
-                        ],
-                        stock: [
-                            {id: 1, name: 'Yes'},
-                            {id: 2, name: 'No'},
-                        ],
-                    })
-
-                    setRefreshing(false);
-                    setLoader(false);
-
-
-                })
-        };
-
-        //productDependency()
 
         customFetch({
             url: 'Product/Get/0',
             method: 'GET',
             callbackResult: (result)=>{
+
                 const { grades, categories, types} = result;
 
                 setProductDependency({
@@ -172,7 +134,8 @@ const ProductEntryScreen = () => {
             },
             navigation
         });
-    },[])
+
+    },[stRefreshing])
 
 
     const insertData = async () => {
@@ -242,7 +205,16 @@ const ProductEntryScreen = () => {
 
             <LoaderViewScreen viewThisComp={stLoader}/>
 
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={false}
+                        onRefresh={()=>{
+                            setRefreshing(prevState => !prevState);
+                        }}
+                    />
+                }
+            >
 
             <View style={{padding:20}}>
 

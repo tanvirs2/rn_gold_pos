@@ -1,3 +1,21 @@
+/*
+SignUp
+Home
+Sales
+Invoice
+Deposit & Withdraw List
+Deposit & Withdraw Entry
+Product List
+Stock Entry
+Expense Entry
+Expense List
+Product Categories
+Product Category Entry
+List Of Sales
+Product Details Invoice
+Camera
+*/
+
 const menuObject = {
     menuItems: [
         {
@@ -91,6 +109,11 @@ const menuObject = {
             mainMenuLabel: 'Inventory',
             mainIcon: 'file-tray-stacked',
             subMenu: [
+                {
+                    name: 'Stock Entry',
+                    icon: '',
+                    route: 'Stock Entry',
+                },
                 {
                     name: 'Product List',
                     icon: '',

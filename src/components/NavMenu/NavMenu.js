@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import {DrawerItem} from '@react-navigation/drawer';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
 
 const SubCustomDrawerItem = ({label, route}) => {
     const navigation = useNavigation();
@@ -20,6 +21,8 @@ const SubCustomDrawerItem = ({label, route}) => {
             label={label}
             style={{
                 backgroundColor: '#F3E8CBFF',
+                borderLeftWidth: 6,
+                borderColor: globalBackgroundColor,
             }}
             labelStyle={{
                 textAlign: 'center',
@@ -39,13 +42,14 @@ const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = 
         <DrawerItem
             label={label}
             style={{
-                backgroundColor: 'rgba(177,185,114,0.8)',
+                backgroundColor: 'rgba(61,61,61,0.8)',
             }}
             labelStyle={{
                 position: 'absolute',
                 top: -10,
                 left: -20,
                 fontWeight: 'bold',
+                color:'#fff'
             }}
             onPress={() => (dropdown ? isSetCollapsed(!isCollapsed) : null)}
             activeTintColor="red"
@@ -62,7 +66,7 @@ const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = 
                             }}
                             name={isCollapsed ? 'downcircleo' : 'upcircle'}
                             size={24}
-                            color="black"
+                            color="#fff"
                         />
                     )}
                 </Fragment>
@@ -86,7 +90,7 @@ const NavMenu = ({mainMenu}) => {
                     <Ionicons
                         name={isCollapsed ? `${mainMenu.mainIcon}-outline` : mainMenu.mainIcon}
                         size={24}
-                        color="black"
+                        color={globalButtonColor}
                     />
                 }
                 isSetCollapsed={isSetCollapsed}
