@@ -7,7 +7,7 @@ import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
 import {Row, Rows, Table} from 'react-native-table-component';
 import CustomButton from '../components/CustomButton';
 import {globalButtonColor} from './color';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import loaderContext from '../contexts/loaderContext';
 import {taka} from '../assets/symbols';
 import moment from 'moment';
@@ -118,7 +118,9 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
     );
 }
 
-export const TransactionalListScreen = ({type, tableHead, navigation}) => {
+export const TransactionalListScreen = ({type, tableHead}) => {
+
+    const navigation = useNavigation();
 
     const styles = StyleSheet.create({
         container: { flex: 1, padding: 16, paddingTop: 30 },
@@ -260,7 +262,9 @@ export const TransactionalListScreen = ({type, tableHead, navigation}) => {
     );
 }
 
-export const TransactionalEntryScreen = ({type, navigation}) => {
+export const TransactionalEntryScreen = ({type}) => {
+
+    const navigation = useNavigation();
 
     const [stLoader, setLoader] = useState(false);
 

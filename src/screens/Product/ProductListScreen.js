@@ -22,12 +22,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
 import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {DetailsModal} from '../../settings/ComponentLib';
 
 
 
-const ProductListScreen = ({navigation}) => {
+const ProductListScreen = () => {
+
+    const navigation = useNavigation();
 
     const isFocused = useIsFocused();
     const [stRefreshing, setRefreshing] = useState(false);

@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React, {Fragment, useState} from 'react';
-import {View, Text, Button, Image, useWindowDimensions, TouchableOpacity} from 'react-native';
+import {View, Text, Button, Image, useWindowDimensions, TouchableOpacity, ToastAndroid} from 'react-native';
 
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
@@ -58,7 +58,7 @@ function CustomDrawerContent(props) {
 
             <DrawerContentScrollView {...props}>
 
-                {/*<DrawerItemList {...props} />*/}
+                <DrawerItemList {...props} />
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
@@ -92,12 +92,15 @@ function CustomDrawerContent(props) {
             }}>
                 <TouchableOpacity style={{width:'100%'}} onPress={()=>{
                     (async ()=>{
-                        await AsyncStorage.setItem('@storage_token', '');
+                        await AsyncStorage.removeItem('@storage_token');
 
-                        navigation.navigate('SignIn', {
-                            token: false,
-                            msg: 'Logout !',
-                        })
+                        ToastAndroid.showWithGravity(
+                            'Logout !',
+                            ToastAndroid.SHORT,
+                            ToastAndroid.BOTTOM
+                        );
+
+                        navigation.navigate('SignIn');
                     })()
                 }}>
                     <View style={{padding: 5, borderColor: '#545454',

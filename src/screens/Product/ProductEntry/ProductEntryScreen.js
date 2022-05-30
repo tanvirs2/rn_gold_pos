@@ -4,15 +4,15 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import CustomButton from '../../../components/CustomButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {apiUrl} from '../../../settings/networking';
+import {apiUrl, customFetch} from '../../../settings/networking';
 import loginToken from '../../../settings/loginToken';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import SelectDropdown from 'react-native-select-dropdown';
 
 import {LocalInput} from '../../../settings/ComponentLib';
-
-
-
+import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
+import {taka} from '../../../assets/symbols';
 
 
 
@@ -72,6 +72,8 @@ const LocalSelect = ({selectProps, data}) => {
 
 const ProductEntryScreen = () => {
 
+    const navigation = useNavigation();
+
     const [stLoader, setLoader] = useState(false);
     const [stRefreshing, setRefreshing] = useState(false);
 
@@ -106,6 +108,8 @@ const ProductEntryScreen = () => {
     useEffect(()=>{
         setLoader(true);
         const productDependency = async () => {
+
+
             fetch(apiUrl + `Product/Get/0`, {
                 method: 'GET',
                 headers: {
@@ -141,7 +145,33 @@ const ProductEntryScreen = () => {
                 })
         };
 
-        productDependency()
+        //productDependency()
+
+        customFetch({
+            url: 'Product/Get/0',
+            method: 'GET',
+            callbackResult: (result)=>{
+                const { grades, categories, types} = result;
+
+                setProductDependency({
+                    grades,
+                    categories,
+                    types,
+                    status: [
+                        {id: 1, name: 'Yes'},
+                        {id: 2, name: 'No'},
+                    ],
+                    stock: [
+                        {id: 1, name: 'Yes'},
+                        {id: 2, name: 'No'},
+                    ],
+                })
+
+                setRefreshing(false);
+                setLoader(false);
+            },
+            navigation
+        });
     },[])
 
 
@@ -149,25 +179,34 @@ const ProductEntryScreen = () => {
 
         setLoader(true);
 
-        /*console.log({
-            'id': st_id,                        //0,
-            'typeId': st_typeId,                //0,
-            //"code": "123456",                 // should be unique
+        customFetch({
+            url: `Product/Upsert`,
+            method: 'POST',
+            body: {
+                "id": st_id,                        //0,
+                "typeId": st_typeId,                //0,
+                //"code": "123456",                 // should be unique
 
-            'name': st_name,                    // "string",
-            'buyingPrice': st_buyingPrice,      // 0,
-            'sellingPrice': st_sellingPrice,    // 0,
-            'weight': st_weight,                // 0,
-            'gradeId': st_gradeId,              // 0,
-            'grade': st_grade,                  // "string",
-            'categoryId': st_categoryId,        // 0,
-            'category': st_category,            // "string",
-            'isStock': st_isStock !== 'No',     // true,
-            'isActive': st_isActive !== 'No',   // true,
-            'description': st_description,      // "string"
-        });*/
+                "name": st_name,                    // "string",
+                "buyingPrice": st_buyingPrice,      // 0,
+                "sellingPrice": st_sellingPrice,    // 0,
+                "weight": st_weight,                // 0,
+                "gradeId": st_gradeId,              // 0,
+                "grade": st_grade,                  // "string",
+                "categoryId": st_categoryId,        // 0,
+                "category": st_category,            // "string",
+                "isStock": st_isStock !== 'No',              // true,
+                "isActive": st_isActive !== 'No',            // true,
+                "description": st_description,      // "string"
+            },
+            callbackResult: (result)=>{
+                setLoader(false);
+                console.log(result);
+            },
+            navigation
+        });
 
-        fetch(apiUrl + `Product/Upsert`, {
+        /*fetch(apiUrl + `Product/Upsert`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'Application/Json',
@@ -195,7 +234,7 @@ const ProductEntryScreen = () => {
             .then(res=>{
                 //console.log(res);
                 setLoader(false);
-            })
+            })*/
     }
 
     return (
@@ -207,17 +246,6 @@ const ProductEntryScreen = () => {
 
             <View style={{padding:20}}>
 
-                {/*"name": st_name: set_name,                    // "string",
-                "buyingPrice": st_buyingPrice: set_buyingPrice,      // 0,
-                "sellingPrice": st_sellingPrice: set_sellingPrice,    // 0,
-                "weight": st_weight: set_weight,                // 0,
-                "gradeId": st_gradeId: set_gradeId,              // 0,
-                "grade": st_grade: set_grade,                  // "string",
-                "categoryId": st_categoryId: set_categoryId,        // 0,
-                "category": st_category: set_category,            // "string",
-                "isStock": st_isStock: set_isStock,              // true,
-                "isActive": st_isActive: set_isActive,            // true,
-                "description": st_description: set_description,      // "string"*/}
 
                 <LocalInput inputProps={
                     {

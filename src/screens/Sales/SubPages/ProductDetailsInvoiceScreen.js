@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {customFetch} from '../../../settings/networking';
 import {taka} from '../../../assets/symbols';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
@@ -9,7 +9,9 @@ import {Cell, Row, Table, TableWrapper} from 'react-native-table-component';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 
-const CustomDataTable = ({navigation}) => {
+const CustomDataTable = () => {
+
+    const navigation = useNavigation();
 
     const isFocused = useIsFocused();
     const [stRefreshing, setRefreshing] = useState(false);

@@ -37,11 +37,7 @@ export default function SignInScreen({route}) {
 
       const { msg, token } = route.params;
 
-      ToastAndroid.showWithGravity(
-          msg,
-          ToastAndroid.SHORT,
-          ToastAndroid.BOTTOM
-      );
+
     }
 
 

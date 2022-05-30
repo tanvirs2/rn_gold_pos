@@ -1,17 +1,33 @@
 import loginToken from './loginToken';
+import {ToastAndroid} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export const apiUrl = "https://pos.newapanjewellers.com/api/";
+
+const pleaseLogging = (navigation) => {
+    ToastAndroid.showWithGravity(
+        'Please Logging !',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+    );
+    if (navigation) {
+        navigation.navigate('SignIn');
+    }
+};
 
 export const customFetch = ({url, method, body, callbackResponse, callbackResult, callbackError, navigation}) => {
 
     (async ()=>{
+
+        let loginTokenString = await loginToken();
+
         body = (method === 'GET') ? false : JSON.stringify(body);
 
         fetch(apiUrl + url, {
             method: method,
             headers: {
                 'content-type': 'application/json',
-                'Authorization': `Bearer ${await loginToken()}`,
+                'Authorization': `Bearer ${loginTokenString}`,
             },
             body,
         })
@@ -21,14 +37,19 @@ export const customFetch = ({url, method, body, callbackResponse, callbackResult
                     callbackResponse(response);
                 }
 
+                if (loginTokenString === null) {
+                    pleaseLogging(navigation);
+                }
 
                 switch (response.status) {
                     case 401:
-                        if (navigation) {
-                            navigation.navigate('SignIn');
-                            //{token: false, msg: 'Please Logging !',}
-                        }
+
+                        pleaseLogging(navigation);
+
                         break;
+                    /*case 200:
+                        alert('200');
+                        break;*/
                     default:
                         //alert('ok');
                 }
@@ -43,6 +64,12 @@ export const customFetch = ({url, method, body, callbackResponse, callbackResult
 
             })
             .catch((error)=>{
+
+                if (loginTokenString === null) {
+                    //console.log('navigation', navigation);
+                    pleaseLogging(navigation);
+                }
+
                 if (callbackError) {
                     callbackError(error);
                 }

@@ -24,7 +24,7 @@ const SubCustomDrawerItem = ({label, route}) => {
             labelStyle={{
                 textAlign: 'center',
                 fontWeight: 'bold',
-                color: '#000',
+                color: route ? '#000': '#f00',
             }}
             onPress={navigateRoute}
         />
@@ -32,6 +32,9 @@ const SubCustomDrawerItem = ({label, route}) => {
 };
 
 const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = true}) => {
+
+    //console.log(dropdown)
+
     return (
         <DrawerItem
             label={label}
@@ -73,6 +76,8 @@ const NavMenu = ({mainMenu}) => {
 
     const [isCollapsed, isSetCollapsed] = useState(true);
 
+    //console.log(!!mainMenu.subMenu[0]);
+
     return (
         <Fragment>
             <CustomDrawerItem
@@ -86,6 +91,7 @@ const NavMenu = ({mainMenu}) => {
                 }
                 isSetCollapsed={isSetCollapsed}
                 isCollapsed={isCollapsed}
+                dropdown={!!mainMenu.subMenu[0]}
             />
 
 
