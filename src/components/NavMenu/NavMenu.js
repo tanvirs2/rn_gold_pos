@@ -5,7 +5,7 @@ import {View} from 'react-native';
 import {DrawerItem} from '@react-navigation/drawer';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
+import {globalBackgroundColor, globalBlackColor, globalButtonColor} from '../../settings/color';
 
 const SubCustomDrawerItem = ({label, route}) => {
     const navigation = useNavigation();
@@ -42,7 +42,7 @@ const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = 
         <DrawerItem
             label={label}
             style={{
-                backgroundColor: 'rgba(61,61,61,0.8)',
+                backgroundColor: isCollapsed?'#3D3D3DCC': '#000',
             }}
             labelStyle={{
                 position: 'absolute',

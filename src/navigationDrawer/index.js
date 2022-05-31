@@ -1,6 +1,6 @@
 
 import React, {Fragment} from 'react';
-import {View, Text, Image, useWindowDimensions, TouchableOpacity, ToastAndroid} from 'react-native';
+import {View, Text, Image, useWindowDimensions, TouchableOpacity, ToastAndroid, ImageBackground} from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen';
 import CameraScreen from '../screens/CameraScreen';
@@ -29,10 +29,12 @@ import ProductCategoryListScreen from '../screens/ProductCategory/ProductCategor
 import ProductCategoryEntryScreen from '../screens/ProductCategory/ProductCategoryEntryScreen';
 import TabListOfSales from '../screens/Sales/SubPages/TabListOfSales';
 import ProductDetailsInvoiceScreen from '../screens/Sales/SubPages/ProductDetailsInvoiceScreen';
-import {globalBackgroundColor} from '../settings/color';
+import {globalBackgroundColor, globalBlackColor} from '../settings/color';
 import logo from '../../assets/images/logo.png';
+import golden_ratio_image from '../../assets/images/golden_ratio.jpg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {customFetch} from '../settings/networking';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -44,12 +46,28 @@ function CustomDrawerContent(props) {
     return (
         <Fragment>
 
-            <View style={{height: 104, alignItems: 'center', shadowColor:'#000', elevation: 50, backgroundColor: '#2a2a2a'}}>
-                <Image
-                    source={logo}
-                    style={{height: height * 0.13, width: 170}}
-                    resizeMode="contain"
-                />
+            <View style={{height: 104,
+                alignItems: 'center',
+                shadowColor:'#000',
+                elevation: 50,
+                backgroundColor: '#2a2a2a'
+            }}>
+
+                <ImageBackground source={golden_ratio_image} resizeMode="cover" style={{justifyContent:'center',
+                    height: '100%', width:'100%'}}>
+                    <View  style={{justifyContent:'center', alignItems: 'center',
+                        height: '100%', width:'100%', backgroundColor:'rgba(54,49,16,0.8)'}} >
+
+                        <Image
+                            source={logo}
+                            style={{height: height * 0.1, width: '70%'}}
+                            resizeMode="contain"
+                        />
+                    </View>
+
+                </ImageBackground>
+
+                {/**/}
             </View>
 
             <DrawerContentScrollView {...props}>
@@ -58,10 +76,10 @@ function CustomDrawerContent(props) {
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
-            <View>
-                <Text style={{fontSize:50, fontWeight:'bold', color: 'red'}}>d</Text>
-            </View>
-        </View>*/}
+                        <View>
+                            <Text style={{fontSize:50, fontWeight:'bold', color: 'red'}}>d</Text>
+                        </View>
+                    </View>*/}
 
                 {
                     menuObject.menuItems.map((mainMenu, mainMenuIndex) => {
@@ -100,9 +118,9 @@ function CustomDrawerContent(props) {
                     })()
                 }}>
                     <View style={{padding: 5, borderColor: '#545454',
-                        borderWidth: 1, borderRadius: 3, backgroundColor:'#fff', alignItems: 'center'}}>
-                        <Text style={{fontWeight:'bold', fontSize:20, color: '#000'}}>
-                            <Ionicons name="log-out-outline" size={24} color="black" />&nbsp;
+                        borderWidth: 1, borderRadius: 3, backgroundColor:globalBackgroundColor, alignItems: 'center'}}>
+                        <Text style={{fontWeight:'bold', fontSize:20, color: globalBlackColor}}>
+                            <Ionicons name="log-out-outline" size={24} color={globalBlackColor} />&nbsp;
                             LOGOUT
                         </Text>
                     </View>

@@ -5,7 +5,7 @@ import {
   View,
   Image,
   useWindowDimensions,
-  ScrollView,
+  ScrollView, ImageBackground,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {apiUrl} from '../../settings/networking';
 import loaderContext from '../../contexts/loaderContext';
 import {globalBlackColor, globalButtonColor} from '../../settings/color';
+import golden_ratio_image_hd from '../../../assets/images/golden_ratio_hd.jpg';
 
 export default function SignInScreen({route}) {
   const {height} = useWindowDimensions();
@@ -116,7 +117,8 @@ export default function SignInScreen({route}) {
 
   return (
     <SafeAreaView>
-      <View style={[styles.container, {height, alignItems: 'center'}]}>
+      <ImageBackground source={golden_ratio_image_hd} style={{height:'100%'}}>
+        <View style={[styles.container, {height, alignItems: 'center'}]}>
         <Image
             source={logo}
             style={[styles.logo, {height: height * 0.3}]}
@@ -136,11 +138,12 @@ export default function SignInScreen({route}) {
               secureTextEntry
           />
           <View style={{marginTop:20}}>
-            <CustomButton text="Sign in" bgColor={globalButtonColor} onPress={onSignInPressed} />
+            <CustomButton text="Log in" bgColor={globalButtonColor} onPress={onSignInPressed} />
           </View>
         </View>
 
       </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     color: 'rgba(147,147,147,0.28)',
-    backgroundColor: globalBlackColor,
+    //backgroundColor: globalBlackColor,
     height: '100%',
   },
   logo: {
