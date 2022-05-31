@@ -20,7 +20,7 @@ import CustomButton from '../../../components/CustomButton';
 import {Rows, Table} from 'react-native-table-component';
 import {RNHoleView} from 'react-native-hole-view';
 import * as React from 'react';
-import {globalButtonColor} from '../../../settings/color';
+import {globalBackgroundColor, globalButtonColor} from '../../../settings/color';
 import {customFetch} from '../../../settings/networking';
 import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
@@ -57,7 +57,9 @@ export default function SalesEntry() {
     const [stComment, setComment] = useState();
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [stTable, setTable] = useState([]);
+    const [stTable, setTable] = useState([
+
+    ]);
 
 
     const getProductByBarcode = () => {
@@ -202,7 +204,7 @@ export default function SalesEntry() {
 
             const contains = collection.contains(barcodes[0].content.data);
 
-            console.log(contains);
+            //console.log(contains);
 
             if (!contains) {
                 setModalVisible(false);
@@ -276,14 +278,17 @@ export default function SalesEntry() {
                             setIsScanned(false);
                         }}
                     >
-                        <View>
-                            <Button title=" &#x274C; Close Scanner" onPress={() => {
+                        <View style={{justifyContent:'center', alignItems:'center', padding:15, backgroundColor:globalBackgroundColor}}>
+
+                            <TouchableOpacity onPress={() => {
                                 setModalVisible(!modalVisible);
                                 setIsScanned(false);
-                            }}/>
+                            }}>
+                                <Text style={{fontWeight: 'bold', fontSize: 15, color:'#000'}}> &#x274C; Close Scanner</Text>
+                            </TouchableOpacity>
                         </View>
 
-                        <View style={styles.centeredView}>
+                        <View style={[styles.centeredView, {backgroundColor: 'rgba(103,103,103,0.9)'}]}>
 
                             <View style={[styles.modalView, {height: height*0.45, width: width*0.9}]}>
 
@@ -421,6 +426,25 @@ export default function SalesEntry() {
                         <CustomButton
                             text="Proceed"
                             bgColor={globalButtonColor}
+                            onPress={()=>{
+                                navigation.navigate('Invoice', {
+                                    id :            0,
+                                    shopId :        1,
+                                    cname :         stCustomerName,
+                                    cmobile :       stMobileNumber,
+                                    caddress :      stAddress,
+                                    totalAmount :   500,
+                                    vatAmount :     200,
+                                    paidAmount :    100,
+                                    dueAmount :     300,
+                                    typeId :        14902,
+                                    categoryId :    15101,
+                                    comment :       stComment,
+                                    productList :[
+                                        ...stTable
+                                    ]
+                                });
+                            }}
                         />
                     </View>
 
@@ -497,8 +521,8 @@ const styles = StyleSheet.create({
     },
     modalView: {
         borderRadius: 3,
-        borderWidth: 2,
-        borderColor: 'red',
+        borderWidth: 5,
+        borderColor: globalBackgroundColor,
         backgroundColor: "white",
         margin: 30,
         alignItems: "center",

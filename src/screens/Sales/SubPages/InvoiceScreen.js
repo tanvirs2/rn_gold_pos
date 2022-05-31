@@ -1,14 +1,21 @@
 /* eslint-disable */
 
-import {Button, Image, ScrollView, Text, useWindowDimensions, View} from 'react-native';
-import React, {useState} from 'react';
+import {Button, Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {Rows, Table} from 'react-native-table-component';
 import IconButton from '../../../components/IconButton/IconButton';
-import logo from '../../../../assets/images/logo.png';
+import logo from '../../../../assets/images/logo_with_black.png';
+import {useIsFocused} from '@react-navigation/native';
+import {customFetch} from '../../../settings/networking';
+import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 
-const InvoiceScreen = () => {
+const InvoiceScreen = ({route}) => {
 
     const {height} = useWindowDimensions();
+    const isFocused = useIsFocused();
+
+    const [stLoader, setLoader] = useState(false);
+    const [stInvoiceData, setInvoiceData] = useState({});
 
     const [stTable, setTable] = useState({
         tableData: [
@@ -30,8 +37,66 @@ const InvoiceScreen = () => {
         ],
     });
 
+    useEffect(()=>{
+        setInvoiceData(route.params);
+        //console.log(route.params);
+    },[isFocused]);
+
+    const saveSales = () => {
+
+        setLoader(true);
+
+        customFetch({
+            url: 'Sale/Upsert',
+            method: 'POST',
+            body: {
+                "id": 0,
+                "shopId": 1,
+                "cname": " Tanvir Sharkar",
+                "cmobile": "01911223344",
+                "caddress": "Savar",
+                "totalAmount": 500,
+                "vatAmount": 200,
+                "paidAmount": 100,
+                "dueAmount": 300,
+                "typeId": 14902,
+                "categoryId": 15101,
+                "comment": "test",
+                "productList": [
+                    {
+                        "id": 0,
+                        "productId": 27,
+                        "weight": 2,
+                        "price": 300,
+                        "ptotal": 600,
+                        "discountAmount": 0
+                    },
+                    {
+                        "id": 0,
+                        "productId": 25,
+                        "weight": 2,
+                        "price": 300,
+                        "ptotal": 600,
+                        "discountAmount": 0
+                    }
+                ]
+            },
+            callbackResult: (result) => {
+                console.log(result);
+                setLoader(false);
+            },
+            callbackError: (err) => {
+                alert(err);
+                setLoader(false);
+            },
+        });
+    };
+
   return (
       <ScrollView>
+
+          <LoaderViewScreen viewThisComp={stLoader}/>
+
           <View style={{flex: 1, alignItems: 'center', color: '#fff'}}>
 
               <View style={{flex: 1, width: '90%'}}>
@@ -54,13 +119,24 @@ const InvoiceScreen = () => {
                       <Text style={{ fontSize:20 }}> 15.5.2022</Text>
                   </View>
 
+                  {/*{
+                                    id :            0,
+                                    shopId :        1,
+                                    cname :         stCustomerName,
+                                    cmobile :       stMobileNumber,
+                                    caddress :      stAddress,
+                                    comment :       stComment,
+                                    productList :[
+                                        ...stTable
+                                    ]
+                                }*/}
 
                   <View >
-                      <Text style={{ fontSize:16 }}>Customer’s Name : Numaan Hussain  </Text>
+                      <Text style={{ fontSize:16 }}>Customer’s Name : {stInvoiceData?.cname}  </Text>
                   </View>
 
                   <View style={{marginBottom:19}}>
-                      <Text style={{ fontSize:16 }}>Phone Number      : 01625286551 </Text>
+                      <Text style={{ fontSize:16 }}>Phone Number      : {stInvoiceData?.cmobile} </Text>
                   </View>
 
 
@@ -71,23 +147,27 @@ const InvoiceScreen = () => {
 
 
                           {
-                              [1, 2, 3].map((elm, index) => (
-                                  <View key={index} style={{}}>
+                              stInvoiceData.productList?.map((elm, index) => {
+
+                                  //console.log('tbl--------------->',elm)
+
+                                  return <View key={index} style={{}}>
 
                                       <View style={{marginBottom: 20}}>
 
-                                          <View style={{backgroundColor: 'gray', borderRadius:3, padding:3, paddingLeft:10}}>
+                                          <View style={{backgroundColor: 'gray', borderRadius:3, padding:3, paddingLeft:10, marginBottom:3,
+                                              marginLeft: -1}}>
                                               <Text style={{fontWeight:'bold', fontSize:18}}>Item {index+1}</Text>
                                           </View>
 
                                           <Table>
-                                              <Rows data={stTable.tableData} />
+                                              <Rows data={elm.table} />
                                           </Table>
 
                                       </View>
 
                                   </View>
-                              ))
+                              })
                           }
 
 
@@ -148,13 +228,17 @@ const InvoiceScreen = () => {
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical:10}}>
                       <View>
-                          <IconButton name="print"/>
+                          <IconButton name="print" color="#000" onPress={saveSales}/>
                       </View>
                       <View>
-                          <IconButton name="share-social"/>
+                          <TouchableOpacity>
+                              <IconButton name="share-social"/>
+                          </TouchableOpacity>
                       </View>
                       <View>
-                          <IconButton name="close-circle" color="red"/>
+                          <TouchableOpacity>
+                              <IconButton name="close-circle"/>
+                          </TouchableOpacity>
                       </View>
 
                   </View>

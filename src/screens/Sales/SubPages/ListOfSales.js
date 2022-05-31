@@ -99,7 +99,7 @@ const CustomDataTable = () => {
 
     return (
         <View>
-            <View>
+            <View style={{height:'83%'}}>
 
                 <LoaderViewScreen viewThisComp={stLoader}/>
 

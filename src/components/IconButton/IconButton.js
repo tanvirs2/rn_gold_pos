@@ -3,10 +3,10 @@ import {Pressable, View, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as React from 'react';
 
-const IconButton = (props, {name='information-circle-outline'}) => {
+const IconButton = (props, {name='information-circle-outline', onPress}) => {
     return (
         <View style={{flex: 1}}>
-            <Pressable style={styles.barcodeIcon} onPress={() => {}}>
+            <Pressable style={styles.barcodeIcon} onPress={onPress}>
                 <Ionicons
                     name={name}
                     size={30}

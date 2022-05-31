@@ -117,7 +117,7 @@ export default function SignInScreen({route}) {
 
   return (
     <SafeAreaView>
-      <ImageBackground source={golden_ratio_image_hd} style={{height:'100%'}}>
+      <ImageBackground source={golden_ratio_image_hd} resizeMode="cover" style={{height:'100%'}}>
         <View style={[styles.container, {height, alignItems: 'center'}]}>
         <Image
             source={logo}

@@ -44,7 +44,7 @@ function withLoaderScreen(WrappedComponent) {
                                     position: 'absolute',
                                     width: '100%',
                                     height: '100%',
-                                    backgroundColor: 'rgba(196,196,196,0.72)',
+                                    backgroundColor: 'rgba(196,196,196,0.44)',
                                     zIndex: 1,
                                 }}>
                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
