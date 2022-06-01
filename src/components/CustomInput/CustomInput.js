@@ -7,16 +7,31 @@ export default function CustomInput({
   setValue,
   placeholder,
   secureTextEntry,
+  keyboardType,
+  multiline,
+  numberOfLines,
+  inputStyle
 }) {
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder={placeholder}
-        value={value}
-        onChangeText={setValue}
-        style={[styles.input]}
-        secureTextEntry={secureTextEntry}
-      />
+    <View style={[styles.container, inputStyle]}>
+      {multiline ? <TextInput
+          placeholder={placeholder}
+          value={value}
+          onChangeText={setValue}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+      /> : <TextInput
+              placeholder={placeholder}
+              value={value}
+              onChangeText={setValue}
+              style={[styles.input]}
+              secureTextEntry={secureTextEntry}
+              keyboardType={keyboardType}
+              numberOfLines={numberOfLines}
+          />
+      }
     </View>
   );
 }

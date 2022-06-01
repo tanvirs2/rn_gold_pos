@@ -1,7 +1,8 @@
 import * as React from 'react';
-import {Button, View} from 'react-native';
+import {Button, Modal, ScrollView, Text, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
+import {globalBackgroundColor} from '../settings/color';
 
 function HomeScreen({navigation}) {
   return (
@@ -34,3 +35,30 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+
+const ConfirmModal = ({setModalVisible}) => {
+
+    return (
+        <View>
+            <View>
+                <Modal animationType="slide" transparent={true}>
+                    <View style={{padding:30, backgroundColor: 'rgba(70,51,0,0.65)'}}>
+                        <ScrollView style={{backgroundColor: '#fff', minHeight:'100%',
+                            borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
+                            <Button title="Close" onPress={()=>{
+                                setModalVisible(false)
+                            }}/>
+                            <View>
+                                <View>
+                                    <Text>ConfirmModal</Text>
+                                </View>
+                            </View>
+                        </ScrollView>
+                    </View>
+                </Modal>
+            </View>
+
+        </View>
+    );
+};

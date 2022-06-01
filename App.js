@@ -21,7 +21,7 @@ const reducer = (state, action) => {
   }
 }
 
-export default function App() {
+const App = () => {
   /*const [loaded] = useFonts({
       MulishRegular: require('./assets/fonts/Mulish-Regular.ttf'),
   });*/
@@ -48,3 +48,5 @@ const styles = StyleSheet.create({
     /*backgroundColor: "#ffffff"*/
   },
 });
+
+export default App;

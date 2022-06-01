@@ -33,6 +33,8 @@ export const SubComponentForInput = ({title, ...props}) => (
     </View>
 );
 
+
+
 export default function SalesEntry() {
 
     const navigation = useNavigation();
@@ -45,6 +47,7 @@ export default function SalesEntry() {
         BarcodeFormat.CODE_128, // You can only specify a particular format
     ]);
 
+    const [stConfirmModalVisible, setConfirmModalVisible] = useState(false);
     const [stLoader, setLoader] = useState(false);
     const [stScannedBarcode, setScannedBarcode] = useState([]);
     const [barcode, setBarcode] = useState('');
@@ -58,7 +61,17 @@ export default function SalesEntry() {
     const [modalVisible, setModalVisible] = useState(false);
 
     const [stTable, setTable] = useState([
-
+        {
+            table: [
+                ['Product’s Name',  ':', 'result.name'],
+                ['Description',     ':', 'result.description'],
+                ['Karat',           ':', 'result.grade'],
+                ['category',        ':', 'result.category'],
+                ['Weight',          ':', 'result.weight'],
+                ['Price P/G',       ':', 'not found'],
+                ['Barcode',         ':', 'result.code'],
+            ]
+        }
     ]);
 
 
@@ -232,6 +245,55 @@ export default function SalesEntry() {
 
     const brTable = collection.count() > 0;
 
+
+    const ConfirmModal = () => {
+
+        return (
+            <View>
+                <View>
+                    <Modal animationType="slide" transparent={true} visible={stConfirmModalVisible}>
+                        <View style={{padding:30, backgroundColor: 'rgba(70,51,0,0.65)'}}>
+                            <ScrollView style={{backgroundColor: '#fff', minHeight:'100%',
+                                borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
+                                <Button title="Close" onPress={()=>{
+                                    setConfirmModalVisible(false)
+                                }}/>
+                                <View>
+                                    <View>
+                                        {
+                                            stTable?.map((elm, index) => {
+
+                                                //console.log('tbl--------------->',elm)
+
+                                                return <View key={index} style={{}}>
+
+                                                    <View style={{marginBottom: 20}}>
+
+                                                        <View style={{backgroundColor: 'gray', borderRadius:3, padding:3, paddingLeft:10, marginBottom:3,
+                                                            marginLeft: -1}}>
+                                                            <Text style={{fontWeight:'bold', fontSize:18}}>Item {index+1}</Text>
+                                                        </View>
+
+                                                        <Table>
+                                                            <Rows data={elm.table} />
+                                                        </Table>
+
+                                                    </View>
+
+                                                </View>
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                            </ScrollView>
+                        </View>
+                    </Modal>
+                </View>
+
+            </View>
+        );
+    };
+
     return (
         <ScrollView>
 
@@ -250,6 +312,7 @@ export default function SalesEntry() {
                     placeholder="Mobile Number"
                     value={stMobileNumber}
                     setValue={setMobileNumber}
+                    keyboardType="numeric"
                 />
                 <SubComponentForInput
                     title="Address *"
@@ -278,24 +341,30 @@ export default function SalesEntry() {
                             setIsScanned(false);
                         }}
                     >
-                        <View style={{justifyContent:'center', alignItems:'center', padding:15, backgroundColor:globalBackgroundColor}}>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 15,
+                            backgroundColor: globalBackgroundColor,
+                        }}>
 
                             <TouchableOpacity onPress={() => {
                                 setModalVisible(!modalVisible);
                                 setIsScanned(false);
                             }}>
-                                <Text style={{fontWeight: 'bold', fontSize: 15, color:'#000'}}> &#x274C; Close Scanner</Text>
+                                <Text style={{fontWeight: 'bold', fontSize: 15, color: '#000'}}> &#x274C; Close
+                                    Scanner</Text>
                             </TouchableOpacity>
                         </View>
 
-                        <View style={[styles.centeredView, {backgroundColor: 'rgba(103,103,103,0.9)'}]}>
+                        <View style={[styles.centeredView, {backgroundColor: 'rgba(63,49,0,0.89)'}]}>
 
-                            <View style={[styles.modalView, {height: height*0.45, width: width*0.9}]}>
+                            <View style={[styles.modalView, {height: height * 0.45, width: width * 0.9}]}>
 
 
                                 {
                                     device && hasPermission && (<Camera
-                                        style={{height:'100%',width:'100%',}}
+                                        style={{height: '100%', width: '100%'}}
                                         device={device}
                                         isActive={modalVisible}
                                         frameProcessor={frameProcessor}
@@ -358,7 +427,7 @@ export default function SalesEntry() {
 
                     <View style={{flexDirection: 'row', paddingTop: 10}}>
 
-                        <View style={{flex: 5, flexDirection:'row'}}>
+                        <View style={{flex: 5, flexDirection: 'row'}}>
 
 
                             <View style={{flex: 4, justifyContent: 'center'}}>
@@ -367,7 +436,7 @@ export default function SalesEntry() {
                                     style={styles.barcodeInput}
                                     placeholder="Input Manually"
                                     value={barcode}
-                                    onChange={e=>setBarcode(e.target.value)}
+                                    onChange={e => setBarcode(e.target.value)}
                                 />
 
                             </View>
@@ -376,7 +445,7 @@ export default function SalesEntry() {
 
                                 <TouchableOpacity style={styles.addButton} onPress={getProductByBarcode}
                                 >
-                                    <Text style={{fontWeight:'bold', color:'#000'}}>Add</Text>
+                                    <Text style={{fontWeight: 'bold', color: '#000'}}>Add</Text>
                                 </TouchableOpacity>
 
                             </View>
@@ -400,7 +469,7 @@ export default function SalesEntry() {
 
             </View>
 
-            { brTable && <View>
+            {brTable && <View>
 
                 <View style={[styles.container, {backgroundColor: '#fdf2e6'}]}>
 
@@ -422,12 +491,16 @@ export default function SalesEntry() {
                         ))
                     }
 
+                    {stConfirmModalVisible && <ConfirmModal/>}
+
                     <View>
                         <CustomButton
                             text="Proceed"
                             bgColor={globalButtonColor}
-                            onPress={()=>{
-                                navigation.navigate('Invoice', {
+                            onPress={() => {
+                                setConfirmModalVisible(true);
+
+                                /*navigation.navigate('Invoice', {
                                     id :            0,
                                     shopId :        1,
                                     cname :         stCustomerName,
@@ -443,7 +516,7 @@ export default function SalesEntry() {
                                     productList :[
                                         ...stTable
                                     ]
-                                });
+                                });*/
                             }}
                         />
                     </View>
