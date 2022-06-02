@@ -1,4 +1,5 @@
 /* eslint-disable */
+import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
@@ -13,18 +14,20 @@ import {
     useWindowDimensions,
     View,
 } from 'react-native';
-import CustomInput from '../../../components/CustomInput';
 import {BarcodeFormat, useScanBarcodes} from 'vision-camera-code-scanner';
+import {Rows, Table} from 'react-native-table-component';
+import {useNavigation} from '@react-navigation/native';
+import {RNHoleView} from 'react-native-hole-view';
+import LinearGradient from 'react-native-linear-gradient';
+
+import CustomInput from '../../../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../../components/CustomButton';
-import {Rows, Table} from 'react-native-table-component';
-import {RNHoleView} from 'react-native-hole-view';
-import * as React from 'react';
 import {globalBackgroundColor, globalButtonColor} from '../../../settings/color';
 import {customFetch} from '../../../settings/networking';
 import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
-import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -58,7 +61,21 @@ export default function SalesEntry() {
     const [stMobileNumber, setMobileNumber] = useState();
     const [stAddress, setAddress] = useState();
     const [stComment, setComment] = useState();
+    const [stDiscount, setDiscount] = useState();
     const [modalVisible, setModalVisible] = useState(false);
+    const [stAmountTable, setAmountTable] = useState({
+            amountTable: [
+                ['Sub Total', ':', '7689'],
+                ['VAT (15%)', ':', '750'],
+                ['Discount', ':', <TextInput placeholder=".................." placeholderTextColor="#f00" value={stDiscount} onChange={setDiscount}/>],
+
+            ],
+            amountTable2: [
+                ['Payable Amount', ':', '8450'],
+                ['Due Amount', ':', '0'],
+            ],
+        }
+    );
 
     const [stTable, setTable] = useState([
         {
@@ -252,40 +269,151 @@ export default function SalesEntry() {
             <View>
                 <View>
                     <Modal animationType="slide" transparent={true} visible={stConfirmModalVisible}>
-                        <View style={{padding:30, backgroundColor: 'rgba(70,51,0,0.65)'}}>
-                            <ScrollView style={{backgroundColor: '#fff', minHeight:'100%',
-                                borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
-                                <Button title="Close" onPress={()=>{
-                                    setConfirmModalVisible(false)
-                                }}/>
-                                <View>
+                        <View style={{padding:30, backgroundColor: 'rgba(87,87,87,0.65)'}}>
+                            <View style={{height: '100%'}}>
+                                <ScrollView style={{backgroundColor: '#fff', minHeight:'100%',
+                                    borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
+
                                     <View>
-                                        {
-                                            stTable?.map((elm, index) => {
 
-                                                //console.log('tbl--------------->',elm)
+                                        {/*<View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
 
-                                                return <View key={index} style={{}}>
+                                            <View style={{ marginTop: -10}}>
+                                                <Text style={{fontWeight:'bold', fontSize:30}}>Invoice</Text>
+                                            </View>
 
-                                                    <View style={{marginBottom: 20}}>
+                                            <Text style={{ fontSize:15 }}> { moment().format('DD/MM/Y') }</Text>
+                                        </View>*/}
 
-                                                        <View style={{backgroundColor: 'gray', borderRadius:3, padding:3, paddingLeft:10, marginBottom:3,
-                                                            marginLeft: -1}}>
-                                                            <Text style={{fontWeight:'bold', fontSize:18}}>Item {index+1}</Text>
+                                        <View>
+                                            <Text style={{fontWeight:'bold', fontSize:30, color:'#9b3a00' }}>Preview</Text>
+                                        </View>
+
+                                        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
+                                            <Text style={{ fontSize:15, fontWeight:'bold', color:'#000'}}>Invoice </Text>
+                                            <Text style={{ fontSize:15, fontWeight:'bold', color:'#000'}}> { moment().format('DD/MM/Y') }</Text>
+                                        </View>
+
+
+                                        <View >
+                                            <Text style={{ fontSize:16 }}>Customer’s Name : {stCustomerName}  </Text>
+                                        </View>
+
+                                        <View style={{marginBottom:19}}>
+                                            <Text style={{ fontSize:16 }}>Phone Number      : {stMobileNumber} </Text>
+                                        </View>
+
+
+                                        <View>
+                                            {
+                                                stTable?.map((elm, index) => {
+
+                                                    //console.log('tbl--------------->',elm)
+
+                                                    return <View key={index} style={{}}>
+
+                                                        <View style={{marginBottom: 20}}>
+
+                                                            <View style={{backgroundColor: globalBackgroundColor, borderRadius:3, padding:3, paddingLeft:10, marginBottom:3}}>
+                                                                <Text style={{fontWeight:'bold', fontSize:18, color:'#000'}}>Item {index+1}</Text>
+                                                            </View>
+
+                                                            <Table>
+                                                                <Rows data={elm.table} />
+                                                            </Table>
+
                                                         </View>
 
-                                                        <Table>
-                                                            <Rows data={elm.table} />
-                                                        </Table>
-
                                                     </View>
+                                                })
+                                            }
+                                        </View>
+                                        {/**-----------------**/}
+
+
+                                        {/******* amountTable-1 ******/}
+                                        <View>
+                                            <View >
+
+                                                <View style={{marginBottom: 20}}>
+
+                                                    <View style={{borderColor: globalBackgroundColor, borderBottomWidth:1, marginBottom:10}}/>
+
+                                                    <Table>
+                                                        <Rows data={stAmountTable.amountTable} />
+                                                    </Table>
 
                                                 </View>
-                                            })
-                                        }
+
+                                            </View>
+                                        </View>
+
+                                        {/******* amountTable-2 ******/}
+                                        <View>
+                                            <View style={{marginBottom:100}}>
+
+                                                <View style={{marginBottom: 20}}>
+
+                                                    <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
+
+                                                    <Table>
+                                                        <Rows data={stAmountTable.amountTable2} />
+                                                    </Table>
+
+                                                </View>
+
+                                            </View>
+                                        </View>
+
                                     </View>
+
+                                </ScrollView>
+
+                                <View style={{bottom:'15%', flexDirection:'row', justifyContent: 'space-around'}}>
+
+
+                                    <View style={{width:'40%'}}>
+
+
+                                            <LinearGradient colors={['#9f4c5b', '#983b4c', '#6a1919']} style={styles.linearGradient}>
+                                                <TouchableOpacity onPress={()=>{
+                                                    setConfirmModalVisible(false)
+                                                }}>
+                                                    <Text style={styles.buttonText}>
+                                                        <Ionicons name="chevron-back-outline" size={15}/>
+                                                        Cancel
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                            </LinearGradient>
+
+
+                                    </View>
+
+                                    <View style={{width:'40%'}}>
+
+                                            <LinearGradient colors={[globalButtonColor, '#98893b', '#6a5019']} style={styles.linearGradient}>
+                                                <TouchableOpacity onPress={()=>{
+                                                    setConfirmModalVisible(false)
+                                                }}>
+                                                    <Text style={styles.buttonText}>
+                                                        Proceed
+                                                        <Ionicons name="chevron-forward-outline" size={15}/>
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                            </LinearGradient>
+
+                                        </View>
+
+
+                                    {/*<View style={{width:'40%', borderColor:'#4D4D4DFF', borderWidth:1, elevation:30, shadowColor: '#000'}}>
+                                        <Button title="Proceed" color={globalButtonColor}/>
+                                    </View>*/}
+
                                 </View>
-                            </ScrollView>
+
+                            </View>
                         </View>
                     </Modal>
                 </View>
@@ -495,7 +623,7 @@ export default function SalesEntry() {
 
                     <View>
                         <CustomButton
-                            text="Proceed"
+                            text="Next"
                             bgColor={globalButtonColor}
                             onPress={() => {
                                 setConfirmModalVisible(true);
@@ -577,7 +705,7 @@ const styles = StyleSheet.create({
         height: 50,
     },
 
-    productDetailsBorder: {borderWidth: 1, borderRadius: 5, borderColor: '#676666', padding: 15, marginBottom: 10},
+    productDetailsBorder: {borderWidth: 1, borderRadius: 5, borderColor: '#676666', padding: 15, marginBottom: 10, backgroundColor: '#fff'},
     flexRow: {flex: 1, flexDirection: 'row', justifyContent: 'center', padding: 10},
     fontBold: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
     text: {margin: 6},
@@ -632,6 +760,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+
+
+
+
+    linearGradient: {
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 5
+    },
+    buttonText: {
+        fontFamily: 'Gill Sans',
+        textAlign: 'center',
+        margin: 8,
+        color: '#ffffff',
+        backgroundColor: 'transparent',
     },
 });
 
