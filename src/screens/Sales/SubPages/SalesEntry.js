@@ -28,6 +28,7 @@ import {customFetch} from '../../../settings/networking';
 import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import moment from 'moment';
+import {taka} from '../../../assets/symbols';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -61,31 +62,18 @@ export default function SalesEntry() {
     const [stMobileNumber, setMobileNumber] = useState();
     const [stAddress, setAddress] = useState();
     const [stComment, setComment] = useState();
-    const [stDiscount, setDiscount] = useState();
     const [modalVisible, setModalVisible] = useState(false);
-    const [stAmountTable, setAmountTable] = useState({
-            amountTable: [
-                ['Sub Total', ':', '7689'],
-                ['VAT (15%)', ':', '750'],
-                ['Discount', ':', <TextInput placeholder=".................." placeholderTextColor="#f00" value={stDiscount} onChange={setDiscount}/>],
-
-            ],
-            amountTable2: [
-                ['Payable Amount', ':', '8450'],
-                ['Due Amount', ':', '0'],
-            ],
-        }
-    );
+    const [stSubTotal, setSubTotal] = useState(0);
 
     const [stTable, setTable] = useState([
         {
             table: [
                 ['Product’s Name',  ':', 'result.name'],
-                ['Description',     ':', 'result.description'],
+                ['Comment',     ':', 'result.description'],
                 ['Karat',           ':', 'result.grade'],
                 ['category',        ':', 'result.category'],
-                ['Weight',          ':', 'result.weight'],
-                ['Price P/G',       ':', 'not found'],
+                ['Weight',          ':', 40],
+                ['Price',       ':', 100],
                 ['Barcode',         ':', 'result.code'],
             ]
         }
@@ -113,17 +101,19 @@ export default function SalesEntry() {
 
                         setScannedBarcode(prevState => [...prevState, barcode]);
 
+                        setSubTotal(prevState => prevState + Number(result.sellingPrice));
+
                         setTable(prevState => {
                             return [
                                 ...prevState,
                                 {
                                     table: [
                                         ['Product’s Name',  ':', result.name],
-                                        ['Description',     ':', result.description],
+                                        ['Comment',     ':', result.description],
                                         ['Karat',           ':', result.grade],
                                         ['category',        ':', result.category],
                                         ['Weight',          ':', result.weight],
-                                        ['Price P/G',       ':', 'not found'],
+                                        ['Price',       ':', result.sellingPrice],
                                         ['Barcode',         ':', result.code],
                                     ]
                                 }
@@ -262,8 +252,31 @@ export default function SalesEntry() {
 
     const brTable = collection.count() > 0;
 
+    const TransactionalInput = ({stValue, setValue}) => {
+
+        return <TextInput
+            keyboardType="numeric"
+            placeholder=".................."
+            placeholderTextColor="#f00"
+            style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
+            value={stValue} onChangeText={setValue}
+        />
+    }
 
     const ConfirmModal = () => {
+
+        const [stVAT, setVAT] = useState(15);
+        const [stVatCost, setVatCost] = useState(15);
+        const [stDiscount, setDiscount] = useState(0);
+        const [stPayable, setPayable] = useState();
+        const [stPaid, setPaid] = useState(0);
+
+        useEffect(()=>{
+            setVatCost((stVAT / 100) * stSubTotal);
+
+            setPayable((stVatCost + stSubTotal) - stDiscount)
+
+        },[stVatCost])
 
         return (
             <View>
@@ -340,7 +353,37 @@ export default function SalesEntry() {
                                                     <View style={{borderColor: globalBackgroundColor, borderBottomWidth:1, marginBottom:10}}/>
 
                                                     <Table>
-                                                        <Rows data={stAmountTable.amountTable} />
+                                                        <Rows data={[
+                                                                ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
+                                                                [`VAT ${stVAT}%`,
+                                                                    <View style={{flexDirection:'row'}}>
+                                                                        <View style={{flex:1}}>
+                                                                            <Text>:</Text>
+                                                                        </View>
+
+                                                                        <TransactionalInput
+                                                                            stValue={stVAT}
+                                                                            setValue={(val)=>{
+                                                                                setVatCost((val / 100) * stSubTotal);
+                                                                                setVAT(val);
+                                                                            }}
+                                                                        />
+
+                                                                    </View>,
+                                                                    `${taka} ${stVatCost}/=`
+                                                                ],
+                                                                ['Discount', ':',
+
+                                                                    <TransactionalInput
+                                                                        stValue={stDiscount}
+                                                                        setValue={val=>{
+                                                                            setDiscount(val)
+                                                                            setPayable((stVatCost + stSubTotal) - val)
+                                                                        }}
+                                                                    />
+                                                                ],
+                                                            ]
+                                                        } />
                                                     </Table>
 
                                                 </View>
@@ -357,7 +400,18 @@ export default function SalesEntry() {
                                                     <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
 
                                                     <Table>
-                                                        <Rows data={stAmountTable.amountTable2} />
+                                                        <Rows data={[
+                                                            ['Payable ', ':', `${taka} ${stPayable}/=`],
+                                                            ['Paid', ':',
+                                                                <TransactionalInput
+                                                                    stValue={stPaid}
+                                                                    setValue={val=>{
+                                                                        setPaid(val)
+                                                                    }}
+                                                                />
+                                                            ],
+                                                            ['Due Amount', ':', `${taka} ${stPayable - stPaid}/=`],
+                                                        ]} />
                                                     </Table>
 
                                                 </View>
