@@ -9,6 +9,8 @@ import {useIsFocused} from '@react-navigation/native';
 import {customFetch} from '../../../settings/networking';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import moment from 'moment';
+import {taka} from '../../../assets/symbols';
+import {globalBackgroundColor} from '../../../settings/color';
 
 const InvoiceScreen = ({route}) => {
 
@@ -34,16 +36,6 @@ const InvoiceScreen = ({route}) => {
             ['Weight', ':', '11.5g'],
             ['Price P/G', ':', '2300'],
             ['Barcode', ':', '111029H88N12'],
-        ],
-        amountTable: [
-            ['Sub Total', ':', invoiceData.subTotal],
-            ['VAT (15%)', ':', invoiceData.vatAmount],
-            ['Discount', ':', '0'],
-        ],
-        amountTable2: [
-            ['Payable Amount', ':', invoiceData.totalAmount],
-            ['Paid', ':', invoiceData.paidAmount],
-            ['Due Amount', ':', invoiceData.dueAmount],
         ],
     });
 
@@ -165,9 +157,9 @@ const InvoiceScreen = ({route}) => {
 
                                       <View style={{marginBottom: 20}}>
 
-                                          <View style={{backgroundColor: 'gray', borderRadius:3, padding:3, paddingLeft:10, marginBottom:3,
+                                          <View style={{backgroundColor: globalBackgroundColor, borderRadius:3, padding:3, paddingLeft:10, marginBottom:3,
                                               marginLeft: -1}}>
-                                              <Text style={{fontWeight:'bold', fontSize:18}}>Item {index+1}</Text>
+                                              <Text style={{fontWeight:'bold', fontSize:18, color:'#000'}}>Item {index+1}</Text>
                                           </View>
 
                                           <Table>
@@ -184,57 +176,48 @@ const InvoiceScreen = ({route}) => {
                       </View>
                   </View>
 
-                  <View>
-                      <View >
+                  <View style={{borderStyle:'dotted', borderWidth:2, borderColor:globalBackgroundColor, padding:10}}>
+                      <View>
+                          <View >
+
+                              <View style={{marginBottom: 20}}>
 
 
-                          {
-                              [1].map((elm, index) => (
-                                  <View key={index}>
+                                  <Table>
+                                      <Rows data={[
+                                          ['Sub Total', ':', `${taka} ${stInvoiceData.subTotal}/=`],
+                                          [`VAT (${stInvoiceData.vatPercent}%)`, ':', `${taka} ${stInvoiceData.vatAmount}/=`],
+                                      ]} />
+                                  </Table>
 
-                                      <View style={{marginBottom: 20}}>
+                              </View>
 
-                                          <View style={{borderColor: 'gray', borderBottomWidth:1, marginBottom:10}}/>
+                          </View>
+                      </View>
 
-                                          <Table>
-                                              <Rows data={stTable.amountTable} />
-                                          </Table>
-
-                                      </View>
-
-                                  </View>
-                              ))
-                          }
+                      <View>
+                          <View >
 
 
+                              <View style={{marginBottom: 20}}>
+
+                                  <View style={{borderColor: 'gray', borderBottomWidth:1, marginBottom:10}}/>
+
+                                  <Table>
+                                      <Rows data={[
+                                          ['Payable Amount', ':', `${taka} ${stInvoiceData.totalAmount}/=`],
+                                          ['Paid', ':', `${taka} ${stInvoiceData.paidAmount}/=`],
+                                          ['Due Amount', ':', `${taka} ${stInvoiceData.dueAmount}/=`],
+                                      ]} />
+                                  </Table>
+
+                              </View>
+
+
+                          </View>
                       </View>
                   </View>
 
-                  <View>
-                      <View >
-
-
-                          {
-                              [1].map((elm, index) => (
-                                  <View key={index}>
-
-                                      <View style={{marginBottom: 20}}>
-
-                                          <View style={{borderColor: 'gray', borderBottomWidth:1, marginBottom:10}}/>
-
-                                          <Table>
-                                              <Rows data={stTable.amountTable2} />
-                                          </Table>
-
-                                      </View>
-
-                                  </View>
-                              ))
-                          }
-
-
-                      </View>
-                  </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical:10}}>
                       <View>
@@ -247,7 +230,7 @@ const InvoiceScreen = ({route}) => {
                       </View>
                       <View>
                           <TouchableOpacity>
-                              <IconButton name="close-circle"/>
+                              <IconButton name="chevron-back-outline"/>
                           </TouchableOpacity>
                       </View>
 

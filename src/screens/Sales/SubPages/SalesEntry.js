@@ -19,7 +19,6 @@ import {BarcodeFormat, useScanBarcodes} from 'vision-camera-code-scanner';
 import {Rows, Table} from 'react-native-table-component';
 import {useNavigation} from '@react-navigation/native';
 import {RNHoleView} from 'react-native-hole-view';
-import LinearGradient from 'react-native-linear-gradient';
 
 import CustomInput from '../../../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -67,7 +66,7 @@ export default function SalesEntry() {
     const [stSubTotal, setSubTotal] = useState(0);
 
     const [stTable, setTable] = useState([
-        {
+        /*{
             table: [
                 ['Product’s Name',  ':', 'result.name'],
                 ['Comment',     ':', 'result.description'],
@@ -77,7 +76,7 @@ export default function SalesEntry() {
                 ['Price',       ':', 100],
                 ['Barcode',         ':', 'result.code'],
             ]
-        }
+        }*/
     ]);
 
 
@@ -253,19 +252,16 @@ export default function SalesEntry() {
 
     const brTable = collection.count() > 0;
 
-    const InvoiceBottomButton = ({title, onPress, colors, iconName, iconPosition}) => {
+    const InvoiceBottomButton = ({title, onPress, color, iconName, iconPosition}) => {
 
         return (
-            <LinearGradient colors={colors} style={styles.linearGradient}>
-                <TouchableOpacity onPress={onPress}>
-                    <Text style={styles.buttonText}>
-                        {iconPosition === 'left' && <Ionicons name={iconName} size={15}/> }
-                            {title}
-                        {iconPosition === 'right' && <Ionicons name={iconName} size={15}/> }
-                    </Text>
-                </TouchableOpacity>
-
-            </LinearGradient>
+            <TouchableOpacity onPress={onPress} style={{backgroundColor:color, borderRadius:3, borderWidth:1, borderColor:'#b4b4b4'}}>
+                <Text style={styles.buttonText}>
+                    {iconPosition === 'left' && <Ionicons name={iconName} size={15}/> }
+                    {title}
+                    {iconPosition === 'right' && <Ionicons name={iconName} size={15}/> }
+                </Text>
+            </TouchableOpacity>
         );
     }
 
@@ -273,7 +269,7 @@ export default function SalesEntry() {
 
         return <TextInput
             keyboardType="numeric"
-            placeholder=".................."
+            placeholder="............"
             placeholderTextColor="#f00"
             style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
             value={stValue}
@@ -284,7 +280,7 @@ export default function SalesEntry() {
     const ConfirmModal = () => {
 
         const [stVAT, setVAT] = useState(15);
-        const [stVatCost, setVatCost] = useState(15);
+        const [stVatCost, setVatCost] = useState(0);
         const [stDiscount, setDiscount] = useState(0);
         const [stPayable, setPayable] = useState(0);
         const [stPaid, setPaid] = useState(0);
@@ -342,8 +338,9 @@ export default function SalesEntry() {
                 cname :         stCustomerName,
                 cmobile :       stMobileNumber,
                 caddress :      stAddress,
-                subTotal :   stSubTotal,
+                subTotal :      stSubTotal,
                 totalAmount :   stPayable,
+                vatPercent :    stVAT,
                 vatAmount :     stVatCost,
                 paidAmount :    stPaid,
                 dueAmount :     stDue,
@@ -430,29 +427,31 @@ export default function SalesEntry() {
                                                                             <Text>:</Text>
                                                                         </View>
 
-                                                                        <TransactionalInput
-                                                                            stValue={stVAT.toString()}
-                                                                            setValue={VAT_val=>{
+                                                                        <View style={{flex:5}}>
+                                                                            <TransactionalInput
+                                                                                stValue={stVAT}
+                                                                                setValue={VAT_val=>{
 
-                                                                                setVatCost((VAT_val / 100) * stSubTotal);
-                                                                                setVAT(VAT_val);
+                                                                                    setVatCost((VAT_val / 100) * stSubTotal);
+                                                                                    setVAT(VAT_val);
 
-                                                                            }}
-                                                                        />
+                                                                                }}
+                                                                            />
+                                                                        </View>
 
                                                                     </View>,
                                                                     `${taka} ${stVatCost}/=`
                                                                 ],
-                                                                ['Discount', ':',
+                                                                /*['Discount', ':',
 
                                                                     <TransactionalInput
-                                                                        stValue={stDiscount.toString()}
+                                                                        stValue={stDiscount}
                                                                         setValue={discountVal=>{
                                                                             setDiscount(discountVal)
                                                                             setPayable((stVatCost + stSubTotal) - discountVal)
                                                                         }}
                                                                     />
-                                                                ],
+                                                                ],*/
                                                             ]
                                                             } />
                                                         </Table>
@@ -475,7 +474,7 @@ export default function SalesEntry() {
                                                                 ['Payable ', ':', `${taka} ${stPayable}/=`],
                                                                 ['Paid', ':',
                                                                     <TransactionalInput
-                                                                        stValue={stPaid.toString()}
+                                                                        stValue={stPaid}
                                                                         setValue={paidVal=>{
                                                                             setPaid(paidVal);
                                                                             setDue(stPayable - paidVal);
@@ -506,7 +505,7 @@ export default function SalesEntry() {
                                             onPress={()=>{
                                                 setConfirmModalVisible(false)
                                             }}
-                                            colors={['#9f4c5b', '#983b4c', '#6a1919']}
+                                            color="#9f4c5b"
                                             iconName="chevron-back-outline"
                                             iconPosition="left"
                                         />
@@ -519,7 +518,7 @@ export default function SalesEntry() {
                                         <InvoiceBottomButton
                                             title="Confirm"
                                             onPress={confirmSell}
-                                            colors={[globalButtonColor, '#98893b', '#6a5019']}
+                                            color={globalButtonColor}
                                             iconName="chevron-forward-outline"
                                             iconPosition="right"
                                         />
@@ -883,14 +882,8 @@ const styles = StyleSheet.create({
     },
 
 
-
-
-    linearGradient: {
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderRadius: 5
-    },
     buttonText: {
+        fontWeight: 'bold',
         fontFamily: 'Gill Sans',
         textAlign: 'center',
         margin: 8,
