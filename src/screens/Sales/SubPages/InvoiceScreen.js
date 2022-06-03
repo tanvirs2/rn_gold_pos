@@ -8,14 +8,23 @@ import logo from '../../../../assets/images/logo_with_black.png';
 import {useIsFocused} from '@react-navigation/native';
 import {customFetch} from '../../../settings/networking';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
+import moment from 'moment';
 
 const InvoiceScreen = ({route}) => {
 
+    const invoiceData = route.params;
     const {height} = useWindowDimensions();
     const isFocused = useIsFocused();
 
     const [stLoader, setLoader] = useState(false);
     const [stInvoiceData, setInvoiceData] = useState({});
+
+    /*
+    * "dueAmount": 2400,
+    * "paidAmount": "2000",
+    * "totalAmount": 4400,
+    * "vatAmount": 600
+    * */
 
     const [stTable, setTable] = useState({
         tableData: [
@@ -27,26 +36,27 @@ const InvoiceScreen = ({route}) => {
             ['Barcode', ':', '111029H88N12'],
         ],
         amountTable: [
-            ['Sub Total', ':', '7689'],
-            ['VAT (15%)', ':', '750'],
+            ['Sub Total', ':', invoiceData.subTotal],
+            ['VAT (15%)', ':', invoiceData.vatAmount],
             ['Discount', ':', '0'],
         ],
         amountTable2: [
-            ['Payable Amount', ':', '8450'],
-            ['Due Amount', ':', '0'],
+            ['Payable Amount', ':', invoiceData.totalAmount],
+            ['Paid', ':', invoiceData.paidAmount],
+            ['Due Amount', ':', invoiceData.dueAmount],
         ],
     });
 
     useEffect(()=>{
         setInvoiceData(route.params);
-        //console.log(route.params);
+        console.log(route.params);
     },[isFocused]);
 
     const saveSales = () => {
 
         setLoader(true);
 
-        customFetch({
+        /*customFetch({
             url: 'Sale/Upsert',
             method: 'POST',
             body: {
@@ -89,7 +99,7 @@ const InvoiceScreen = ({route}) => {
                 alert(err);
                 setLoader(false);
             },
-        });
+        });*/
     };
 
   return (
@@ -116,7 +126,7 @@ const InvoiceScreen = ({route}) => {
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
                       <Text style={{ fontSize:20 }}>GS00111869 </Text>
-                      <Text style={{ fontSize:20 }}> 15.5.2022</Text>
+                      <Text style={{ fontSize:20 }}> { moment().format('DD/MM/Y') } </Text>
                   </View>
 
                   {/*{

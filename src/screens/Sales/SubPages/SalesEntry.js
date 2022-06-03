@@ -3,6 +3,7 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
+    Alert,
     Button,
     LogBox,
     Modal,
@@ -252,6 +253,22 @@ export default function SalesEntry() {
 
     const brTable = collection.count() > 0;
 
+    const InvoiceBottomButton = ({title, onPress, colors, iconName, iconPosition}) => {
+
+        return (
+            <LinearGradient colors={colors} style={styles.linearGradient}>
+                <TouchableOpacity onPress={onPress}>
+                    <Text style={styles.buttonText}>
+                        {iconPosition === 'left' && <Ionicons name={iconName} size={15}/> }
+                            {title}
+                        {iconPosition === 'right' && <Ionicons name={iconName} size={15}/> }
+                    </Text>
+                </TouchableOpacity>
+
+            </LinearGradient>
+        );
+    }
+
     const TransactionalInput = ({stValue, setValue}) => {
 
         return <TextInput
@@ -259,7 +276,8 @@ export default function SalesEntry() {
             placeholder=".................."
             placeholderTextColor="#f00"
             style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
-            value={stValue} onChangeText={setValue}
+            value={stValue}
+            onChangeText={setValue}
         />
     }
 
@@ -268,15 +286,74 @@ export default function SalesEntry() {
         const [stVAT, setVAT] = useState(15);
         const [stVatCost, setVatCost] = useState(15);
         const [stDiscount, setDiscount] = useState(0);
-        const [stPayable, setPayable] = useState();
+        const [stPayable, setPayable] = useState(0);
         const [stPaid, setPaid] = useState(0);
+        const [stDue, setDue] = useState(0);
 
         useEffect(()=>{
+
             setVatCost((stVAT / 100) * stSubTotal);
 
             setPayable((stVatCost + stSubTotal) - stDiscount)
 
         },[stVatCost])
+
+        const confirmSell = () => {
+
+            /*
+            * {
+                  "id": 0,
+                  "shopId": 1,
+                  "cname": " Tanvir Sharkar",
+                  "cmobile": "01911223344",
+                  "caddress": "Savar",
+                  "totalAmount": 500,
+                  "vatAmount": 200,
+                  "paidAmount": 100,
+                  "dueAmount": 300,
+                  "typeId": 14902,
+                  "categoryId": 15101,
+                  "comment": "test",
+                  "productList": [
+                    {
+                      "id": 0,
+                      "productId": 27
+                    },
+                     {
+                      "id": 0,
+                      "productId": 25
+                    }
+                  ]
+                }
+
+                stVAT
+
+                stDiscount
+                stPayable
+
+                * */
+            //Alert.alert('ddd', 'AAA')
+
+            setConfirmModalVisible(false);
+
+            navigation.navigate('Invoice', {
+                id :            0,
+                shopId :        1,
+                cname :         stCustomerName,
+                cmobile :       stMobileNumber,
+                caddress :      stAddress,
+                subTotal :   stSubTotal,
+                totalAmount :   stPayable,
+                vatAmount :     stVatCost,
+                paidAmount :    stPaid,
+                dueAmount :     stDue,
+                comment :       stComment,
+                productList :[
+                    ...stTable
+                ]
+            })
+
+        }
 
         return (
             <View>
@@ -288,15 +365,6 @@ export default function SalesEntry() {
                                     borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
 
                                     <View>
-
-                                        {/*<View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
-
-                                            <View style={{ marginTop: -10}}>
-                                                <Text style={{fontWeight:'bold', fontSize:30}}>Invoice</Text>
-                                            </View>
-
-                                            <Text style={{ fontSize:15 }}> { moment().format('DD/MM/Y') }</Text>
-                                        </View>*/}
 
                                         <View>
                                             <Text style={{fontWeight:'bold', fontSize:30, color:'#9b3a00' }}>Preview</Text>
@@ -344,16 +412,17 @@ export default function SalesEntry() {
                                         {/**-----------------**/}
 
 
-                                        {/******* amountTable-1 ******/}
-                                        <View>
-                                            <View >
+                                        <View style={{borderStyle: 'dotted', borderWidth: 2, padding:5,marginBottom:100, borderColor:globalBackgroundColor}}>
+                                            {/******* amountTable-1 ******/}
+                                            <View>
+                                                <View >
 
-                                                <View style={{marginBottom: 20}}>
+                                                    <View style={{marginBottom: 20}}>
 
-                                                    <View style={{borderColor: globalBackgroundColor, borderBottomWidth:1, marginBottom:10}}/>
+                                                        {/*<View style={{borderColor: globalBackgroundColor, borderBottomWidth:1, marginBottom:10}}/>*/}
 
-                                                    <Table>
-                                                        <Rows data={[
+                                                        <Table>
+                                                            <Rows data={[
                                                                 ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
                                                                 [`VAT ${stVAT}%`,
                                                                     <View style={{flexDirection:'row'}}>
@@ -362,10 +431,12 @@ export default function SalesEntry() {
                                                                         </View>
 
                                                                         <TransactionalInput
-                                                                            stValue={stVAT}
-                                                                            setValue={(val)=>{
-                                                                                setVatCost((val / 100) * stSubTotal);
-                                                                                setVAT(val);
+                                                                            stValue={stVAT.toString()}
+                                                                            setValue={VAT_val=>{
+
+                                                                                setVatCost((VAT_val / 100) * stSubTotal);
+                                                                                setVAT(VAT_val);
+
                                                                             }}
                                                                         />
 
@@ -375,47 +446,49 @@ export default function SalesEntry() {
                                                                 ['Discount', ':',
 
                                                                     <TransactionalInput
-                                                                        stValue={stDiscount}
-                                                                        setValue={val=>{
-                                                                            setDiscount(val)
-                                                                            setPayable((stVatCost + stSubTotal) - val)
+                                                                        stValue={stDiscount.toString()}
+                                                                        setValue={discountVal=>{
+                                                                            setDiscount(discountVal)
+                                                                            setPayable((stVatCost + stSubTotal) - discountVal)
                                                                         }}
                                                                     />
                                                                 ],
                                                             ]
-                                                        } />
-                                                    </Table>
+                                                            } />
+                                                        </Table>
+
+                                                    </View>
 
                                                 </View>
-
                                             </View>
-                                        </View>
 
-                                        {/******* amountTable-2 ******/}
-                                        <View>
-                                            <View style={{marginBottom:100}}>
+                                            {/******* amountTable-2 ******/}
+                                            <View>
+                                                <View style={{}}>
 
-                                                <View style={{marginBottom: 20}}>
+                                                    <View style={{marginBottom: 20}}>
 
-                                                    <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
+                                                        <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
 
-                                                    <Table>
-                                                        <Rows data={[
-                                                            ['Payable ', ':', `${taka} ${stPayable}/=`],
-                                                            ['Paid', ':',
-                                                                <TransactionalInput
-                                                                    stValue={stPaid}
-                                                                    setValue={val=>{
-                                                                        setPaid(val)
-                                                                    }}
-                                                                />
-                                                            ],
-                                                            ['Due Amount', ':', `${taka} ${stPayable - stPaid}/=`],
-                                                        ]} />
-                                                    </Table>
+                                                        <Table>
+                                                            <Rows data={[
+                                                                ['Payable ', ':', `${taka} ${stPayable}/=`],
+                                                                ['Paid', ':',
+                                                                    <TransactionalInput
+                                                                        stValue={stPaid.toString()}
+                                                                        setValue={paidVal=>{
+                                                                            setPaid(paidVal);
+                                                                            setDue(stPayable - paidVal);
+                                                                        }}
+                                                                    />
+                                                                ],
+                                                                ['Due Amount', ':', `${taka} ${stDue}/=`],
+                                                            ]} />
+                                                        </Table>
+
+                                                    </View>
 
                                                 </View>
-
                                             </View>
                                         </View>
 
@@ -428,37 +501,30 @@ export default function SalesEntry() {
 
                                     <View style={{width:'40%'}}>
 
-
-                                            <LinearGradient colors={['#9f4c5b', '#983b4c', '#6a1919']} style={styles.linearGradient}>
-                                                <TouchableOpacity onPress={()=>{
-                                                    setConfirmModalVisible(false)
-                                                }}>
-                                                    <Text style={styles.buttonText}>
-                                                        <Ionicons name="chevron-back-outline" size={15}/>
-                                                        Cancel
-                                                    </Text>
-                                                </TouchableOpacity>
-
-                                            </LinearGradient>
+                                        <InvoiceBottomButton
+                                            title="Cancel"
+                                            onPress={()=>{
+                                                setConfirmModalVisible(false)
+                                            }}
+                                            colors={['#9f4c5b', '#983b4c', '#6a1919']}
+                                            iconName="chevron-back-outline"
+                                            iconPosition="left"
+                                        />
 
 
                                     </View>
 
                                     <View style={{width:'40%'}}>
 
-                                            <LinearGradient colors={[globalButtonColor, '#98893b', '#6a5019']} style={styles.linearGradient}>
-                                                <TouchableOpacity onPress={()=>{
-                                                    setConfirmModalVisible(false)
-                                                }}>
-                                                    <Text style={styles.buttonText}>
-                                                        Proceed
-                                                        <Ionicons name="chevron-forward-outline" size={15}/>
-                                                    </Text>
-                                                </TouchableOpacity>
+                                        <InvoiceBottomButton
+                                            title="Confirm"
+                                            onPress={confirmSell}
+                                            colors={[globalButtonColor, '#98893b', '#6a5019']}
+                                            iconName="chevron-forward-outline"
+                                            iconPosition="right"
+                                        />
 
-                                            </LinearGradient>
-
-                                        </View>
+                                    </View>
 
 
                                     {/*<View style={{width:'40%', borderColor:'#4D4D4DFF', borderWidth:1, elevation:30, shadowColor: '#000'}}>
