@@ -21,6 +21,7 @@ export const customFetch = ({url, method, body, callbackResponse, callbackResult
 
         let loginTokenString = await loginToken();
 
+        method = method ? method : 'GET';
         body = (method === 'GET') ? false : JSON.stringify(body);
 
         fetch(apiUrl + url, {

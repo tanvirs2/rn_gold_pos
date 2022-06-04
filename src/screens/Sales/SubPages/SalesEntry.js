@@ -54,7 +54,7 @@ export default function SalesEntry() {
     const [stConfirmModalVisible, setConfirmModalVisible] = useState(false);
     const [stLoader, setLoader] = useState(false);
     const [stScannedBarcode, setScannedBarcode] = useState([]);
-    const [barcode, setBarcode] = useState('');
+    const [barcode, setBarcode] = useState('P-637895491821048620');
     const [hasPermission, setHasPermission] = useState(false);
     const [isScanned, setIsScanned] = useState(false);
 
@@ -64,6 +64,8 @@ export default function SalesEntry() {
     const [stComment, setComment] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [stSubTotal, setSubTotal] = useState(0);
+
+    const [stProductList, setProductList] = useState([]);
 
     const [stTable, setTable] = useState([
         /*{
@@ -95,9 +97,11 @@ export default function SalesEntry() {
                 method: 'GET',
                 callbackResult: (result)=>{
 
-                    console.log('GetProductByCode',result);
+                    console.log('GetProductByCode',result.id);
 
                     if (result?.code) {
+
+                        setProductList(prevState => [...prevState, {id: 0, productId: result.id}]);
 
                         setScannedBarcode(prevState => [...prevState, barcode]);
 
@@ -285,6 +289,7 @@ export default function SalesEntry() {
         const [stPayable, setPayable] = useState(0);
         const [stPaid, setPaid] = useState(0);
         const [stDue, setDue] = useState(0);
+        const [stInvoice, setInvoice] = useState(0);
 
         useEffect(()=>{
 
@@ -296,59 +301,72 @@ export default function SalesEntry() {
 
         const confirmSell = () => {
 
-            /*
-            * {
-                  "id": 0,
-                  "shopId": 1,
-                  "cname": " Tanvir Sharkar",
-                  "cmobile": "01911223344",
-                  "caddress": "Savar",
-                  "totalAmount": 500,
-                  "vatAmount": 200,
-                  "paidAmount": 100,
-                  "dueAmount": 300,
-                  "typeId": 14902,
-                  "categoryId": 15101,
-                  "comment": "test",
-                  "productList": [
-                    {
-                      "id": 0,
-                      "productId": 27
-                    },
-                     {
-                      "id": 0,
-                      "productId": 25
-                    }
-                  ]
-                }
-
-                stVAT
-
-                stDiscount
-                stPayable
-
-                * */
             //Alert.alert('ddd', 'AAA')
+            /**/
+            setLoader(true);
 
-            setConfirmModalVisible(false);
+            customFetch({
+                url: 'Sale/Upsert',
+                method: 'POST',
+                body: {
+                    "id": 0,
+                    "shopId": 1,
+                    "cname": stCustomerName,
+                    "cmobile": stMobileNumber,
+                    "caddress": stAddress,
+                    "totalAmount": stPayable,
+                    "vatAmount": stVatCost,
+                    "paidAmount": stPaid,
+                    "dueAmount": stDue,
+                    "comment": stComment,
+                    "productList": [
+                        ...stProductList
+                    ]
+                },
+                callbackResult: insertedId => {
 
-            navigation.navigate('Invoice', {
-                id :            0,
-                shopId :        1,
-                cname :         stCustomerName,
-                cmobile :       stMobileNumber,
-                caddress :      stAddress,
-                subTotal :      stSubTotal,
-                totalAmount :   stPayable,
-                vatPercent :    stVAT,
-                vatAmount :     stVatCost,
-                paidAmount :    stPaid,
-                dueAmount :     stDue,
-                comment :       stComment,
-                productList :[
-                    ...stTable
-                ]
-            })
+                    /* Child request */
+                    customFetch({
+                        url: 'Sale/Get/'+insertedId,
+                        callbackResult: resultChild => {
+
+                            setInvoice(resultChild.model.code)
+
+                            console.log('insertedId', insertedId)
+                            console.log('resultChild', resultChild.model.code)
+
+                            setConfirmModalVisible(false);
+
+                            setLoader(false);
+
+                            navigation.navigate('Invoice', {
+                                id :            0,
+                                shopId :        1,
+                                invoiceNo :     resultChild.model.code,
+                                cname :         stCustomerName,
+                                cmobile :       stMobileNumber,
+                                caddress :      stAddress,
+                                subTotal :      stSubTotal,
+                                totalAmount :   stPayable,
+                                vatPercent :    stVAT,
+                                vatAmount :     stVatCost,
+                                paidAmount :    stPaid,
+                                discount :      stDiscount,
+                                dueAmount :     stDue,
+                                comment :       stComment,
+                                productList :[
+                                    ...stTable
+                                ]
+                            })
+
+                        },
+                    });
+                    /* End Child request */
+                },
+            });
+
+
+
 
         }
 
@@ -358,6 +376,9 @@ export default function SalesEntry() {
                     <Modal animationType="slide" transparent={true} visible={stConfirmModalVisible}>
                         <View style={{padding:30, backgroundColor: 'rgba(87,87,87,0.65)'}}>
                             <View style={{height: '100%'}}>
+
+                                <LoaderViewScreen viewThisComp={stLoader}/>
+
                                 <ScrollView style={{backgroundColor: '#fff', minHeight:'100%',
                                     borderColor: globalBackgroundColor, borderWidth:2, borderRadius:5, padding:10}}>
 
@@ -432,7 +453,7 @@ export default function SalesEntry() {
                                                                                 stValue={stVAT}
                                                                                 setValue={VAT_val=>{
 
-                                                                                    setVatCost((VAT_val / 100) * stSubTotal);
+                                                                                    setVatCost(((VAT_val / 100) * stSubTotal).toFixed(2));
                                                                                     setVAT(VAT_val);
 
                                                                                 }}
@@ -477,7 +498,7 @@ export default function SalesEntry() {
                                                                         stValue={stPaid}
                                                                         setValue={paidVal=>{
                                                                             setPaid(paidVal);
-                                                                            setDue(stPayable - paidVal);
+                                                                            setDue((stPayable - paidVal).toFixed(2));
                                                                         }}
                                                                     />
                                                                 ],
@@ -740,32 +761,33 @@ export default function SalesEntry() {
 
                     {stConfirmModalVisible && <ConfirmModal/>}
 
-                    <View>
-                        <CustomButton
-                            text="Next"
-                            bgColor={globalButtonColor}
-                            onPress={() => {
-                                setConfirmModalVisible(true);
+                    <View style={{flexDirection:'row'}}>
+                        <View style={{flex:1, margin:10}}>
+                            <CustomButton
+                                text="Reset"
+                                bgColor="#9f4c5b"
+                                onPress={() => {
+                                    setConfirmModalVisible(false);
 
-                                /*navigation.navigate('Invoice', {
-                                    id :            0,
-                                    shopId :        1,
-                                    cname :         stCustomerName,
-                                    cmobile :       stMobileNumber,
-                                    caddress :      stAddress,
-                                    totalAmount :   500,
-                                    vatAmount :     200,
-                                    paidAmount :    100,
-                                    dueAmount :     300,
-                                    typeId :        14902,
-                                    categoryId :    15101,
-                                    comment :       stComment,
-                                    productList :[
-                                        ...stTable
-                                    ]
-                                });*/
-                            }}
-                        />
+                                    setCustomerName('')
+                                    setMobileNumber('')
+                                    setAddress('')
+                                    setComment('')
+                                    setBarcode('')
+                                    setProductList([])
+                                    setTable([])
+                                }}
+                            />
+                        </View>
+                        <View style={{flex:1, margin:10}}>
+                            <CustomButton
+                                text="Next"
+                                bgColor={globalButtonColor}
+                                onPress={() => {
+                                    setConfirmModalVisible(true);
+                                }}
+                            />
+                        </View>
                     </View>
 
                 </View>
