@@ -134,7 +134,7 @@ const CustomDataTable = () => {
                                                         (()=>{
                                                             switch (cellIndex) {
 
-                                                                case 5:
+                                                                case 4:
                                                                     return (
                                                                         <Fragment>
                                                                             <Pressable onPress={()=>{
