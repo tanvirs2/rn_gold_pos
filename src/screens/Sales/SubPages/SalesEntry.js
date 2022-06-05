@@ -54,7 +54,7 @@ export default function SalesEntry() {
     const [stConfirmModalVisible, setConfirmModalVisible] = useState(false);
     const [stLoader, setLoader] = useState(false);
     const [stScannedBarcode, setScannedBarcode] = useState([]);
-    const [barcode, setBarcode] = useState('P-637895491821048620');
+    const [barcode, setBarcode] = useState(''); //P-637895491821048620
     const [hasPermission, setHasPermission] = useState(false);
     const [isScanned, setIsScanned] = useState(false);
 
@@ -128,28 +128,8 @@ export default function SalesEntry() {
                         ToastAndroid.show('Not found !', ToastAndroid.SHORT)
                     }
 
-
                     setLoader(false);
 
-                    /*let tt = {
-                        'id': 24,
-
-                        'name': 'Gold Bangle B-Design',
-                        'description': 'New shape 2022',
-                        'grade': '18k',
-                        'gradeId': 14801,
-                        'categoryId': 4,
-                        'category': 'Bangle',
-                        'weight': 5.60,
-                        'code': '637887663320736161',
-
-                        'isActive': true,
-                        'typeId': 14701,
-                        'buyingPrice': 2000.0000,
-                        'sellingPrice': null,
-                        'isStock': true,
-                    };
-                    */
                 },
                 callbackError: () => {
                     setScannedBarcode([]);
@@ -689,7 +669,7 @@ export default function SalesEntry() {
                 </View>
 
 
-                <View style={styles.container}>
+                {stCustomerName ? <View style={styles.container}>
 
                     <Text>Barcode</Text>
 
@@ -733,7 +713,7 @@ export default function SalesEntry() {
 
                     </View>
 
-                </View>
+                </View> : null}
 
             </View>
 

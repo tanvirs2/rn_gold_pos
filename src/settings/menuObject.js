@@ -35,11 +35,7 @@ const menuObject = {
                     name: 'List of sales',
                     icon: '',
                     route: 'List Of Sales',
-                }, {
-                    name: 'Due bill receive',
-                    icon: '',
-                    route: '',
-                },
+                }
             ],
         },
 
@@ -47,6 +43,23 @@ const menuObject = {
             mainMenuLabel: 'Stock Search',
             mainIcon: 'file-tray-full',
             subMenu: [],
+        },
+
+        {
+            mainMenuLabel: 'Due Received',
+            mainIcon: 'briefcase',
+            subMenu: [
+                {
+                    name: 'Due bill receive List',
+                    icon: '',
+                    route: 'Due Received List',
+                },
+                {
+                    name: 'Due bill receive Entry',
+                    icon: '',
+                    route: 'Due Received Entry',
+                }
+            ],
         },
 
         {

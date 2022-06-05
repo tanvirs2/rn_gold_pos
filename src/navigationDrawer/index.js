@@ -34,6 +34,8 @@ import logo from '../../assets/images/logo.png';
 import golden_ratio_image from '../../assets/images/golden_ratio.jpg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {customFetch} from '../settings/networking';
+import DueBillsReceivedListScreen from '../screens/Due/DueBillsReceivedList/DueBillsReceivedListScreen';
+import DueBillsReceivedEntryScreen from '../screens/Due/DueBillsReceivedEntry/DueBillsReceivedEntryScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -72,7 +74,7 @@ function CustomDrawerContent(props) {
 
             <DrawerContentScrollView {...props}>
 
-                {/*<DrawerItemList {...props} />*/}
+                <DrawerItemList {...props} />
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>
@@ -150,6 +152,8 @@ const DrawerNavigation = () => {
           <Drawer.Screen name="Product Category Entry" component={ProductCategoryEntryScreen} />
           <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
           <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
+          <Drawer.Screen name="Due Received List" component={DueBillsReceivedListScreen} />
+          <Drawer.Screen name="Due Received Entry" component={DueBillsReceivedEntryScreen} />
           <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
   );

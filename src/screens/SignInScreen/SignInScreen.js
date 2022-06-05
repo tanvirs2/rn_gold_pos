@@ -5,7 +5,7 @@ import {
   View,
   Image,
   useWindowDimensions,
-  ScrollView, ImageBackground,
+  ScrollView, ImageBackground, Pressable, Text,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -27,8 +27,8 @@ export default function SignInScreen({route}) {
 
   //console.log('screenMiddle', screenMiddle)
 
-  const [username, setUsername] = useState('admin'); //'admin'
-  const [password, setPassword] = useState('Admin@1'); //'Admin@1'
+  const [username, setUsername] = useState(); //'admin'
+  const [password, setPassword] = useState(); //'Admin@1'
   //const [stMenu, setMenu] = useState({}); //'Admin@1'
 
   useEffect(()=>{
@@ -119,6 +119,17 @@ export default function SignInScreen({route}) {
     <SafeAreaView>
       <ImageBackground source={golden_ratio_image_hd} resizeMode="cover" style={{height:'100%'}}>
         <View style={[styles.container, {height, alignItems: 'center'}]}>
+
+
+          <Pressable style={{position: 'absolute', top:89, left:94,height: 30, width:30,
+            zIndex:10,
+            //backgroundColor:'red'
+          }} onPress={()=>{
+            //alert('dd')
+            setUsername('admin');
+            setPassword('Admin@1');
+          }}/>
+
         <Image
             source={logo}
             style={[styles.logo, {height: height * 0.3}]}
