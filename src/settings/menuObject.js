@@ -50,14 +50,14 @@ const menuObject = {
             mainIcon: 'briefcase',
             subMenu: [
                 {
-                    name: 'Due bill receive List',
-                    icon: '',
-                    route: 'Due Received List',
-                },
-                {
                     name: 'Due bill receive Entry',
                     icon: '',
                     route: 'Due Received Entry',
+                },
+                {
+                    name: 'Due bill receive List',
+                    icon: '',
+                    route: 'Due Received List',
                 }
             ],
         },

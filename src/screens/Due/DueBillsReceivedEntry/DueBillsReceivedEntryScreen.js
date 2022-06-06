@@ -2,26 +2,26 @@
 
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {TransactionalEntryScreen} from '../../../settings/ComponentLib';
+import {DeuTransactionalEntryScreen} from '../../../settings/ComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
 
 
 
-const DepositEntryScreen = () => {
+const RetailEntryScreen = () => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Deposit"/>
+            <DeuTransactionalEntryScreen type="Retail"/>
         </Fragment>
     );
 }
 
-const WithdrawEntryScreen = () => {
+const WholesaleEntryScreen = () => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Withdraw"/>
+            <DeuTransactionalEntryScreen type="Wholesale"/>
         </Fragment>
     );
 }
@@ -32,8 +32,8 @@ const DueBillsReceivedEntryScreen = () => {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Deposit Entry" component={DepositEntryScreen}/>
-            <Tab.Screen name="Withdraw Entry" component={WithdrawEntryScreen}/>
+            <Tab.Screen name="Retail" component={RetailEntryScreen}/>
+            <Tab.Screen name="Wholesale" component={WholesaleEntryScreen}/>
         </Tab.Navigator>
     );
 }

@@ -2,29 +2,29 @@
 
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {TransactionalListScreen} from '../../../settings/ComponentLib';
+import {DueTransactionalListScreen} from '../../../settings/ComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
 
 
-const DepositListScreen = () => {
+const RetailListScreen = () => {
 
     return (
         <Fragment>
-            <TransactionalListScreen type="Deposit" tableHead={
-                ['Deposit Name', 'Amount', 'Comment', 'Date']
+            <DueTransactionalListScreen type="Retail" tableHead={
+                ['Invoice No', 'Date', 'Category', 'Amount', 'Comment']
             }/>
         </Fragment>
     );
 }
 
-const WithdrawListScreen = () => {
+const WholesaleListScreen = () => {
 
 
     return (
         <Fragment>
-            <TransactionalListScreen type="Withdraw" tableHead={
-                ['Withdraw Name', 'Amount', 'Comment', 'Date']
+            <DueTransactionalListScreen type="Wholesale" tableHead={
+                ['Invoice No', 'Date', 'Category', 'Amount', 'Comment']
             }/>
         </Fragment>
     );
@@ -34,8 +34,8 @@ const DueBillsReceivedListScreen = () => {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Deposit List" component={DepositListScreen}/>
-            <Tab.Screen name="Withdraw List" component={WithdrawListScreen}/>
+            <Tab.Screen name="Retail List" component={RetailListScreen}/>
+            <Tab.Screen name="Wholesale List" component={WholesaleListScreen}/>
         </Tab.Navigator>
     );
 };

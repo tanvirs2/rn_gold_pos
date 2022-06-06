@@ -5,7 +5,7 @@ import {
   View,
   Image,
   useWindowDimensions,
-  ScrollView, ImageBackground, Pressable, Text,
+  ScrollView, ImageBackground, Pressable, Text, Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -58,13 +58,20 @@ export default function SignInScreen({route}) {
           'content-type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
-          username: 'admin',
-          password: 'Admin@1',
+          username,
+          password
         }),
       },
     )
       .then(res => res.json())
       .then(async json => {
+
+        //console.log(json)
+
+        if (json) {
+          loadContext.loaderDispatch('loaded');
+          (json.result === null) && Alert.alert('Invalid credentials !', "You have entered an invalid username or password")
+        }
 
         if (json.accessToken) {
 
@@ -78,6 +85,7 @@ export default function SignInScreen({route}) {
         //console.log(json, json.accessToken);
       })
       .catch(err => {
+        loadContext.loaderDispatch('loaded');
         alert(err);
       });
   };

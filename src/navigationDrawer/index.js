@@ -74,7 +74,7 @@ function CustomDrawerContent(props) {
 
             <DrawerContentScrollView {...props}>
 
-                <DrawerItemList {...props} />
+                {/*<DrawerItemList {...props} />*/}
 
 
                 {/*<View style={{position:'absolute', right:-10, top:'30%', zIndex:999}}>

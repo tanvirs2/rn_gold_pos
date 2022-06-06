@@ -52,13 +52,13 @@ const CustomDataTable = () => {
 
                     return [
 
-                        data.name,
+                        data.id,
 
                         data.category,
 
                         `${taka} `+data.amount,
 
-                        data.isActive !== 'No',
+                        data.code,
 
                         data.id,
 
