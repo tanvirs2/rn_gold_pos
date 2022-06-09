@@ -97,7 +97,7 @@ export default function SalesEntry() {
                 method: 'GET',
                 callbackResult: (result)=>{
 
-                    console.log('GetProductByCode',result.id);
+                    //console.log('GetProductByCode',result.id);
 
                     if (result?.code) {
 
@@ -748,7 +748,7 @@ export default function SalesEntry() {
                                 bgColor="#9f4c5b"
                                 onPress={() => {
                                     setConfirmModalVisible(false);
-
+                                    setScannedBarcode([]);
                                     setCustomerName('')
                                     setMobileNumber('')
                                     setAddress('')

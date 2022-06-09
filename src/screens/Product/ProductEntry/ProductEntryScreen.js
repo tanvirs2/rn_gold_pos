@@ -9,66 +9,14 @@ import loginToken from '../../../settings/loginToken';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import SelectDropdown from 'react-native-select-dropdown';
 
-import {LocalInput} from '../../../settings/ComponentLib';
+import {LocalInput, LocalSelect} from '../../../settings/ComponentLib';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
 import {taka} from '../../../assets/symbols';
 
 
 
-const LocalSelect = ({selectProps, data}) => {
 
-    const [stDropdownOpen, setDropdownOpen] = useState(false);
-
-
-    return (
-        <View style={{marginTop:30}}>
-            <Text style={{fontSize:20, marginBottom:10}}>{selectProps.placeholder}</Text>
-
-                <View style={{
-                    borderRadius:5,
-                    borderColor: '#988686',
-                    borderWidth: 1,
-                }}>
-
-                    <SelectDropdown
-                        onFocus={()=>{
-                            setDropdownOpen(true);
-                            //console.log(data);
-                        }}
-                        onBlur={()=>{
-                            setDropdownOpen(false);
-                        }}
-                        buttonStyle={{
-                            width: '100%',
-                            borderRadius: 5,
-                        }}
-                        renderDropdownIcon={()=><Ionicons
-                            name={stDropdownOpen ? 'chevron-up': 'chevron-down'}
-                            size={28}
-                            color="#988686FF"
-                        />}
-                        data={data}
-                        onSelect={(selectedItem, index) => {
-                            //console.log(selectedItem.name, index);
-                            selectProps.setValue(selectedItem.name)
-                        }}
-                        buttonTextAfterSelection={(selectedItem, index) => {
-                            // text represented after item is selected
-                            // if data array is an array of objects then return selectedItem.property to render after item is selected
-                            return selectedItem.name;
-                        }}
-                        rowTextForSelection={(item, index) => {
-                            // text represented for each item in dropdown
-                            // if data array is an array of objects then return item.property to represent item in dropdown
-                            return item.name;
-                        }}
-                    />
-
-                </View>
-        </View>
-    );
-}
 
 const ProductEntryScreen = () => {
 

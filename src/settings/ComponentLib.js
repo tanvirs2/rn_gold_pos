@@ -12,6 +12,7 @@ import loaderContext from '../contexts/loaderContext';
 import {taka} from '../assets/symbols';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
+import SelectDropdown from 'react-native-select-dropdown';
 
 export const LocalInput = ({inputProps}) => {
 
@@ -268,7 +269,7 @@ export const TransactionalEntryScreen = ({type}) => {
 
     const [stLoader, setLoader] = useState(false);
 
-    const [stDepositName, setDepositName] = useState('');
+    const [stCustomerName, setCustomerName] = useState('');
     const [stAmount, setAmount] = useState('');
     const [stComment, setComment] = useState('');
     const [stShopId, setShopId] = useState(1);
@@ -286,7 +287,7 @@ export const TransactionalEntryScreen = ({type}) => {
             body: {
                 'id': stId,
                 'description': stComment,
-                'name': stDepositName,
+                'name': stCustomerName,
                 'comment': stComment,
                 'amount': stAmount,
                 'date': moment(date).format('Y-MM-DD'),
@@ -296,7 +297,7 @@ export const TransactionalEntryScreen = ({type}) => {
                 setLoader(false);
                 console.log(result);
 
-                setDepositName('');
+                setCustomerName('');
                 setAmount('');
                 setComment('');
                 setShopId(1);
@@ -319,8 +320,8 @@ export const TransactionalEntryScreen = ({type}) => {
                     <View>
                         <Text style={{fontSize:20, marginBottom:10}}> {type} Name</Text>
                         <CustomInput
-                            value={stDepositName}
-                            setValue={setDepositName}
+                            value={stCustomerName}
+                            setValue={setCustomerName}
                             placeholder={`${type} Name`}
                         />
                     </View>
@@ -405,35 +406,55 @@ export const DeuTransactionalEntryScreen = ({type}) => {
 
     const [stLoader, setLoader] = useState(false);
 
-    const [stDepositName, setDepositName] = useState('');
+    const [stId, setId] = useState(0);
+    const [stCustomerName, setCustomerName] = useState('');
     const [stAmount, setAmount] = useState('');
     const [stComment, setComment] = useState('');
     const [stShopId, setShopId] = useState(1);
-    const [stId, setId] = useState(0);
+
+    const [stInvoicesArray, setInvoicesArray] = useState([]);
+    const [stInvoiceId, setInvoiceId] = useState(0);
 
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
 
+    useEffect(()=>{
+        getInvoices();
+    },[]);
+
+
     const dataSave = async () => {
         setLoader(true);
+
+        /*{
+            "id": 0,
+            "name": "string",
+            "invoiceId": 18,
+            "amount": 10,
+            "date": "2022-06-06",
+            "description": "string",
+            "comment": "string",
+            "shopId": 1
+        }*/
+
 
         customFetch({
             url: 'DueBill/Upsert',
             method: 'POST',
             body: {
                 'id': stId,
-                'description': stComment,
-                'name': stDepositName,
-                'comment': stComment,
+                'name': stCustomerName,
+                'invoiceId': stInvoiceId,
                 'amount': stAmount,
                 'date': moment(date).format('Y-MM-DD'),
+                'description': stComment,
                 'shopId': stShopId,
             },
             callbackResult: (result)=>{
                 setLoader(false);
                 console.log(result);
 
-                setDepositName('');
+                setCustomerName('');
                 setAmount('');
                 setComment('');
                 setShopId(1);
@@ -443,6 +464,17 @@ export const DeuTransactionalEntryScreen = ({type}) => {
                 setOpen(false);
             },
             navigation
+        });
+    }
+
+    const getInvoices = () => {
+
+        customFetch({
+            url: 'DueBill/Get/2',
+            callbackResult: (result) => {
+                setInvoicesArray(result.invoiceCodes);
+                console.log(result.invoiceCodes);
+            },
         });
     }
 
@@ -456,20 +488,29 @@ export const DeuTransactionalEntryScreen = ({type}) => {
                     <View>
                         <Text style={{fontSize:20, marginBottom:10}}> Customer Name</Text>
                         <CustomInput
-                            value={stDepositName}
-                            setValue={setDepositName}
+                            value={stCustomerName}
+                            setValue={setCustomerName}
                             placeholder={`Customer Name`}
                         />
                     </View>
 
-                    <View style={{marginTop:30}}>
+                    {/*<View style={{marginTop:30}}>
                         <Text style={{fontSize:20, marginBottom:10}}>Invoice Number *</Text>
                         <CustomInput
                             value={stAmount}
                             setValue={setAmount}
                             placeholder="Invoice Number"
                         />
-                    </View>
+                    </View>*/}
+
+                    <LocalSelect
+                        data={stInvoicesArray}
+                        selectProps={{
+                            value: stInvoiceId,
+                            setValue: setInvoiceId,
+                            placeholder: 'Invoice Number',
+                        }}
+                    />
 
                     <View style={{marginTop:30}}>
                         <Text style={{fontSize:20, marginBottom:10}}>Amount</Text>
@@ -583,7 +624,7 @@ export const DueTransactionalListScreen = ({type, tableHead}) => {
                 let listArray = result.data.map((data)=>{
 
                     return [
-                        'notReady',
+                        data.name,
 
                         moment(data.date).format('MMMM Do'),
 
@@ -688,6 +729,61 @@ export const DueTransactionalListScreen = ({type, tableHead}) => {
                 </View>
             </ScrollView>
 
+        </View>
+    );
+}
+
+
+export const LocalSelect = ({selectProps, data}) => {
+
+    const [stDropdownOpen, setDropdownOpen] = useState(false);
+
+
+    return (
+        <View style={{marginTop:30}}>
+            <Text style={{fontSize:20, marginBottom:10}}>{selectProps.placeholder}</Text>
+
+            <View style={{
+                borderRadius:5,
+                borderColor: '#988686',
+                borderWidth: 1,
+            }}>
+
+                <SelectDropdown
+                    onFocus={()=>{
+                        setDropdownOpen(true);
+                        //console.log(data);
+                    }}
+                    onBlur={()=>{
+                        setDropdownOpen(false);
+                    }}
+                    buttonStyle={{
+                        width: '100%',
+                        borderRadius: 5,
+                    }}
+                    renderDropdownIcon={()=><Ionicons
+                        name={stDropdownOpen ? 'chevron-up': 'chevron-down'}
+                        size={28}
+                        color="#988686FF"
+                    />}
+                    data={data}
+                    onSelect={(selectedItem, index) => {
+                        //console.log(selectedItem.name, index);
+                        selectProps.setValue(selectedItem.id)
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        // text represented after item is selected
+                        // if data array is an array of objects then return selectedItem.property to render after item is selected
+                        return selectedItem.name;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                        // text represented for each item in dropdown
+                        // if data array is an array of objects then return item.property to represent item in dropdown
+                        return item.name;
+                    }}
+                />
+
+            </View>
         </View>
     );
 }

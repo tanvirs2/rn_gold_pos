@@ -12,7 +12,7 @@ const RetailListScreen = () => {
     return (
         <Fragment>
             <DueTransactionalListScreen type="Retail" tableHead={
-                ['Invoice No', 'Date', 'Category', 'Amount', 'Comment']
+                ['Name', 'Date', 'Category', 'Amount', 'Comment']
             }/>
         </Fragment>
     );
@@ -24,7 +24,7 @@ const WholesaleListScreen = () => {
     return (
         <Fragment>
             <DueTransactionalListScreen type="Wholesale" tableHead={
-                ['Invoice No', 'Date', 'Category', 'Amount', 'Comment']
+                ['Name', 'Date', 'Category', 'Amount', 'Comment']
             }/>
         </Fragment>
     );

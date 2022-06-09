@@ -52,12 +52,12 @@ const menuObject = {
                 {
                     name: 'Due bill receive Entry',
                     icon: '',
-                    route: 'Due Received Entry',
+                    route: 'Due Receive Entry',
                 },
                 {
                     name: 'Due bill receive List',
                     icon: '',
-                    route: 'Due Received List',
+                    route: 'Due Receive List',
                 }
             ],
         },
