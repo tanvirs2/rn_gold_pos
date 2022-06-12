@@ -13,6 +13,7 @@ Product Categories
 Product Category Entry
 List Of Sales
 Product Details Invoice
+Due Received
 Camera
 */
 
@@ -140,18 +141,18 @@ const menuObject = {
 
             ],
         },{
-            mainMenuLabel: 'CRM (Wholesale)',
+            mainMenuLabel: 'CRM',
             mainIcon: 'people',
             subMenu: [
                 {
-                    name: 'Wholesaler Entry',
+                    name: 'Customer Entry',
                     icon: '',
-                    route: 'Sales',
+                    route: 'Customer Entry',
                 },
                 {
-                    name: 'Wholesaler List',
+                    name: 'Customer List',
                     icon: '',
-                    route: 'List Of Sales',
+                    route: 'Customer List',
                 },
 
             ],

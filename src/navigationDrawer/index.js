@@ -36,6 +36,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {customFetch} from '../settings/networking';
 import DueBillsReceivedListScreen from '../screens/Due/DueBillsReceivedList/DueBillsReceivedListScreen';
 import DueBillsReceivedEntryScreen from '../screens/Due/DueBillsReceivedEntry/DueBillsReceivedEntryScreen';
+import CustomerListScreen from '../screens/Customer/CustomerListScreen';
+import CustomerEntryScreen from '../screens/Customer/CustomerEntryScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -154,6 +156,8 @@ const DrawerNavigation = () => {
           <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
           <Drawer.Screen name="Due Receive List" component={DueBillsReceivedListScreen} />
           <Drawer.Screen name="Due Receive Entry" component={DueBillsReceivedEntryScreen} />
+          <Drawer.Screen name="Customer Entry" component={CustomerEntryScreen} />
+          <Drawer.Screen name="Customer List" component={CustomerListScreen} />
           <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
   );

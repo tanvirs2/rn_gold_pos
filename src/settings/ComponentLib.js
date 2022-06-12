@@ -1,6 +1,6 @@
 import {ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import CustomInput from '../components/CustomInput';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {customFetch} from './networking';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
@@ -116,6 +116,207 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
                 </View>
             </View>
         </Modal>
+    );
+}
+
+export const CommonListScreen = (props) => {
+
+    return (
+        <Fragment>
+            <TransactionalListScreen {...props}/>
+        </Fragment>
+    );
+}
+
+const GenericInput = ({name}) => {
+    const [stAmount, setAmount] = useState()
+
+    return (
+        <Fragment>
+            <Text style={{fontSize: 20, marginBottom: 10}}> {name} </Text>
+
+            <CustomInput
+                value={stAmount}
+                setValue={setAmount}
+                placeholder={name}
+            />
+        </Fragment>
+    );
+}
+
+const GenericCommentInput = ({name}) => {
+    const [stAmount, setAmount] = useState()
+
+    return (
+        <Fragment>
+            <Text style={{fontSize:20, marginBottom:10}}>{name}</Text>
+            <CustomInput
+                value={stAmount}
+                setValue={setAmount}
+                multiline={true}
+                numberOfLines={4}
+                placeholder={name}
+            />
+        </Fragment>
+    );
+}
+
+const DateField = ({name}) => {
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+
+
+    return (
+        <Fragment>
+            <Text style={{fontSize:20, marginBottom:10}}> {name} </Text>
+            <CustomButton
+                text={
+                    <Text>
+
+                        {moment(date).format('Y-MM-DD')}
+
+                        &nbsp; ( {moment(date).format('MMMM Do')} )
+
+                        &nbsp;<Ionicons name="calendar-outline" size={24} color="#000"/>
+
+                    </Text>
+                }
+                type="border"
+                onPress={() => {
+                    //console.log(moment(date).format('Y-MM-DD'));
+                    setOpen(true);
+                }}
+            />
+
+
+            <DatePicker
+                mode="date"
+
+                modal
+                open={open}
+                date={date}
+                onConfirm={(date) => {
+                    setOpen(false)
+                    setDate(date)
+                }}
+                onCancel={() => {
+                    setOpen(false)
+                }}
+            />
+        </Fragment>
+    );
+}
+
+export const CommonEntryScreen = (props) => {
+
+    const navigation = useNavigation();
+
+    const [stLoader, setLoader] = useState(false);
+
+    const [stCustomerName, setCustomerName] = useState('');
+    const [stAmount, setAmount] = useState('');
+    const [stComment, setComment] = useState('');
+    const [stShopId, setShopId] = useState(1);
+    const [stId, setId] = useState(0);
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+
+    const dataSave = async () => {
+        setLoader(true);
+
+        customFetch({
+            url: type+'/Upsert',
+            method: 'POST',
+            body: {
+                'id': stId,
+                'description': stComment,
+                'name': stCustomerName,
+                'comment': stComment,
+                'amount': stAmount,
+                'date': moment(date).format('Y-MM-DD'),
+                'shopId': stShopId,
+            },
+            callbackResult: (result)=>{
+                setLoader(false);
+                console.log(result);
+
+                setCustomerName('');
+                setAmount('');
+                setComment('');
+                setShopId(1);
+                setId(0);
+
+                setDate(new Date());
+                setOpen(false);
+            },
+            navigation
+        });
+    }
+
+    const {type, inputs} = props;
+
+    //alert(inputs);
+
+    const inputsElm = (inpObj) => {
+
+        let input = null;
+
+        switch (inpObj.type) {
+            case 'text':
+                input = <GenericInput name={inpObj.name}/>
+                break;
+
+            case 'date':
+                input = <DateField name={inpObj.name}/>
+                break;
+
+            case 'comment':
+                input = <GenericCommentInput name={inpObj.name}/>
+                break;
+
+            default:
+                input = <GenericInput name={inpObj.name}/>
+        }
+
+        return input;
+    }
+
+    return (
+        <Fragment>
+            <View>
+
+                <LoaderViewScreen viewThisComp={stLoader}/>
+
+                <ScrollView>
+                    <View style={{padding:20}}>
+
+                        {
+                            inputs.map((inpObj, ind)=>{
+                                return (
+                                    <View key={ind} style={{marginTop: 30}}>
+                                        {inputsElm(inpObj)}
+                                    </View>
+                                );
+                            })
+                        }
+
+
+                        <View style={{marginTop:30}}>
+
+                            <CustomButton
+                                text="Add"
+                                bgColor={globalButtonColor}
+                                onPress={dataSave}
+                            />
+
+                        </View>
+
+                    </View>
+                </ScrollView>
+            </View>
+        </Fragment>
     );
 }
 

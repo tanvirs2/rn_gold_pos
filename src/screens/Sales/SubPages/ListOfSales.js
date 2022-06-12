@@ -12,7 +12,7 @@ import {Cell, Row, Table, TableWrapper} from 'react-native-table-component';
 import {DetailsModal} from '../../../settings/ComponentLib';
 
 
-const CustomDataTable = () => {
+const CustomDataTable = ({searchValue, toggleBtn}) => {
 
     const navigation = useNavigation();
 
@@ -22,6 +22,7 @@ const CustomDataTable = () => {
     const [stLoader, setLoader] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [stIdForModal, setIdForModal] = useState(0);
+
 
     const [stProducts, setProducts] = useState({
         tableHead: ['Product', 'Category', 'Amount', 'Invoice No.', 'Action'],
@@ -42,7 +43,7 @@ const CustomDataTable = () => {
 
 
         customFetch({
-            url: 'Sale/GetAll?pageIndex=0&pageSize=200',
+            url: `Sale/GetAll?pageIndex=0&pageSize=200&searchValue=${searchValue}`,
             method: 'GET',
             callbackResult: (result)=>{
 
@@ -81,7 +82,7 @@ const CustomDataTable = () => {
         });
 
 
-    }, [isFocused, stRefreshing]);
+    }, [isFocused, stRefreshing, toggleBtn]);
 
     function alertIndex(index) {
         Alert.alert(`This is row ${index + 1}`);
@@ -111,6 +112,7 @@ const CustomDataTable = () => {
                 >
                     <View>
                         <View style={styles.container}>
+
 
                             {
                                 modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url="Sale/Get/"/>
@@ -174,25 +176,32 @@ const CustomDataTable = () => {
 
 const ListOfSales = () => {
 
+    const [stSearchValue, setSearchValue] = useState('');
+    const [stSearchBtn, setSearchBtn] = useState('');
+
     return (
-        <View style={{ alignItems: 'center'}}>
-            <View style={{width:'95%', }}>
-                <View style={{marginTop:15, alignItems: 'center'}}>
-                    <Text style={{fontSize:28, fontWeight:'bold'}}>List of Sales</Text>
+        <View style={{alignItems: 'center'}}>
+            <View style={{width: '95%'}}>
+                <View style={{marginTop: 15, alignItems: 'center'}}>
+                    <Text style={{fontSize: 28, fontWeight: 'bold'}}>List of Sales</Text>
                 </View>
 
-                <View style={{height:100, alignItems: 'flex-start', marginTop:20, width:'100%'}}>
-                    <Text style={{fontSize:18, marginBottom:5}}>Search Invoice Number </Text>
+                <View style={{height: 100, alignItems: 'flex-start', marginTop: 20, width: '100%'}}>
+                    <Text style={{fontSize: 18, marginBottom: 5}}>Search Invoice Number </Text>
 
-                    <View style={{width:'100%', flexDirection:'row'}}>
-                        <View style={{width:'75%', marginRight:'5%'}}>
-                            <CustomInput/>
+                    <View style={{width: '100%', flexDirection: 'row'}}>
+                        <View style={{width: '75%', marginRight: '5%'}}>
+                            <CustomInput
+                                value={stSearchValue}
+                                setValue={setSearchValue}
+                            />
                         </View>
 
-                        <View style={{width:'20%'}}>
+                        <View style={{width: '20%'}}>
                             <CustomButton
                                 text={<Ionicons color="red" size={23} name={'search-outline'}/>}
                                 bgColor="white"
+                                onPress={()=>setSearchBtn(prevState => !prevState)}
                             />
                         </View>
 
@@ -200,8 +209,8 @@ const ListOfSales = () => {
 
                 </View>
 
-                <View >
-                    <CustomDataTable/>
+                <View>
+                    <CustomDataTable searchValue={stSearchValue} toggleBtn={stSearchBtn}/>
                 </View>
 
             </View>
