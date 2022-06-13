@@ -119,14 +119,169 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
     );
 }
 
-export const CommonListScreen = (props) => {
+export const CommonListScreen = ({type, tableHead, tableDB}) => {
+
+    const navigation = useNavigation();
+
+    const styles = StyleSheet.create({
+        container: { flex: 1, padding: 16, paddingTop: 30 },
+        head: { height: 60, backgroundColor: '#cccccc' },
+        text: { margin: 6, fontWeight:'bold' },
+        cell: { margin: 6 }
+    });
+
+    const isFocused = useIsFocused();
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [stDeposits, setDeposits] = useState({
+        tableHead, //['Deposit Name', 'Amount', 'Comment', 'Date']
+        tableData: [
+            ['', '', '', ''],
+        ]
+    })
+
+    const loadContext = useContext(loaderContext);
+
+    useEffect( ()=>{
+
+        loadContext.loaderDispatch('loading');
+
+        customFetch({
+            url: type+'/GetAll?pageIndex=0&pageSize=200',
+            method: 'GET',
+            callbackResult: (result)=>{
+                loadContext.loaderDispatch('loaded');
+
+                let listArray = result.data.map((data)=>{
+
+                    let tableFacedDB = tableDB.map(dbName=> {
+
+                        let name = dbName.split('|')[0];
+                        let type = dbName.split('|')[1];
+                        //return dbName.split('|')[1];
+
+                        let processedData = null;
+
+                        switch (type){
+                            case 'text':
+                                processedData = String(data[name]);
+                                break;
+                            case 'taka':
+                                processedData = `${taka} ${data[name]}`;
+                                break;
+                            case 'date':
+                                processedData = moment(data[name]).format('MMMM Do');
+                                break;
+
+                        }
+
+                        return processedData;
+                    })
+
+                    //console.log('tableFacedDB---->', tableFacedDB);
+
+
+                    return tableFacedDB;
+                })
+
+
+
+                setDeposits((prevState)=>{
+                    return {
+                        ...prevState,
+                        tableData: [
+                            ...listArray
+                        ]
+                    };
+                })
+            },
+            navigation,
+            callbackError: (err)=>{
+                loadContext.loaderDispatch('loaded');
+            }
+        });
+
+    }, [isFocused]);
 
     return (
-        <Fragment>
-            <TransactionalListScreen {...props}/>
-        </Fragment>
+        <View>
+
+            <ScrollView>
+                <View style={{marginTop:10,padding:20, justifyContent:'center', alignItems:'center'}}>
+
+                    <View>
+                        <Pressable onPress={() => setOpen(true)} >
+                            <View style={{backgroundColor:'#000', paddingHorizontal:10, paddingVertical:5, borderRadius:10, flexDirection:'row', marginTop:1}}>
+
+
+                                <View>
+                                    <Ionicons name="calendar-outline" size={24} color="#fff"/>
+                                </View>
+
+                                <View>
+                                    <Text style={{color: 'gray', fontWeight:'bold', fontSize:15}}> {moment().diff(date, 'days') === 0 ? 'Today':'Day' } &nbsp;</Text>
+                                </View>
+
+                                <View>
+                                    <Text style={{color: '#fff', fontWeight:'bold', fontSize:15}}>{moment(date).format('MMMM Do')} &nbsp;</Text>
+                                </View>
+
+                                <View>
+                                    <Ionicons name="chevron-down-outline" size={20} color="#fff"/>
+                                </View>
+
+
+                            </View>
+                        </Pressable>
+
+
+                        <DatePicker
+                            mode="date"
+
+                            modal
+                            open={open}
+                            date={date}
+                            onConfirm={(date) => {
+                                setOpen(false)
+                                setDate(date)
+                            }}
+                            onCancel={() => {
+                                setOpen(false)
+                            }}
+                        />
+                    </View>
+
+                </View>
+
+                <View>
+                    {loadContext.loader && <View style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(196,196,196,0.72)',
+                        zIndex: 1,
+                    }}>
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <ActivityIndicator size="large" color="#0000ff"/>
+                        </View>
+                    </View>}
+
+                    <View style={styles.container}>
+
+                        <Table>
+                            <Row data={stDeposits.tableHead} style={styles.head} textStyle={styles.text}/>
+                            <Rows data={stDeposits.tableData} textStyle={styles.cell}/>
+                        </Table>
+
+                    </View>
+                </View>
+            </ScrollView>
+
+        </View>
     );
 }
+
 
 const GenericInput = ({name, type, value, setValue}) => {
     const [stAmount, setAmount] = useState()
