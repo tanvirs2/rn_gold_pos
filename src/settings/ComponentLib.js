@@ -128,7 +128,7 @@ export const CommonListScreen = (props) => {
     );
 }
 
-const GenericInput = ({name}) => {
+const GenericInput = ({name, type, value, setValue}) => {
     const [stAmount, setAmount] = useState()
 
     return (
@@ -136,23 +136,24 @@ const GenericInput = ({name}) => {
             <Text style={{fontSize: 20, marginBottom: 10}}> {name} </Text>
 
             <CustomInput
-                value={stAmount}
-                setValue={setAmount}
+                value={value}
+                setValue={setValue}
                 placeholder={name}
+                keyboardType={type}
             />
         </Fragment>
     );
 }
 
-const GenericCommentInput = ({name}) => {
+const GenericCommentInput = ({name, value, setValue}) => {
     const [stAmount, setAmount] = useState()
 
     return (
         <Fragment>
             <Text style={{fontSize:20, marginBottom:10}}>{name}</Text>
             <CustomInput
-                value={stAmount}
-                setValue={setAmount}
+                value={value}
+                setValue={setValue}
                 multiline={true}
                 numberOfLines={4}
                 placeholder={name}
@@ -161,7 +162,7 @@ const GenericCommentInput = ({name}) => {
     );
 }
 
-const DateField = ({name}) => {
+const DateField = ({name, value, setValue}) => {
 
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
@@ -214,70 +215,105 @@ export const CommonEntryScreen = (props) => {
 
     const [stLoader, setLoader] = useState(false);
 
-    const [stCustomerName, setCustomerName] = useState('');
-    const [stAmount, setAmount] = useState('');
-    const [stComment, setComment] = useState('');
-    const [stShopId, setShopId] = useState(1);
-    const [stId, setId] = useState(0);
 
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
+    const {type, inputs} = props;
+
+
+    /*let myObj = {};
+
+    inputs.forEach((currentVal, index) => {
+        myObj[currentVal.dbName] = currentVal.value;
+        //console.log(currentVal.dbName);
+    });
+
+    console.log(myObj);
+
+    console.log(object);
+
+    console.log(bodyMapped)*/
 
     const dataSave = async () => {
+
         setLoader(true);
+
+        const bodyMapped = inputs.map((inpObj, ind)=>{
+
+            return {
+                [inpObj.dbName]: inpObj.value
+            };
+        })
+
+        let bodyMappedSingle = Object.assign({}, ...bodyMapped);
+
 
         customFetch({
             url: type+'/Upsert',
             method: 'POST',
-            body: {
-                'id': stId,
-                'description': stComment,
-                'name': stCustomerName,
-                'comment': stComment,
-                'amount': stAmount,
-                'date': moment(date).format('Y-MM-DD'),
-                'shopId': stShopId,
-            },
+            body: bodyMappedSingle,
             callbackResult: (result)=>{
                 setLoader(false);
-                console.log(result);
+                //console.log('result---->', result);
 
-                setCustomerName('');
-                setAmount('');
-                setComment('');
-                setShopId(1);
-                setId(0);
-
-                setDate(new Date());
-                setOpen(false);
+                inputs.forEach((currentVal, index) => {
+                    if (currentVal.setValue) {
+                        currentVal.setValue(null);
+                    }
+                });
             },
             navigation
         });
     }
 
-    const {type, inputs} = props;
 
-    //alert(inputs);
 
     const inputsElm = (inpObj) => {
 
         let input = null;
 
         switch (inpObj.type) {
+            case 'hide':
+                input = <Fragment/>
+                break;
+
             case 'text':
-                input = <GenericInput name={inpObj.name}/>
+                input = <GenericInput
+                    name={inpObj.name}
+                    setValue={inpObj.setValue}
+                    value={inpObj.value}
+                />
+                break;
+
+            case 'numeric':
+                input = <GenericInput
+                    name={inpObj.name}
+                    setValue={inpObj.setValue}
+                    value={inpObj.value}
+                    type="numeric"
+                />
                 break;
 
             case 'date':
-                input = <DateField name={inpObj.name}/>
+                input = <DateField
+                    name={inpObj.name}
+                    setValue={inpObj.setValue}
+                    value={inpObj.value}
+                />
                 break;
 
             case 'comment':
-                input = <GenericCommentInput name={inpObj.name}/>
+                input = <GenericCommentInput
+                    name={inpObj.name}
+                    setValue={inpObj.setValue}
+                    value={inpObj.value}
+                />
                 break;
 
             default:
-                input = <GenericInput name={inpObj.name}/>
+                input = <GenericInput
+                    name={inpObj.name}
+                    setValue={inpObj.setValue}
+                    value={inpObj.value}
+                />
         }
 
         return input;
@@ -295,7 +331,7 @@ export const CommonEntryScreen = (props) => {
                         {
                             inputs.map((inpObj, ind)=>{
                                 return (
-                                    <View key={ind} style={{marginTop: 30}}>
+                                    <View key={ind} style={{marginTop: inpObj.type==='hide' ? 0 : 30}}>
                                         {inputsElm(inpObj)}
                                     </View>
                                 );
