@@ -38,6 +38,7 @@ import DueBillsReceivedListScreen from '../screens/Due/DueBillsReceivedList/DueB
 import DueBillsReceivedEntryScreen from '../screens/Due/DueBillsReceivedEntry/DueBillsReceivedEntryScreen';
 import CustomerListScreen from '../screens/Customer/CustomerListScreen';
 import CustomerEntryScreen from '../screens/Customer/CustomerEntryScreen';
+import PurchaseEntryTab from '../screens/Purchase/PurchaseEntryTab';
 
 
 const Drawer = createDrawerNavigator();
@@ -158,6 +159,7 @@ const DrawerNavigation = () => {
           <Drawer.Screen name="Due Receive Entry" component={DueBillsReceivedEntryScreen} />
           <Drawer.Screen name="Customer Entry" component={CustomerEntryScreen} />
           <Drawer.Screen name="Customer List" component={CustomerListScreen} />
+          <Drawer.Screen name="Purchase Entry" component={PurchaseEntryTab} />
           <Drawer.Screen name="Camera" component={CameraScreen} />
       </Drawer.Navigator>
   );

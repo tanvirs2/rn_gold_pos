@@ -1,9 +1,5 @@
 module.exports = {
-  root: false,
+  root: true,
   extends: '@react-native-community',
-
   ignorePatterns: ['*', 'temp.js'],
-  rules: {
-    //...
-  },
 };

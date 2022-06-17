@@ -1,21 +1,16 @@
-/*eslint-disable*/
-
 import React, {Fragment, useState} from 'react';
 import {CommonEntryScreen} from '../../settings/ComponentLib';
 
+const PurchaseEntryScreen = () => {
 
-const CustomerEntryScreen = () => {
-
-    //const [stId, setId] = useState(0);
     const [stCustomerName, setCustomerName] = useState('');
     const [stMobile, setMobile] = useState('');
     const [stAddress, setAddress] = useState('');
 
-
     return (
         <Fragment>
             <CommonEntryScreen
-                type="Customar"
+                type="Purchase"
                 inputs={[
                     {
                         name: 'id',
@@ -62,5 +57,4 @@ const CustomerEntryScreen = () => {
     );
 }
 
-
-export default CustomerEntryScreen;
+export default PurchaseEntryScreen;

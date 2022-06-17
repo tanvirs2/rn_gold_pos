@@ -4,11 +4,11 @@
 
 import 'react-native';
 import React from 'react';
-import App3 from '../App';
+import App from '../App_backup';
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
 
 it('renders correctly', () => {
-  renderer.create(<App3 />);
+  renderer.create(<App />);
 });

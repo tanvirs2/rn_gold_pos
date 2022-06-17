@@ -68,9 +68,9 @@ const menuObject = {
             mainIcon: 'cart',
             subMenu: [
                 {
-                    name: 'New Gold Purchase',
+                    name: 'Purchase Entry',
                     icon: '',
-                    route: '',
+                    route: 'Purchase Entry',
                 },
                 {
                     name: 'New Gold Purchase List',
