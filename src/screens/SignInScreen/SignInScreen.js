@@ -49,6 +49,8 @@ export default function SignInScreen({route}) {
 
     loadContext.loaderDispatch('loading');
 
+    //loadContext.loaderDispatch('loaded');navigation.navigate('DrawerNavigation'); // when electricity off
+
     fetch(
       apiUrl + `Device/Login`,
       {

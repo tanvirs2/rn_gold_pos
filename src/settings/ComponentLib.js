@@ -13,6 +13,7 @@ import {taka} from '../assets/symbols';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import SelectDropdown from 'react-native-select-dropdown';
+import IconButton from '../components/IconButton/IconButton';
 
 export const LocalInput = ({inputProps}) => {
 
@@ -370,6 +371,7 @@ export const CommonEntryScreen = (props) => {
 
     const [stLoader, setLoader] = useState(false);
 
+    const [stIfArrayType, setIfArrayType] = useState(['', '']);
 
     const {type, inputs} = props;
 
@@ -425,6 +427,10 @@ export const CommonEntryScreen = (props) => {
 
         let input = null;
 
+        //arrayAbstraction
+
+        //console.log(inpObj.arrayAbstraction)
+
         switch (inpObj.type) {
             case 'hide':
                 input = <Fragment/>
@@ -437,6 +443,18 @@ export const CommonEntryScreen = (props) => {
                     value={inpObj.value}
                 />
                 break;
+
+            case 'select':
+                input = <LocalSelect
+                    data={inpObj.selectOptions}
+                    selectProps={{
+                        setValue: inpObj.setValue,
+                        value: inpObj.value,
+                        placeholder: inpObj.name,
+                    }}
+                />
+                break;
+
 
             case 'numeric':
                 input = <GenericInput
@@ -461,6 +479,56 @@ export const CommonEntryScreen = (props) => {
                     setValue={inpObj.setValue}
                     value={inpObj.value}
                 />
+                break;
+
+            case 'array':
+                input = <View>
+                    <View style={{flexDirection:'row', justifyContent: 'space-between', marginBottom:5}}>
+                        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#000'}}>
+                            {inpObj.name}
+                        </Text>
+                        <View>
+                            <IconButton
+                                onPress={()=>{
+                                    inpObj.setValue(prevState => {
+
+                                        //console.log(prevState);
+
+                                        return [...prevState, inpObj.arrayAbstraction]
+                                    });
+                                    //console.log(inpObj.arrayAbstraction)
+                                }}
+                                name="add-outline"
+                            />
+                        </View>
+                    </View>
+
+                    {
+                        inpObj.value.map((arr, key)=>{
+
+                            //console.log('---aa-->', arr); inpObj.setValue
+
+                            return (
+                                <View key={key} style={{borderWidth: 1, padding: 5, borderRadius: 5, marginBottom: 10, backgroundColor:'rgba(185,185,185,0.32)'}}>
+                                    {
+                                        arr.map((inpObj2, ind)=>{
+
+                                            console.log('---aa-->', inpObj2);
+
+                                            return (
+                                                <View key={ind} style={{marginTop: inpObj2.type==='hide' ? 0 : 30}}>
+                                                    {inputsElm(inpObj2)}
+                                                </View>
+                                            );
+                                        })
+                                    }
+                                </View>
+                            )
+                        })
+                    }
+
+
+                </View>
                 break;
 
             default:

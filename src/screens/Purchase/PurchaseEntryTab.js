@@ -9,7 +9,7 @@ const Tab = createMaterialTopTabNavigator();
 const NewGold = () => {
     return (
         <View>
-            <PurchaseEntryScreen/>
+            <PurchaseEntryScreen type="newGold"/>
         </View>
     );
 }
@@ -17,7 +17,7 @@ const NewGold = () => {
 const OldGold = () => {
     return (
         <View>
-            <PurchaseEntryScreen/>
+            <PurchaseEntryScreen type="oldGold"/>
         </View>
     );
 }
