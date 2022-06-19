@@ -2,7 +2,10 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {CommonEntryScreen} from '../../settings/ComponentLib';
 import {customFetch} from '../../settings/networking';
 import {useNavigation} from '@react-navigation/native';
-import {TextInput} from 'react-native';
+import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Rows, Table} from 'react-native-table-component';
+import CustomButton from '../../components/CustomButton';
+import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
 
 const PurchaseEntryScreen = ({type}) => {
 
@@ -35,200 +38,9 @@ const PurchaseEntryScreen = ({type}) => {
     }
   ]
 }
-*/
-    const navigation = useNavigation();
-
-    const [stLoader, setLoader] = useState(false);
-    const [stRefreshing, setRefreshing] = useState(false);
-    const [stCustomerName, setCustomerName] = useState('');
-    const [stMobile, setMobile] = useState('');
 
 
-    const [stPr_name, setPr_name] = useState('');
-    const [stPr_description, setPr_description] = useState('');
-    const [stPr_category, setPr_category] = useState('');
-    const [stPr_grade, setPr_grade] = useState('');
-    const [stPr_weight, setPr_weight] = useState('');
-
-
-    const [stProductsArr, setProductsArr] = useState([]);
-    const [stProductsArrData, setProductsArrData] = useState([{
-        name: '',
-        description: '',
-        category: '',
-        grade: '',
-        weigh: ''
-    }]);
-
-    const [stAddress, setAddress] = useState('');
-    const [stProductDependency, setProductDependency] = useState({
-        grades:[],
-        categories: [],
-        types: [],
-        status: [],
-        stock: [],
-    });
-
-
-    useEffect(()=>{
-        setLoader(true);
-
-        customFetch({
-            url: 'Product/Get/0',
-            method: 'GET',
-            callbackResult: (result)=>{
-
-                const { grades, categories, types} = result;
-
-                setProductDependency({
-                    grades,
-                    categories,
-                    types,
-                    status: [
-                        {id: 1, name: 'Yes'},
-                        {id: 2, name: 'No'},
-                    ],
-                    stock: [
-                        {id: 1, name: 'Yes'},
-                        {id: 2, name: 'No'},
-                    ],
-                })
-
-                setRefreshing(false);
-                setLoader(false);
-            },
-            navigation
-        });
-
-    },[stRefreshing])
-
-    return (
-        <Fragment>
-
-            {/*{
-                stProductsArrData.map((val, key)=>(
-                    <TextInput key={key}
-                        value={val.name}
-                       onChangeText={(inpData)=>{
-                           let list = [...stProductsArrData];
-                           list[key]['name'] = inpData;
-                           setProductsArrData(list);
-                       }}
-                    />
-                ))
-            }*/}
-
-            {/*{
-                stProductsArr.map((val, key, thisArr)=> {
-                    //console.log('---', key, '---',val[0].value)
-                    return (
-                        <TextInput
-                            key={key}
-                            value={val[2].value}
-
-                            onChangeText={(inpData) => {
-                                let list = [...stProductsArr];
-                                list[key][2].value = inpData;
-                                setProductsArr(list);
-                            }}
-
-                            placeholder="aaaaa"
-
-                        />
-                    );
-                })
-            }*/}
-
-            <CommonEntryScreen
-                type="Purchase"
-                inputs={[
-                    {
-                        type: 'hide',
-                        name: 'id',
-                        dbName: 'id',
-                        value: 0,
-                    },
-                    {
-                        type: 'hide',
-                        name: 'isActive',
-                        dbName: 'isActive',
-                        value: true,
-                    },
-                    {
-                        type: 'hide',
-                        name: 'shopId',
-                        dbName: 'shopId',
-                        value: 1,
-                    },
-                    {
-                        type: 'text',
-                        name: 'Seller’s Name',
-                        dbName: 'name',
-                        value: stCustomerName,
-                        setValue: setCustomerName,
-                    },
-                    {
-                        type: 'numeric',
-                        name: 'Mobile Number',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    },
-                    {
-                        type: 'comment',
-                        name: 'Address',
-                        dbName: 'address',
-                        value: stAddress,
-                        setValue: setAddress,
-                    },
-                    {
-                        type: 'numeric',
-                        name: 'Product’s Name',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    }, {
-                        type: 'select',
-                        selectOptions: stProductDependency.grades,
-                        name: 'Karat',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    },
-                    {
-                        type: 'select',
-                        selectOptions: stProductDependency.categories,
-                        name: 'Category',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    }, {
-                        type: 'numeric',
-                        name: 'Weight (gm)',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    },
-                    {
-                        type: 'numeric',
-                        name: 'Price (p/g)',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    }, {
-                        type: 'numeric',
-                        name: 'Buying Price',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    }, {
-                        type: 'numeric',
-                        name: 'Selling Price',
-                        dbName: 'mobile',
-                        value: stMobile,
-                        setValue: setMobile,
-                    },
-                    {
+{
                         type: 'array',
                         arrayAbstraction: [
                             {
@@ -280,10 +92,370 @@ const PurchaseEntryScreen = ({type}) => {
                         value: stProductsArr,
                         setValue: setProductsArr,
                     },
-                ]}
-            />
+*/
+    const navigation = useNavigation();
+
+    const [stLoader, setLoader] = useState(false);
+    const [stRefreshing, setRefreshing] = useState(false);
+    const [stCustomerName, setCustomerName] = useState('');
+    const [stMobile, setMobile] = useState('');
+
+
+    const [stPr_name, setPr_name] = useState('');
+    const [stPr_description, setPr_description] = useState('');
+    const [stPr_category, setPr_category] = useState('');
+    const [stPr_grade, setPr_grade] = useState('');
+    const [stPr_weight, setPr_weight] = useState('');
+
+
+    const [stProductsArr, setProductsArr] = useState([]);
+    const [stTable, setTable] = useState([
+        {
+            table: [
+                ['Product’s Name',  ':', 'result.name'],
+                ['Comment',     ':', 'result.description'],
+                ['Karat',           ':', 'result.grade'],
+                ['category',        ':', 'result.category'],
+                ['Weight',          ':', 40],
+                ['Price',       ':', 100],
+                ['Barcode',         ':', 'result.code'],
+            ]
+        }
+    ]);
+
+    const [stAddress, setAddress] = useState('');
+    const [stProductDependency, setProductDependency] = useState({
+        grades:[],
+        categories: [],
+        types: [],
+        status: [],
+        stock: [],
+    });
+
+
+    useEffect(()=>{
+        setLoader(true);
+
+        customFetch({
+            url: 'Product/Get/0',
+            method: 'GET',
+            callbackResult: (result)=>{
+
+                const { grades, categories, types} = result;
+
+                setProductDependency({
+                    grades,
+                    categories,
+                    types,
+                    status: [
+                        {id: 1, name: 'Yes'},
+                        {id: 2, name: 'No'},
+                    ],
+                    stock: [
+                        {id: 1, name: 'Yes'},
+                        {id: 2, name: 'No'},
+                    ],
+                })
+
+                setRefreshing(false);
+                setLoader(false);
+            },
+            navigation
+        });
+
+    },[stRefreshing])
+
+    return (
+        <Fragment>
+            <ScrollView>
+                <CommonEntryScreen
+                    type="Purchase"
+                    saveBtn={false}
+                    inputs={[
+                        {
+                            type: 'hide',
+                            name: 'id',
+                            dbName: 'id',
+                            value: 0,
+                        },
+                        {
+                            type: 'hide',
+                            name: 'isActive',
+                            dbName: 'isActive',
+                            value: true,
+                        },
+                        {
+                            type: 'hide',
+                            name: 'shopId',
+                            dbName: 'shopId',
+                            value: 1,
+                        },
+                        {
+                            type: 'text',
+                            name: 'Seller’s Name',
+                            dbName: 'name',
+                            value: stCustomerName,
+                            setValue: setCustomerName,
+                        },
+                        {
+                            type: 'numeric',
+                            name: 'Mobile Number',
+                            dbName: 'mobile',
+                            value: stMobile,
+                            setValue: setMobile,
+                        },
+                        {
+                            type: 'comment',
+                            name: 'Address',
+                            dbName: 'address',
+                            value: stAddress,
+                            setValue: setAddress,
+                        }
+
+                    ]}
+                />
+
+                <View style={{borderWidth:1, borderColor:globalBackgroundColor, backgroundColor:'#fdf8ed'}}>
+                    <CommonEntryScreen
+                        type="Purchase"
+                        inputs={[
+                            {
+                                type: 'numeric',
+                                name: 'Product’s Name',
+                                dbName: 'mobile',
+                                value: stMobile,
+                                setValue: setMobile,
+                            },
+                            {
+                                type: 'select',
+                                selectOptions: stProductDependency.grades,
+                                name: 'Karat',
+                                dbName: 'mobile',
+                                value: stMobile,
+                                setValue: setMobile,
+                            },
+                            {
+                                type: 'select',
+                                selectOptions: stProductDependency.categories,
+                                name: 'Category',
+                                dbName: 'mobile',
+                                value: stMobile,
+                                setValue: setMobile,
+                            }, {
+                                type: 'numeric',
+                                name: 'Weight (gm)',
+                                dbName: 'mobile',
+                                value: stMobile,
+                                setValue: setMobile,
+                            },
+                            {
+                                type: 'numeric',
+                                name: 'Price (p/g)',
+                                dbName: 'mobile',
+                                value: stMobile,
+                                setValue: setMobile,
+                            }
+
+                        ]}
+                        btnName="Add"
+                    />
+                </View>
+
+
+                <View style={{margin:30}}>
+
+                    {
+                        stTable?.map((elm, index) => {
+
+                            //console.log('tbl--------------->',elm)
+
+                            return <View key={index} style={{}}>
+
+                                <View style={{marginBottom: 20}}>
+
+                                    {/*<View style={{backgroundColor: globalBackgroundColor, borderRadius:3, padding:3, paddingLeft:10, marginBottom:3}}>
+                                        <Text style={{fontWeight:'bold', fontSize:18, color:'#000'}}>Item {index+1}</Text>
+                                    </View>*/}
+
+                                    <Table>
+                                        <Rows data={elm.table} />
+                                    </Table>
+
+                                </View>
+
+                            </View>
+                        })
+                    }
+                </View>
+
+                <View style={[styles.container, {backgroundColor: '#fdf2e6'}]}>
+
+                    <Text style={styles.fontBold}>Product Detail</Text>
+
+                    {
+                        stTable.map((elm, index) => (
+                            <View key={index} style={styles.productDetailsBorder}>
+
+                                <View style={{marginBottom: 20}}>
+
+                                    <Table>
+                                        <Rows data={elm.table} textStyle={styles.text}/>
+                                    </Table>
+
+                                </View>
+
+                            </View>
+                        ))
+                    }
+
+                    <View style={{flexDirection:'row'}}>
+                        <View style={{flex:1, margin:10}}>
+                            <CustomButton
+                                text="Reset"
+                                bgColor="#9f4c5b"
+                                onPress={() => {
+                                    /*setConfirmModalVisible(false);
+                                    setScannedBarcode([]);
+                                    setCustomerName('')
+                                    setMobileNumber('')
+                                    setAddress('')
+                                    setComment('')
+                                    setBarcode('')
+                                    setProductList([])
+                                    setTable([])*/
+                                }}
+                            />
+                        </View>
+                        <View style={{flex:1, margin:10}}>
+                            <CustomButton
+                                text="Save"
+                                bgColor={globalButtonColor}
+                                onPress={() => {
+                                    /*setConfirmModalVisible(true);*/
+                                }}
+                            />
+                        </View>
+                    </View>
+
+                </View>
+            </ScrollView>
+
         </Fragment>
     );
 }
 
 export default PurchaseEntryScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 10,
+        marginBottom: 3,
+    },
+    barcodeIcon: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: globalButtonColor,
+        padding: 10,
+        borderRadius: 5,
+        marginLeft: 5,
+        height: 50,
+    },
+
+    barcodeInput: {
+        width: '100%',
+        marginRight: 20,
+        borderLeftWidth: 1,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderBottomLeftRadius: 5,
+        borderTopLeftRadius: 5,
+        borderColor: '#777',
+        backgroundColor: '#ffffff',
+        height: 50,
+        padding: 10,
+    },
+
+    addButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: globalButtonColor,
+        padding: 10,
+        borderColor: '#777777',
+        borderRightWidth: 1,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
+        marginLeft: 0,
+        height: 50,
+    },
+
+    productDetailsBorder: {borderWidth: 1, borderRadius: 5, borderColor: '#676666', padding: 15, marginBottom: 10, backgroundColor: '#fff'},
+    flexRow: {flex: 1, flexDirection: 'row', justifyContent: 'center', padding: 10},
+    fontBold: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
+    text: {margin: 6},
+
+
+
+
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        borderRadius: 3,
+        borderWidth: 5,
+        borderColor: globalBackgroundColor,
+        backgroundColor: "white",
+        margin: 30,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 10,
+            height: 10
+        },
+        shadowOpacity: 0.01,
+        shadowRadius: 10,
+        elevation: 50
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    rnholeView: {
+        width: 500,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+
+
+    buttonText: {
+        fontWeight: 'bold',
+        fontFamily: 'Gill Sans',
+        textAlign: 'center',
+        margin: 8,
+        color: '#ffffff',
+        backgroundColor: 'transparent',
+    },
+});
