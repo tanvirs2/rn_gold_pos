@@ -69,6 +69,7 @@ const PurchaseEntryScreen = ({type}) => {
         stock: [],
     });
 
+
     useEffect(()=>{
         setLoader(true);
 
@@ -104,7 +105,7 @@ const PurchaseEntryScreen = ({type}) => {
     return (
         <Fragment>
 
-            {
+            {/*{
                 stProductsArrData.map((val, key)=>(
                     <TextInput key={key}
                         value={val.name}
@@ -115,7 +116,28 @@ const PurchaseEntryScreen = ({type}) => {
                        }}
                     />
                 ))
-            }
+            }*/}
+
+            {/*{
+                stProductsArr.map((val, key, thisArr)=> {
+                    //console.log('---', key, '---',val[0].value)
+                    return (
+                        <TextInput
+                            key={key}
+                            value={val[2].value}
+
+                            onChangeText={(inpData) => {
+                                let list = [...stProductsArr];
+                                list[key][2].value = inpData;
+                                setProductsArr(list);
+                            }}
+
+                            placeholder="aaaaa"
+
+                        />
+                    );
+                })
+            }*/}
 
             <CommonEntryScreen
                 type="Purchase"
@@ -172,7 +194,8 @@ const PurchaseEntryScreen = ({type}) => {
                         dbName: 'mobile',
                         value: stMobile,
                         setValue: setMobile,
-                    }, {
+                    },
+                    {
                         type: 'select',
                         selectOptions: stProductDependency.categories,
                         name: 'Category',
@@ -185,7 +208,8 @@ const PurchaseEntryScreen = ({type}) => {
                         dbName: 'mobile',
                         value: stMobile,
                         setValue: setMobile,
-                    }, {
+                    },
+                    {
                         type: 'numeric',
                         name: 'Price (p/g)',
                         dbName: 'mobile',
@@ -203,7 +227,8 @@ const PurchaseEntryScreen = ({type}) => {
                         dbName: 'mobile',
                         value: stMobile,
                         setValue: setMobile,
-                    }, {
+                    },
+                    {
                         type: 'array',
                         arrayAbstraction: [
                             {
@@ -218,8 +243,6 @@ const PurchaseEntryScreen = ({type}) => {
                                 type: 'text',
                                 name: 'name',
                                 dbName: 'mobile',
-                                value: stPr_name,
-                                setValue: setPr_name,
                             },
                             {
                                 type: 'comment',
@@ -230,6 +253,7 @@ const PurchaseEntryScreen = ({type}) => {
                             },
                             {
                                 type: 'select',
+                                selectOptions: stProductDependency.categories,
                                 name: 'category',
                                 dbName: 'mobile',
                                 value: stPr_category,
@@ -237,6 +261,7 @@ const PurchaseEntryScreen = ({type}) => {
                             },
                             {
                                 type: 'select',
+                                selectOptions: stProductDependency.grades,
                                 name: 'grade',
                                 dbName: 'mobile',
                                 value: stPr_grade,
@@ -250,8 +275,8 @@ const PurchaseEntryScreen = ({type}) => {
                                 setValue: setPr_weight,
                             },
                         ],
-                        name: 'productList',
-                        dbName: 'mobile',
+                        name: 'Add Product',
+                        dbName: 'arrrrrrrr',
                         value: stProductsArr,
                         setValue: setProductsArr,
                     },

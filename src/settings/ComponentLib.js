@@ -1,4 +1,4 @@
-import {ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, Vibration, View} from 'react-native';
 import CustomInput from '../components/CustomInput';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {customFetch} from './networking';
@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
 import {Row, Rows, Table} from 'react-native-table-component';
 import CustomButton from '../components/CustomButton';
-import {globalButtonColor} from './color';
+import {globalBackgroundColor, globalButtonColor} from './color';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import loaderContext from '../contexts/loaderContext';
 import {taka} from '../assets/symbols';
@@ -423,13 +423,34 @@ export const CommonEntryScreen = (props) => {
 
 
 
-    const inputsElm = (inpObj) => {
+    const inputsElm = (inpObj, child = false, childOptions) => {
 
         let input = null;
 
         //arrayAbstraction
 
         //console.log(inpObj.arrayAbstraction)
+
+        const valueChangeWhenInputTypeArray = (inpText) => {
+
+            if (child) {
+                //alert('dd')
+                //console.log('---zzzxxxxx-->', childOptions.rootField)
+                //console.log('---xxxxx-->', list[childOptions.rootIndex][childOptions.inputIndex].value);
+                //list[key][2].value = inpData;
+                //setProductsArr(list);
+                //console.log('---ccccc-->', list)
+
+                let list = [...childOptions.childInputs];
+
+                list[childOptions.rootIndex][childOptions.inputIndex].value = inpText;
+
+                return childOptions.rootField.setValue(list);
+
+            }
+
+            return inpObj.setValue(inpText);
+        }
 
         switch (inpObj.type) {
             case 'hide':
@@ -439,7 +460,7 @@ export const CommonEntryScreen = (props) => {
             case 'text':
                 input = <GenericInput
                     name={inpObj.name}
-                    setValue={inpObj.setValue}
+                    setValue={valueChangeWhenInputTypeArray}
                     value={inpObj.value}
                 />
                 break;
@@ -459,7 +480,7 @@ export const CommonEntryScreen = (props) => {
             case 'numeric':
                 input = <GenericInput
                     name={inpObj.name}
-                    setValue={inpObj.setValue}
+                    setValue={valueChangeWhenInputTypeArray}
                     value={inpObj.value}
                     type="numeric"
                 />
@@ -468,7 +489,7 @@ export const CommonEntryScreen = (props) => {
             case 'date':
                 input = <DateField
                     name={inpObj.name}
-                    setValue={inpObj.setValue}
+                    setValue={valueChangeWhenInputTypeArray}
                     value={inpObj.value}
                 />
                 break;
@@ -476,13 +497,16 @@ export const CommonEntryScreen = (props) => {
             case 'comment':
                 input = <GenericCommentInput
                     name={inpObj.name}
-                    setValue={inpObj.setValue}
+                    setValue={valueChangeWhenInputTypeArray}
                     value={inpObj.value}
                 />
                 break;
 
             case 'array':
                 input = <View>
+
+                    <View style={{borderWidth:1, borderColor: globalBackgroundColor, marginBottom:15}}/>
+
                     <View style={{flexDirection:'row', justifyContent: 'space-between', marginBottom:5}}>
                         <Text style={{fontSize: 20, fontWeight: 'bold', color: '#000'}}>
                             {inpObj.name}
@@ -493,6 +517,7 @@ export const CommonEntryScreen = (props) => {
                                     inpObj.setValue(prevState => {
 
                                         //console.log(prevState);
+                                        Vibration.vibrate(100)
 
                                         return [...prevState, inpObj.arrayAbstraction]
                                     });
@@ -506,18 +531,24 @@ export const CommonEntryScreen = (props) => {
                     {
                         inpObj.value.map((arr, key)=>{
 
-                            //console.log('---aa-->', arr); inpObj.setValue
+                            //console.log('---aa-->', arr); //inpObj.setValue
 
                             return (
-                                <View key={key} style={{borderWidth: 1, padding: 5, borderRadius: 5, marginBottom: 10, backgroundColor:'rgba(185,185,185,0.32)'}}>
+                                <View key={key} style={{borderWidth: 1,
+                                    borderColor: globalBackgroundColor, padding: 10, borderRadius: 5, marginBottom: 15, backgroundColor:'rgba(255,199,0,0.32)'}}>
                                     {
                                         arr.map((inpObj2, ind)=>{
 
-                                            console.log('---aa-->', inpObj2);
+                                            //console.log('---aa-->', ind);
 
                                             return (
                                                 <View key={ind} style={{marginTop: inpObj2.type==='hide' ? 0 : 30}}>
-                                                    {inputsElm(inpObj2)}
+                                                    {inputsElm(inpObj2, true, {
+                                                        rootIndex: key,
+                                                        inputIndex: ind,
+                                                        rootField: inpObj,
+                                                        childInputs: inpObj.value,
+                                                    })}
                                                 </View>
                                             );
                                         })
@@ -534,7 +565,7 @@ export const CommonEntryScreen = (props) => {
             default:
                 input = <GenericInput
                     name={inpObj.name}
-                    setValue={inpObj.setValue}
+                    setValue={valueChangeWhenInputTypeArray}
                     value={inpObj.value}
                 />
         }
