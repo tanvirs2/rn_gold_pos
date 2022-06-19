@@ -93,6 +93,31 @@ const PurchaseEntryScreen = ({type}) => {
                         setValue: setProductsArr,
                     },
 */
+
+
+    /*
+    * {
+  "id": 0,
+  "cname": "Mahtabjj",
+  "cmobile": "01911223",
+  "caddress": "Gulshan",
+  "totalAmount": 500,
+  "vatAmount": 100,
+  "paidAmount": 600,
+  "dueAmount": 50,
+  "categoryId": 15002,
+  "productList": [
+    {
+      "id": 0,
+      "name": "test",
+      "description": "test",
+      "category": 4,
+      "grade": 14803,
+      "weight": 5
+
+    }
+  ]
+}*/
     const navigation = useNavigation();
 
     const [stLoader, setLoader] = useState(false);
@@ -106,22 +131,11 @@ const PurchaseEntryScreen = ({type}) => {
     const [stPr_category, setPr_category] = useState('');
     const [stPr_grade, setPr_grade] = useState('');
     const [stPr_weight, setPr_weight] = useState('');
+    const [stPr_price, setPr_price] = useState('');
 
 
     const [stProductsArr, setProductsArr] = useState([]);
-    const [stTable, setTable] = useState([
-        {
-            table: [
-                ['Product’s Name',  ':', 'result.name'],
-                ['Comment',     ':', 'result.description'],
-                ['Karat',           ':', 'result.grade'],
-                ['category',        ':', 'result.category'],
-                ['Weight',          ':', 40],
-                ['Price',       ':', 100],
-                ['Barcode',         ':', 'result.code'],
-            ]
-        }
-    ]);
+    const [stTable, setTable] = useState([]);
 
     const [stAddress, setAddress] = useState('');
     const [stProductDependency, setProductDependency] = useState({
@@ -170,7 +184,7 @@ const PurchaseEntryScreen = ({type}) => {
             <ScrollView>
                 <CommonEntryScreen
                     type="Purchase"
-                    saveBtn={false}
+                    defaultBtn={false}
                     inputs={[
                         {
                             type: 'hide',
@@ -215,49 +229,96 @@ const PurchaseEntryScreen = ({type}) => {
                     ]}
                 />
 
+
                 <View style={{borderWidth:1, borderColor:globalBackgroundColor, backgroundColor:'#fdf8ed'}}>
                     <CommonEntryScreen
                         type="Purchase"
+                        btnName="Add"
+                        btnPress={()=>{
+
+                            const currentState = {
+                                name: stPr_name,
+                                grade: stPr_description,
+                                category: stPr_category,
+                                weight: stPr_grade,
+                                description: stPr_weight,
+                                price: stPr_price,
+                            };
+                            setTable(prevState => [...prevState, {
+                                table: [
+                                    ['Product’s Name',  ':', stPr_name],
+                                    ['Comment',         ':', stPr_description],
+                                    ['Karat',           ':', stPr_category],
+                                    ['category',        ':', stPr_grade],
+                                    ['Weight',          ':', stPr_weight],
+                                    ['Price',           ':', stPr_price],
+                                    ['Barcode',         ':', 'result.code'],
+                                ]
+                            }]);
+
+                            console.log(stTable)
+
+                            /*console.log(
+                                stPr_name,
+                                stPr_description,
+                                stPr_category,
+                                stPr_grade,
+                                stPr_weight,
+                                stPr_price,
+                            )*/
+                        }}
                         inputs={[
                             {
-                                type: 'numeric',
+                                type: 'hide',
+                                name: 'id',
+                                dbName: 'id',
+                                value: 0,
+                            },
+                            {
+                                type: 'text',
                                 name: 'Product’s Name',
-                                dbName: 'mobile',
-                                value: stMobile,
-                                setValue: setMobile,
+                                dbName: 'name',
+                                value: stPr_name,
+                                setValue: setPr_name,
                             },
                             {
                                 type: 'select',
                                 selectOptions: stProductDependency.grades,
                                 name: 'Karat',
-                                dbName: 'mobile',
-                                value: stMobile,
-                                setValue: setMobile,
+                                dbName: 'grade',
+                                value: stPr_grade,
+                                setValue: setPr_grade,
                             },
                             {
                                 type: 'select',
                                 selectOptions: stProductDependency.categories,
                                 name: 'Category',
-                                dbName: 'mobile',
-                                value: stMobile,
-                                setValue: setMobile,
+                                dbName: 'category',
+                                value: stPr_category,
+                                setValue: setPr_category,
                             }, {
                                 type: 'numeric',
                                 name: 'Weight (gm)',
-                                dbName: 'mobile',
-                                value: stMobile,
-                                setValue: setMobile,
+                                dbName: 'weight',
+                                value: stPr_weight,
+                                setValue: setPr_weight,
                             },
                             {
                                 type: 'numeric',
                                 name: 'Price (p/g)',
-                                dbName: 'mobile',
-                                value: stMobile,
-                                setValue: setMobile,
+                                dbName: 'price',
+                                value: stPr_price,
+                                setValue: setPr_price,
+                            },
+                            {
+                                type: 'comment',
+                                name: 'Description',
+                                dbName: 'description',
+                                value: stPr_description,
+                                setValue: setPr_description,
                             }
 
                         ]}
-                        btnName="Add"
                     />
                 </View>
 

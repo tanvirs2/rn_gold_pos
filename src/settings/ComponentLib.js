@@ -373,8 +373,9 @@ export const CommonEntryScreen = (props) => {
 
     const [stIfArrayType, setIfArrayType] = useState(['', '']);
 
-    const {type, inputs, btnName} = props;
+    const {type, inputs, btnName, btnPress} = props;
 
+    //console.log(typeof btnPress)
 
     /*let myObj = {};
 
@@ -596,10 +597,10 @@ export const CommonEntryScreen = (props) => {
                         <View style={{marginTop:30}}>
 
                             {
-                                (props.saveBtn !== false) && <CustomButton
+                                (props.defaultBtn !== false) && <CustomButton
                                     text={btnName ? btnName : 'Save'}
                                     bgColor={globalButtonColor}
-                                    onPress={dataSave}
+                                    onPress={btnPress ? btnPress : dataSave}
                                 />
                             }
 
