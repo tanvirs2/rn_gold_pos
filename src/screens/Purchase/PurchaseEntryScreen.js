@@ -2,7 +2,7 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {CommonEntryScreen} from '../../settings/ComponentLib';
 import {customFetch} from '../../settings/networking';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TextInput, Vibration, View} from 'react-native';
 import {Rows, Table} from 'react-native-table-component';
 import CustomButton from '../../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
@@ -124,6 +124,7 @@ const PurchaseEntryScreen = ({type}) => {
     const [stRefreshing, setRefreshing] = useState(false);
     const [stCustomerName, setCustomerName] = useState('');
     const [stMobile, setMobile] = useState('');
+    const [stAddress, setAddress] = useState('');
 
 
     const [stPr_name, setPr_name] = useState('');
@@ -137,7 +138,6 @@ const PurchaseEntryScreen = ({type}) => {
     const [stProductsArr, setProductsArr] = useState([]);
     const [stTable, setTable] = useState([]);
 
-    const [stAddress, setAddress] = useState('');
     const [stProductDependency, setProductDependency] = useState({
         grades:[],
         categories: [],
@@ -145,6 +145,16 @@ const PurchaseEntryScreen = ({type}) => {
         status: [],
         stock: [],
     });
+
+
+    const resetPrInputs = () => {
+        setPr_name('')
+        setPr_description('')
+        setPr_category('')
+        setPr_grade('')
+        setPr_weight('')
+        setPr_price('')
+    }
 
 
     useEffect(()=>{
@@ -236,6 +246,10 @@ const PurchaseEntryScreen = ({type}) => {
                         btnName="Add"
                         btnPress={()=>{
 
+                            Vibration.vibrate(10);
+
+                            resetPrInputs()
+
                             const currentState = {
                                 name: stPr_name,
                                 grade: stPr_description,
@@ -244,6 +258,7 @@ const PurchaseEntryScreen = ({type}) => {
                                 description: stPr_weight,
                                 price: stPr_price,
                             };
+
                             setTable(prevState => [...prevState, {
                                 table: [
                                     ['Product’s Name',  ':', stPr_name],
@@ -325,28 +340,23 @@ const PurchaseEntryScreen = ({type}) => {
 
                 <View style={{margin:30}}>
 
-                    {
-                        stTable?.map((elm, index) => {
+                    <View style={{}}>
 
-                            //console.log('tbl--------------->',elm)
+                        <View style={{marginBottom: 10}}>
 
-                            return <View key={index} style={{}}>
+                            <Table>
+                                <Rows data={[
+                                    ['Sub Total',  ':', '1000'],
+                                    ['VAT (15%)',         ':', '750'],
+                                    ['Total Amount',           ':', '1750'],
+                                    ['Payable Amount',        ':', '1750'],
+                                    ['Due Amount',          ':', '0'],
+                                ]} />
+                            </Table>
 
-                                <View style={{marginBottom: 20}}>
+                        </View>
 
-                                    {/*<View style={{backgroundColor: globalBackgroundColor, borderRadius:3, padding:3, paddingLeft:10, marginBottom:3}}>
-                                        <Text style={{fontWeight:'bold', fontSize:18, color:'#000'}}>Item {index+1}</Text>
-                                    </View>*/}
-
-                                    <Table>
-                                        <Rows data={elm.table} />
-                                    </Table>
-
-                                </View>
-
-                            </View>
-                        })
-                    }
+                    </View>
                 </View>
 
                 <View style={[styles.container, {backgroundColor: '#fdf2e6'}]}>
@@ -356,9 +366,10 @@ const PurchaseEntryScreen = ({type}) => {
                     {
                         stTable.map((elm, index) => (
                             <View key={index} style={styles.productDetailsBorder}>
-
+                                <View style={{width: '100%', backgroundColor:globalBackgroundColor, padding:5, paddingLeft:15, borderRadius:5}}>
+                                    <Text style={{color: '#000', fontWeight:'bold', fontSize:17}}>Item {index+1}</Text>
+                                </View>
                                 <View style={{marginBottom: 20}}>
-
                                     <Table>
                                         <Rows data={elm.table} textStyle={styles.text}/>
                                     </Table>
@@ -375,27 +386,28 @@ const PurchaseEntryScreen = ({type}) => {
                                 text="Reset"
                                 bgColor="#9f4c5b"
                                 onPress={() => {
-                                    /*setConfirmModalVisible(false);
-                                    setScannedBarcode([]);
+                                    Vibration.vibrate(100);
+
                                     setCustomerName('')
-                                    setMobileNumber('')
+                                    setMobile('')
                                     setAddress('')
-                                    setComment('')
-                                    setBarcode('')
-                                    setProductList([])
-                                    setTable([])*/
+                                    setTable([])
+                                    resetPrInputs()
                                 }}
                             />
                         </View>
-                        <View style={{flex:1, margin:10}}>
+
+
+                        {stTable.length > 0 && <View style={{flex: 1, margin: 10}}>
                             <CustomButton
                                 text="Save"
                                 bgColor={globalButtonColor}
                                 onPress={() => {
+                                    Vibration.vibrate(1000);
                                     /*setConfirmModalVisible(true);*/
                                 }}
                             />
-                        </View>
+                        </View>}
                     </View>
 
                 </View>
