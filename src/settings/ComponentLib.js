@@ -1,4 +1,14 @@
-import {ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, Vibration, View} from 'react-native';
+import {
+    ActivityIndicator,
+    Modal,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    Vibration,
+    View,
+} from 'react-native';
 import CustomInput from '../components/CustomInput';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {customFetch} from './networking';
@@ -611,6 +621,19 @@ export const CommonEntryScreen = (props) => {
             </View>
         </Fragment>
     );
+}
+
+
+export const TransactionalInput = ({stValue, setValue}) => {
+
+    return <TextInput
+        keyboardType="numeric"
+        placeholder="............"
+        placeholderTextColor="#f00"
+        style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
+        value={stValue}
+        onChangeText={setValue}
+    />
 }
 
 export const TransactionalListScreen = ({type, tableHead}) => {

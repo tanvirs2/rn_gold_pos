@@ -29,6 +29,7 @@ import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import moment from 'moment';
 import {taka} from '../../../assets/symbols';
+import {TransactionalInput} from '../../../settings/ComponentLib';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -249,7 +250,7 @@ export default function SalesEntry() {
         );
     }
 
-    const TransactionalInput = ({stValue, setValue}) => {
+    /*const TransactionalInput = ({stValue, setValue}) => {
 
         return <TextInput
             keyboardType="numeric"
@@ -259,7 +260,7 @@ export default function SalesEntry() {
             value={stValue}
             onChangeText={setValue}
         />
-    }
+    }*/
 
     const ConfirmModal = () => {
 

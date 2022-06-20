@@ -1,11 +1,12 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {CommonEntryScreen} from '../../settings/ComponentLib';
+import {CommonEntryScreen, TransactionalInput} from '../../settings/ComponentLib';
 import {customFetch} from '../../settings/networking';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, StyleSheet, Text, TextInput, Vibration, View} from 'react-native';
 import {Rows, Table} from 'react-native-table-component';
 import CustomButton from '../../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
+import {taka} from '../../assets/symbols';
 
 const PurchaseEntryScreen = ({type}) => {
 
@@ -147,6 +148,17 @@ const PurchaseEntryScreen = ({type}) => {
     });
 
 
+    const [stVAT, setVAT] = useState(15);
+    const [stVatCost, setVatCost] = useState(0);
+    const [stDiscount, setDiscount] = useState(0);
+    const [stPayable, setPayable] = useState(0);
+    const [stPaid, setPaid] = useState(0);
+    const [stDue, setDue] = useState(0);
+
+
+    const [stSubTotal, setSubTotal] = useState(0);
+
+
     const resetPrInputs = () => {
         setPr_name('')
         setPr_description('')
@@ -188,6 +200,17 @@ const PurchaseEntryScreen = ({type}) => {
         });
 
     },[stRefreshing])
+
+
+    useEffect(()=>{
+
+        setVatCost((stVAT / 100) * stSubTotal);
+
+        setPayable((stVatCost + stSubTotal) - stDiscount)
+
+        setDue((stPayable - stPaid).toFixed(2));
+
+    },[stVatCost, stSubTotal, stPayable])
 
     return (
         <Fragment>
@@ -240,7 +263,7 @@ const PurchaseEntryScreen = ({type}) => {
                 />
 
 
-                <View style={{borderWidth:1, borderColor:globalBackgroundColor, backgroundColor:'#fdf8ed'}}>
+                <View style={styles.borderBox}>
                     <CommonEntryScreen
                         type="Purchase"
                         btnName="Add"
@@ -259,6 +282,11 @@ const PurchaseEntryScreen = ({type}) => {
                                 price: stPr_price,
                             };
 
+                            setProductsArr(prevState => [...prevState, currentState]);
+
+                            setSubTotal(prevState => Number(prevState) + Number(stPr_price));
+                            //setSubTotal(100);
+
                             setTable(prevState => [...prevState, {
                                 table: [
                                     ['Product’s Name',  ':', stPr_name],
@@ -271,7 +299,7 @@ const PurchaseEntryScreen = ({type}) => {
                                 ]
                             }]);
 
-                            console.log(stTable)
+                            //console.log(stProductsArr)
 
                             /*console.log(
                                 stPr_name,
@@ -346,20 +374,88 @@ const PurchaseEntryScreen = ({type}) => {
 
                             <Table>
                                 <Rows data={[
+                                    ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
+                                    [`VAT ${stVAT}%`,
+                                        <View style={{flexDirection:'row'}}>
+                                            <View style={{flex:1}}>
+                                                <Text>:</Text>
+                                            </View>
+
+                                            <View style={{flex:5}}>
+                                                <TransactionalInput
+                                                    stValue={stVAT}
+                                                    setValue={VAT_val=>{
+
+                                                        setVatCost(((VAT_val / 100) * stSubTotal).toFixed(2));
+                                                        setVAT(VAT_val);
+
+                                                    }}
+                                                />
+                                            </View>
+
+                                        </View>,
+                                        `${taka} ${stVatCost}/=`
+                                    ],
+                                    /*['Discount', ':',
+
+                                        <TransactionalInput
+                                            stValue={stDiscount}
+                                            setValue={discountVal=>{
+                                                setDiscount(discountVal)
+                                                setPayable((stVatCost + stSubTotal) - discountVal)
+                                            }}
+                                        />
+                                    ],*/
+                                ]
+                                } />
+                            </Table>
+
+                            {/*<Table>
+                                <Rows data={[
                                     ['Sub Total',  ':', '1000'],
                                     ['VAT (15%)',         ':', '750'],
                                     ['Total Amount',           ':', '1750'],
                                     ['Payable Amount',        ':', '1750'],
                                     ['Due Amount',          ':', '0'],
                                 ]} />
-                            </Table>
+                            </Table>*/}
 
+                        </View>
+
+
+                        {/******* amountTable-2 ******/}
+                        <View>
+                            <View style={{}}>
+
+                                <View style={{marginBottom: 20}}>
+
+                                    <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
+
+                                    <Table>
+                                        <Rows data={[
+                                            ['Payable ', ':', `${taka} ${stPayable}/=`],
+                                            ['Paid', ':',
+                                                <TransactionalInput
+                                                    stValue={stPaid}
+                                                    setValue={paidVal=>{
+                                                        setPaid(paidVal);
+                                                        setDue((stPayable - paidVal).toFixed(2));
+                                                    }}
+                                                />
+                                            ],
+                                            ['Due Amount', ':', `${taka} ${stDue}/=`],
+                                        ]} />
+                                    </Table>
+
+                                </View>
+
+                            </View>
                         </View>
 
                     </View>
                 </View>
 
-                <View style={[styles.container, {backgroundColor: '#fdf2e6'}]}>
+                <View style={[styles.container, styles.borderBox,  {backgroundColor: '#fdf2e6'}]}>
 
                     <Text style={styles.fontBold}>Product Detail</Text>
 
@@ -392,6 +488,13 @@ const PurchaseEntryScreen = ({type}) => {
                                     setMobile('')
                                     setAddress('')
                                     setTable([])
+
+                                    setSubTotal(0);
+                                    setPayable(0);
+                                    setVAT(15)
+                                    setPaid(0);
+                                    setDue(0);
+
                                     resetPrInputs()
                                 }}
                             />
@@ -420,6 +523,13 @@ const PurchaseEntryScreen = ({type}) => {
 export default PurchaseEntryScreen;
 
 const styles = StyleSheet.create({
+
+    borderBox: {
+        borderWidth: 1,
+        borderColor: globalBackgroundColor,
+        backgroundColor: '#fdf8ed',
+    },
+
     container: {
         flex: 1,
         justifyContent: 'center',
