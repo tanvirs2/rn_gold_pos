@@ -137,7 +137,7 @@ const PurchaseEntryScreen = ({type}) => {
 
 
     const [stProductsArr, setProductsArr] = useState([]);
-    const [stTable, setTable] = useState([]);
+    //const [stTable, setTable] = useState([]);
 
     const [stProductDependency, setProductDependency] = useState({
         grades:[],
@@ -151,7 +151,7 @@ const PurchaseEntryScreen = ({type}) => {
     const [stVAT, setVAT] = useState(15);
     const [stVatCost, setVatCost] = useState(0);
     const [stDiscount, setDiscount] = useState(0);
-    const [stPayable, setPayable] = useState(0);
+    const [stPayable, setPayable] = useState(0); //totalAmount
     const [stPaid, setPaid] = useState(0);
     const [stDue, setDue] = useState(0);
 
@@ -211,6 +211,50 @@ const PurchaseEntryScreen = ({type}) => {
         setDue((stPayable - stPaid).toFixed(2));
 
     },[stVatCost, stSubTotal, stPayable])
+
+    const saveData = () => {
+        //setLoader(true);
+
+        console.log('--------->',
+            {
+                id: 0,
+                cname: stCustomerName,
+                cmobile: stMobile,
+                caddress: stAddress,
+                totalAmount: stPayable,
+                vatAmount: stVatCost,
+                paidAmount: stPaid,
+                dueAmount: stDue,
+                productList: stProductsArr
+
+            }
+        );
+
+        //return 0;
+
+        customFetch({
+            url: 'Purchase/Upsert',
+            method: 'POST',
+            body: {
+                id: 0,
+                cname: stCustomerName,
+                cmobile: stMobile,
+                caddress: stAddress,
+                totalAmount: stPayable,
+                vatAmount: stVatCost,
+                paidAmount: stPaid,
+                dueAmount: stDue,
+                productList: stProductsArr
+
+            },
+            callbackResult: (result)=>{
+                setLoader(false);
+                console.log('result---->', result);
+            },
+            navigation
+        });
+
+    }
 
     return (
         <Fragment>
@@ -274,20 +318,20 @@ const PurchaseEntryScreen = ({type}) => {
                             resetPrInputs()
 
                             const currentState = {
+                                id: 0,
                                 name: stPr_name,
-                                grade: stPr_description,
+                                grade: stPr_grade,
                                 category: stPr_category,
-                                weight: stPr_grade,
-                                description: stPr_weight,
+                                weight: stPr_weight,
+                                description: stPr_description,
                                 price: stPr_price,
                             };
 
                             setProductsArr(prevState => [...prevState, currentState]);
 
-                            setSubTotal(prevState => Number(prevState) + Number(stPr_price));
-                            //setSubTotal(100);
+                            setSubTotal(prevState => Number(prevState) + ( Number(stPr_price) * Number(stPr_weight) ));
 
-                            setTable(prevState => [...prevState, {
+                            /*setTable(prevState => [...prevState, {
                                 table: [
                                     ['Product’s Name',  ':', stPr_name],
                                     ['Comment',         ':', stPr_description],
@@ -297,18 +341,8 @@ const PurchaseEntryScreen = ({type}) => {
                                     ['Price',           ':', stPr_price],
                                     ['Barcode',         ':', 'result.code'],
                                 ]
-                            }]);
+                            }]);*/
 
-                            //console.log(stProductsArr)
-
-                            /*console.log(
-                                stPr_name,
-                                stPr_description,
-                                stPr_category,
-                                stPr_grade,
-                                stPr_weight,
-                                stPr_price,
-                            )*/
                         }}
                         inputs={[
                             {
@@ -396,29 +430,10 @@ const PurchaseEntryScreen = ({type}) => {
                                         </View>,
                                         `${taka} ${stVatCost}/=`
                                     ],
-                                    /*['Discount', ':',
-
-                                        <TransactionalInput
-                                            stValue={stDiscount}
-                                            setValue={discountVal=>{
-                                                setDiscount(discountVal)
-                                                setPayable((stVatCost + stSubTotal) - discountVal)
-                                            }}
-                                        />
-                                    ],*/
                                 ]
                                 } />
                             </Table>
 
-                            {/*<Table>
-                                <Rows data={[
-                                    ['Sub Total',  ':', '1000'],
-                                    ['VAT (15%)',         ':', '750'],
-                                    ['Total Amount',           ':', '1750'],
-                                    ['Payable Amount',        ':', '1750'],
-                                    ['Due Amount',          ':', '0'],
-                                ]} />
-                            </Table>*/}
 
                         </View>
 
@@ -460,14 +475,23 @@ const PurchaseEntryScreen = ({type}) => {
                     <Text style={styles.fontBold}>Product Detail</Text>
 
                     {
-                        stTable.map((elm, index) => (
+                        stProductsArr.map((elm, index) => (
                             <View key={index} style={styles.productDetailsBorder}>
                                 <View style={{width: '100%', backgroundColor:globalBackgroundColor, padding:5, paddingLeft:15, borderRadius:5}}>
                                     <Text style={{color: '#000', fontWeight:'bold', fontSize:17}}>Item {index+1}</Text>
                                 </View>
                                 <View style={{marginBottom: 20}}>
+
                                     <Table>
-                                        <Rows data={elm.table} textStyle={styles.text}/>
+                                        <Rows data={[
+                                            ['Product’s Name',  ':', elm.name],
+                                            ['Comment',         ':', elm.description],
+                                            ['Karat',           ':', elm.grade],
+                                            ['category',        ':', elm.category],
+                                            ['Weight',          ':', elm.weight],
+                                            ['Price',           ':', elm.price],
+                                            ['Barcode',         ':', 'result.code'],
+                                        ]} textStyle={styles.text}/>
                                     </Table>
 
                                 </View>
@@ -487,7 +511,9 @@ const PurchaseEntryScreen = ({type}) => {
                                     setCustomerName('')
                                     setMobile('')
                                     setAddress('')
-                                    setTable([])
+
+                                    //setTable([])
+                                    setProductsArr([]);
 
                                     setSubTotal(0);
                                     setPayable(0);
@@ -501,12 +527,14 @@ const PurchaseEntryScreen = ({type}) => {
                         </View>
 
 
-                        {stTable.length > 0 && <View style={{flex: 1, margin: 10}}>
+                        {stProductsArr.length > 0 && <View style={{flex: 1, margin: 10}}>
                             <CustomButton
                                 text="Save"
                                 bgColor={globalButtonColor}
                                 onPress={() => {
                                     Vibration.vibrate(1000);
+
+                                    saveData();
                                     /*setConfirmModalVisible(true);*/
                                 }}
                             />
