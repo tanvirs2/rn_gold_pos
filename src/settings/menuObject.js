@@ -73,19 +73,10 @@ const menuObject = {
                     route: 'Purchase Entry',
                 },
                 {
-                    name: 'New Gold Purchase List',
+                    name: 'Purchase List',
                     icon: '',
-                    route: '',
-                }, {
-                    name: 'Old Gold Purchase',
-                    icon: '',
-                    route: '',
-                }, {
-                    name: 'Old Gold Purchase List',
-                    icon: '',
-                    route: '',
-                },
-
+                    route: 'Purchase List',
+                }
             ],
         },{
             mainMenuLabel: 'Deposit/Withdraw',

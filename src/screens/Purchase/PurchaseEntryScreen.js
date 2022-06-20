@@ -213,9 +213,9 @@ const PurchaseEntryScreen = ({type}) => {
     },[stVatCost, stSubTotal, stPayable])
 
     const saveData = () => {
-        //setLoader(true);
+        setLoader(true);
 
-        console.log('--------->',
+        /*console.log('--------->',
             {
                 id: 0,
                 cname: stCustomerName,
@@ -228,7 +228,7 @@ const PurchaseEntryScreen = ({type}) => {
                 productList: stProductsArr
 
             }
-        );
+        );*/
 
         //return 0;
 
@@ -244,8 +244,8 @@ const PurchaseEntryScreen = ({type}) => {
                 vatAmount: stVatCost,
                 paidAmount: stPaid,
                 dueAmount: stDue,
-                productList: stProductsArr
 
+                productList: stProductsArr
             },
             callbackResult: (result)=>{
                 setLoader(false);
