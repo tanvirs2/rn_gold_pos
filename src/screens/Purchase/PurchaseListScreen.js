@@ -9,9 +9,10 @@ const PurchaseListScreen = () => {
         <Fragment>
             <CommonListScreen
                 type="Purchase"
-                tableHead={['category', 'type']}
+                tableHead={['category', 'Amount', 'type']}
                 tableDB={[
                     'category|text',
+                    'amount|taka',
                     'type|text'
                 ]}
             />

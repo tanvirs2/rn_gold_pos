@@ -11,114 +11,59 @@ import {taka} from '../../assets/symbols';
 const PurchaseEntryScreen = ({type}) => {
 
     /*{
-  "id": 0,
-  "code": "string",
-  "cname": "string",
-  "cmobile": "string",
-  "caddress": "string",
-  "totalAmount": 10,
-  "vatAmount": 10,
-  "paidAmount": 10,
-  "dueAmount": 10,
-  "categoryId": 15101,
-  "typeId": 14902,
-  "approveBy": "string",
-  "productList": [
-    {
-      "id": 0,
-      "productId": 28,
-      "name": "string",
-      "description": "string",
-      "isStock": true,
-      "grade": 14803,
-      "category": 1,
-      "weight": 10,
-      "price": 10,
-      "ptotal": 10,
-      "discountAmount": 10
-    }
-  ]
-}
-
-
-{
-                        type: 'array',
-                        arrayAbstraction: [
-                            {
-                                type: 'hide',
-                                name: 'id',
-                                dbName: 'mobile',
-                                value: 0,
-                                setValue: () => {
-                                },
-                            },
-                            {
-                                type: 'text',
-                                name: 'name',
-                                dbName: 'mobile',
-                            },
-                            {
-                                type: 'comment',
-                                name: 'description',
-                                dbName: 'mobile',
-                                value: stPr_description,
-                                setValue: setPr_description,
-                            },
-                            {
-                                type: 'select',
-                                selectOptions: stProductDependency.categories,
-                                name: 'category',
-                                dbName: 'mobile',
-                                value: stPr_category,
-                                setValue: setPr_category,
-                            },
-                            {
-                                type: 'select',
-                                selectOptions: stProductDependency.grades,
-                                name: 'grade',
-                                dbName: 'mobile',
-                                value: stPr_grade,
-                                setValue: setPr_grade,
-                            },
-                            {
-                                type: 'numeric',
-                                name: 'weight',
-                                dbName: 'mobile',
-                                value: stPr_weight,
-                                setValue: setPr_weight,
-                            },
-                        ],
-                        name: 'Add Product',
-                        dbName: 'arrrrrrrr',
-                        value: stProductsArr,
-                        setValue: setProductsArr,
-                    },
+        type: 'array',
+        arrayAbstraction: [
+            {
+                type: 'hide',
+                name: 'id',
+                dbName: 'mobile',
+                value: 0,
+                setValue: () => {
+                },
+            },
+            {
+                type: 'text',
+                name: 'name',
+                dbName: 'mobile',
+            },
+            {
+                type: 'comment',
+                name: 'description',
+                dbName: 'mobile',
+                value: stPr_description,
+                setValue: setPr_description,
+            },
+            {
+                type: 'select',
+                selectOptions: stProductDependency.categories,
+                name: 'category',
+                dbName: 'mobile',
+                value: stPr_category,
+                setValue: setPr_category,
+            },
+            {
+                type: 'select',
+                selectOptions: stProductDependency.grades,
+                name: 'grade',
+                dbName: 'mobile',
+                value: stPr_grade,
+                setValue: setPr_grade,
+            },
+            {
+                type: 'numeric',
+                name: 'weight',
+                dbName: 'mobile',
+                value: stPr_weight,
+                setValue: setPr_weight,
+            },
+        ],
+        name: 'Add Product',
+        dbName: 'arrrrrrrr',
+        value: stProductsArr,
+        setValue: setProductsArr,
+    },
 */
 
-
-    /*
-    * {
-  "id": 0,
-  "cname": "Mahtabjj",
-  "cmobile": "01911223",
-  "caddress": "Gulshan",
-  "totalAmount": 500,
-  "vatAmount": 100,
-  "paidAmount": 600,
-  "dueAmount": 50,
-  "categoryId": 15002,
-  "productList": [
-    {
-      "id": 0,
-      "name": "test",
-      "description": "test",
-      "category": 4,
-      "grade": 14803,
-      "weight": 5
-
-    }
-  ]
-}*/
     const navigation = useNavigation();
 
     const [stLoader, setLoader] = useState(false);
@@ -240,6 +185,7 @@ const PurchaseEntryScreen = ({type}) => {
                 cname: stCustomerName,
                 cmobile: stMobile,
                 caddress: stAddress,
+                categoryId: 15001,
                 totalAmount: stPayable,
                 vatAmount: stVatCost,
                 paidAmount: stPaid,
@@ -373,7 +319,8 @@ const PurchaseEntryScreen = ({type}) => {
                                 dbName: 'category',
                                 value: stPr_category,
                                 setValue: setPr_category,
-                            }, {
+                            },
+                            {
                                 type: 'numeric',
                                 name: 'Weight (gm)',
                                 dbName: 'weight',
