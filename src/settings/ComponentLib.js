@@ -1,11 +1,11 @@
 import {
-    ActivityIndicator,
+    ActivityIndicator, Alert,
     Modal,
-    Pressable,
+    Pressable, RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
+    TextInput, TouchableOpacity,
     Vibration,
     View,
 } from 'react-native';
@@ -14,7 +14,7 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {customFetch} from './networking';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
-import {Row, Rows, Table} from 'react-native-table-component';
+import {Cell, Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import CustomButton from '../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from './color';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -129,6 +129,269 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
         </Modal>
     );
 }
+
+export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder}) => {
+
+    const styles = StyleSheet.create({
+        container: {backgroundColor: '#fff'},
+        head: {height: 60, backgroundColor: '#f1f8ff'},
+        headText: {margin: 5},
+        text: {margin: 6},
+        row: { flexDirection: 'row', backgroundColor: '#ffffff' },
+        btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
+        btnText: { textAlign: 'center', color: '#fff' }
+    });
+
+    const navigation = useNavigation();
+
+    const isFocused = useIsFocused();
+    const [stRefreshing, setRefreshing] = useState(false);
+
+    const [stLoader, setLoader] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [stIdForModal, setIdForModal] = useState(0);
+
+    const [stSearchValue, setSearchValue] = useState('');
+    const [stSearchBtn, setSearchBtn] = useState('');
+
+
+    const [stProducts, setProducts] = useState({
+        tableHead,
+        tableData: [
+            ['', '', '', '', '', ''],
+        ],
+    });
+
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+    }, []);
+
+
+    useEffect(()=>{
+
+        setLoader(true);
+
+
+        customFetch({
+            url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${searchValue?searchValue:''}`,
+            method: 'GET',
+            callbackResult: (result)=>{
+
+                //console.log(result)
+
+                let listArray = result.data.map((data)=>{
+
+                    let tableFacedDB = tableDB.map(dbName=> {
+
+                        let name = dbName.split('|')[0];
+                        let type = dbName.split('|')[1];
+                        //return dbName.split('|')[1];
+
+                        let processedData = null;
+
+                        switch (type){
+                            case 'text':
+                                processedData = String(data[name]);
+                                break;
+                            case 'taka':
+                                processedData = `${taka} ${data[name]}`;
+                                break;
+                            case 'status':
+                                processedData = (
+                                    <View style={{flexDirection:'row', paddingLeft:5}}>
+                                        {data[name] ?
+                                        <View style={{
+                                            flexDirection: 'row', backgroundColor: 'green',
+                                            justifyContent: 'center',
+                                            alignItems: 'center', borderRadius: 3, padding: 2
+                                        }}>
+
+                                            <View>
+                                                <Text style={{
+                                                    color: '#fff',
+                                                    fontSize: 10,
+                                                }}> Active </Text>
+                                            </View>
+
+                                            <View>
+                                                <View style={{
+                                                    width: 10,
+                                                    height: 10,
+                                                    backgroundColor: '#fff',
+                                                    borderRadius: 3,
+                                                    marginTop:1,
+                                                    marginRight: 1,
+                                                }}/>
+                                            </View>
+                                        </View>
+                                        :
+                                        <View style={{flexDirection:'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center', borderRadius:3,
+                                            borderColor: '#000', borderWidth: 1, padding:2
+                                        }}>
+                                            <View>
+                                                <View style={{width:10, height:10, backgroundColor:'#000', borderRadius:3}}/>
+                                            </View>
+                                            <View>
+                                                <Text style={{fontSize:8}}> Deactive </Text>
+                                            </View>
+                                        </View>}
+                                </View>
+                                );
+                                break;
+                            case 'date':
+                                processedData = moment(data[name]).format('MMMM Do');
+                                break;
+                            case 'action':
+                                processedData = <Ionicons name="ellipsis-vertical" size={24} color="#000"/>;
+                                break;
+                            default:
+                                processedData = String(data[name]);
+                        }
+
+                        return processedData;
+                    })
+
+                    //console.log('tableFacedDB---->', tableFacedDB);
+
+
+                    return tableFacedDB;
+                })
+
+                setProducts((prevState)=>{
+                    return {
+                        ...prevState,
+                        tableData: [
+                            ...listArray
+                        ]
+                    };
+                })
+
+                setRefreshing(false);
+                setLoader(false);
+            },
+            navigation
+        });
+
+
+    }, [isFocused, stRefreshing, toggleBtn]);
+
+    function alertIndex(index) {
+        Alert.alert(`This is row ${index + 1}`);
+    }
+
+    const element = (data, index) => (
+        <TouchableOpacity onPress={() => alertIndex(index)}>
+            <View style={styles.btn}>
+                <Text style={styles.btnText}>button</Text>
+            </View>
+        </TouchableOpacity>
+    );
+
+    return (
+        <View style={{margin:10}}>
+
+            <View style={{height: 80, alignItems: 'flex-start', marginTop: 5, width: '100%'}}>
+                {/*<Text style={{fontSize: 18, marginBottom: 5}}>Search Invoice Number </Text>*/}
+
+                <View style={{width: '100%', flexDirection: 'row'}}>
+                    <View style={{width: '75%', marginRight: '5%'}}>
+                        <CustomInput
+                            value={stSearchValue}
+                            setValue={setSearchValue}
+                            placeholder={searchPlaceholder}
+                        />
+                    </View>
+
+                    <View style={{width: '20%'}}>
+                        <CustomButton
+                            text={<Ionicons color="red" size={23} name={'search-outline'}/>}
+                            bgColor="white"
+                            onPress={()=>setSearchBtn(prevState => !prevState)}
+                        />
+                    </View>
+
+                </View>
+
+            </View>
+
+            <View style={{height:'86%'}}>
+
+                <LoaderViewScreen viewThisComp={stLoader}/>
+
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={stRefreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <View>
+                        <View style={styles.container}>
+
+
+                            {
+                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url="Sale/Get/"/>
+                            }
+
+                            <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>
+                                <Row
+                                    data={stProducts.tableHead}
+                                    style={styles.head}
+                                    textStyle={styles.headText}
+                                />
+
+
+                                {
+                                    stProducts.tableData.map((rowData, index) => (
+                                        <TableWrapper key={index} style={styles.row}>
+                                            {rowData.map((cellData, cellIndex) => (
+                                                <Cell
+                                                    key={cellIndex}
+                                                    data={
+                                                        (()=>{
+                                                            switch (cellIndex) {
+
+                                                                case 4:
+                                                                    return (
+                                                                        <Fragment>
+                                                                            <Pressable onPress={()=>{
+                                                                                setModalVisible(true)
+                                                                                setIdForModal(cellData);
+                                                                            }} style={{alignItems:'center'}}>
+
+                                                                                <Ionicons name="ellipsis-vertical" size={24} color="#000"/>
+
+                                                                            </Pressable>
+
+                                                                        </Fragment>
+                                                                    );
+                                                                default:
+                                                                    return cellData;
+                                                            }
+                                                        })()
+                                                    }
+                                                    textStyle={styles.text}
+                                                />
+                                            ))}
+                                        </TableWrapper>
+                                    ))
+                                }
+
+
+                            </Table>
+                        </View>
+                    </View>
+                </ScrollView>
+
+
+            </View>
+        </View>
+    );
+};
 
 export const CommonListScreen = ({type, tableHead, tableDB}) => {
 

@@ -1,19 +1,22 @@
 /*eslint-disable*/
 
 import React, {Fragment} from 'react';
-import {CommonListScreen} from '../../settings/ComponentLib';
+import {CommonListScreen, CustomDataTable} from '../../settings/ComponentLib';
 
 const CustomerListScreen = () => {
 
     return (
         <Fragment>
-            <CommonListScreen
+
+            <CustomDataTable
                 type="Customar"
-                tableHead={['Customer Name', 'Is Active']}
+                tableHead={['Customer Name', 'Is Active', 'Action']}
                 tableDB={[
                     'name|text',
-                    'isActive|text'
+                    'isActive|status',
+                    'id|action'
                 ]}
+                searchPlaceholder="Customer Name..."
             />
         </Fragment>
     )
