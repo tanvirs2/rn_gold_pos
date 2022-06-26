@@ -102,9 +102,9 @@ const InfoBadge = ({label, value, iconName}) => {
         backgroundColor: '#e1e1e1',
         margin: 10,
         borderRadius: 5,
-        height: 170,
+        height: 150,
         padding: 10,
-        width: 170,
+        width: 150,
         justifyContent: 'center',
         alignItems: 'center',
       }}>

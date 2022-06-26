@@ -135,7 +135,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
     const styles = StyleSheet.create({
         container: {backgroundColor: '#fff'},
         head: {height: 60, backgroundColor: '#f1f8ff'},
-        headText: {margin: 5},
+        headText: {margin: 5, textAlign: 'center'},
         text: {margin: 6},
         row: { flexDirection: 'row', backgroundColor: '#ffffff' },
         btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
@@ -172,9 +172,10 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
 
         setLoader(true);
 
+        console.log(stSearchValue)
 
         customFetch({
-            url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${searchValue?searchValue:''}`,
+            url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${stSearchValue}`,
             method: 'GET',
             callbackResult: (result)=>{
 
@@ -199,7 +200,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                 break;
                             case 'status':
                                 processedData = (
-                                    <View style={{flexDirection:'row', paddingLeft:5}}>
+                                    <View style={{alignItems:'center'}}>
                                         {data[name] ?
                                         <View style={{
                                             flexDirection: 'row', backgroundColor: 'green',
@@ -245,10 +246,36 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                 processedData = moment(data[name]).format('MMMM Do');
                                 break;
                             case 'action':
-                                processedData = <Ionicons name="ellipsis-vertical" size={24} color="#000"/>;
+                                processedData = (
+                                    <Pressable onPress={()=>{
+                                        setModalVisible(true)
+                                        setIdForModal(data[name]);
+                                    }} style={{alignItems:'center'}}>
+
+                                        <Ionicons name="ellipsis-vertical" size={24} color="#000"/>
+
+                                    </Pressable>
+                                );
                                 break;
+
+                            case 'centerText':
+                                processedData = (
+                                    <View style={{alignItems:'center'}}>
+                                        <Text>
+                                            {String(data[name])}
+                                        </Text>
+                                    </View>
+                                );
+                                break;
+
                             default:
-                                processedData = String(data[name]);
+                                processedData = (
+                                    <View style={{alignItems:'center'}}>
+                                        <Text>
+                                            {String(data[name])}
+                                        </Text>
+                                    </View>
+                                );
                         }
 
                         return processedData;
@@ -276,19 +303,19 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
         });
 
 
-    }, [isFocused, stRefreshing, toggleBtn]);
+    }, [isFocused, stRefreshing, stSearchBtn]);
 
     function alertIndex(index) {
         Alert.alert(`This is row ${index + 1}`);
     }
 
-    const element = (data, index) => (
+    /*const element = (data, index) => (
         <TouchableOpacity onPress={() => alertIndex(index)}>
             <View style={styles.btn}>
                 <Text style={styles.btnText}>button</Text>
             </View>
         </TouchableOpacity>
-    );
+    );*/
 
     return (
         <View style={{margin:10}}>
@@ -343,7 +370,6 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                     style={styles.head}
                                     textStyle={styles.headText}
                                 />
-
 
                                 {
                                     stProducts.tableData.map((rowData, index) => (

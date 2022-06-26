@@ -482,6 +482,21 @@ const PurchaseEntryScreen = ({type}) => {
                                     Vibration.vibrate(1000);
 
                                     saveData();
+
+                                    setCustomerName('')
+                                    setMobile('')
+                                    setAddress('')
+
+                                    //setTable([])
+                                    setProductsArr([]);
+
+                                    setSubTotal(0);
+                                    setPayable(0);
+                                    setVAT(15)
+                                    setPaid(0);
+                                    setDue(0);
+
+                                    resetPrInputs()
                                     /*setConfirmModalVisible(true);*/
                                 }}
                             />

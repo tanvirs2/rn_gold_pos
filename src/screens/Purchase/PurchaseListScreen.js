@@ -14,7 +14,7 @@ const PurchaseListScreen = () => {
                 tableDB={[
                     'category|text',
                     'amount|taka',
-                    'type|text'
+                    'type|centerText'
                 ]}
                 searchPlaceholder="Seller name, Category name..."
             />
