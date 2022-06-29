@@ -1,37 +1,55 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import moment from 'moment';
-import {Fragment} from 'react';
+import {customFetch} from '../../settings/networking';
+import {taka} from '../../assets/symbols';
 
-let today = (
-  <Fragment>
-    <Ionicons name="calendar-outline" size={24} color="white" />
-    &nbsp;
-    <Text style={{color: 'gray'}}>Today</Text>{' '}
-    <Text> {moment().format('MMMM Do')}</Text>
-  </Fragment>
-);
 
-const countries = [today, 'Canada', 'Australia', 'Ireland'];
-const infoBadgesData = [
-  {value: '$45,000', iconName: 'reader-outline', label: 'Total Sale'},
-  {value: '$76,000', iconName: 'card-outline', label: 'Total Deposit'},
-  {value: '$12,000', iconName: 'wallet-outline', label: 'Total Withdrawn'},
-  {
-    value: '$45,000',
-    iconName: 'thumbs-down-outline',
-    label: 'Total Due Receive',
-  },
-  {value: '$76,000', iconName: 'cart-outline', label: 'Total Purchase'},
-  {value: '$12,000', iconName: 'receipt-outline', label: 'Total Sale Return'},
-  {value: '$45,000', iconName: 'cash-outline', label: 'Total Expense'},
-  {value: '$76,000', iconName: 'podium-outline', label: 'Total Profit'},
-];
+
 
 const HomeScreen = () => {
+
+    const [stInfoBadgesData, setInfoBadgesData] = useState([
+        {value: '$45,000', iconName: 'reader-outline', label: 'Total Sale'},
+        {value: '$76,000', iconName: 'card-outline', label: 'Total Deposit'},
+        {value: '$12,000', iconName: 'wallet-outline', label: 'Total Withdrawn'},
+        {value: '$45,000', iconName: 'thumbs-down-outline', label: 'Total Due Receive'},
+        {value: '$76,000', iconName: 'cart-outline', label: 'Total Purchase'},
+        {value: '$12,000', iconName: 'receipt-outline', label: 'Total Sale Return'},
+        {value: '$45,000', iconName: 'cash-outline', label: 'Total Expense'},
+        {value: '$76,000', iconName: 'podium-outline', label: 'Total Profit'},
+    ]);
+
+    useEffect(()=>{
+        customFetch({
+            url: 'Dashboard/GetAllDailySummery',
+            callbackResult: (result) => {
+
+                const {
+                    totalSale,
+                    totalDeposite,
+                    totalWithdraw,
+                    totalDueBill,
+                    totalPurchase,
+                    totalExpence,
+                } = result;
+
+
+                setInfoBadgesData([
+                    {value: `${taka}${totalSale}`, iconName: 'reader-outline', label: 'Total Sale'},
+                    {value: `${taka}${totalDeposite}`, iconName: 'card-outline', label: 'Total Deposit'},
+                    {value: `${taka}${totalWithdraw}`, iconName: 'wallet-outline', label: 'Total Withdrawn'},
+                    {value: `${taka}${totalDueBill}`, iconName: 'thumbs-down-outline', label: 'Total Due Bill'},
+                    {value: `${taka}${totalPurchase}`, iconName: 'cart-outline', label: 'Total Purchase'},
+                    {value: `${taka}${totalExpence}`, iconName: 'cash-outline', label: 'Total Expense'},
+                    {value: `${taka}0`, iconName: 'receipt-outline', label: 'Total Sale Return'},
+                    {value: `${taka}0`, iconName: 'podium-outline', label: 'Total Profit'},
+                ])
+            },
+        });
+    }, []);
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -42,34 +60,7 @@ const HomeScreen = () => {
           <Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
             Manager
           </Text>
-
-          <View>
-            <SelectDropdown
-              buttonTextStyle={{
-                backgroundColor: '#000',
-                color: 'white',
-                paddingVertical: 3,
-                borderRadius: 10,
-                width: 100,
-              }}
-              defaultValue={today}
-              data={countries}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                // text represented after item is selected
-                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                // text represented for each item in dropdown
-                // if data array is an array of objects then return item.property to represent item in dropdown
-                return item;
-              }}
-            />
-          </View>
-
+            
           <View
             style={{
               flexDirection: 'row',
@@ -78,7 +69,7 @@ const HomeScreen = () => {
               alignItems: 'center',
               width: '100%',
             }}>
-            {infoBadgesData.map(({value, iconName, label}, index) => {
+            {stInfoBadgesData.map(({value, iconName, label}, index) => {
               return (
                 <InfoBadge
                   key={index}

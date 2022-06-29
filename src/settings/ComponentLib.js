@@ -37,7 +37,7 @@ export const LocalInput = ({inputProps}) => {
     );
 }
 
-export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, tableCallback, modalData}) => {
+export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBaseName, tableCallback, modalData, editRoute}) => {
 
     //const navigation = useNavigation();
 
@@ -60,8 +60,10 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
 
         //console.log(stIdForModal);
 
+        let url = `${urlBaseName}/Get/${stIdForModal}`;
+
         customFetch({
-            url: url + stIdForModal,
+            url,
             method:'GET',
             callbackResult: (result)=>{
 
@@ -110,6 +112,13 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
         return modifiedText;
     }
 
+    const editData = () => {
+        setModalVisible(prevState => !prevState);
+        navigation.navigate(editRoute, {
+            id: stIdForModal,
+        });
+    }
+
     return (
         <Modal
             animationType="slide"
@@ -152,10 +161,11 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
                     </Table>
 
                     <View style={{margin:40}}>
-                        <CustomButton
+                        {editRoute && <CustomButton
                             text="Edit"
                             bgColor={globalButtonColor}
-                        />
+                            onPress={editData}
+                        />}
                     </View>
 
                 </View>
@@ -164,7 +174,7 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
     );
 }
 
-export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder, modalData}) => {
+export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder, modalData, editRoute}) => {
 
     const styles = StyleSheet.create({
         container: {backgroundColor: '#fff'},
@@ -356,7 +366,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
 
 
                             {
-                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url={`${type}/Get/`} modalData={modalData}/>
+                                modalVisible && <DetailsModal navigation={navigation} setModalVisible={setModalVisible} stIdForModal={stIdForModal} urlBaseName={type} modalData={modalData} editRoute={editRoute}/>
                             }
 
                             <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>

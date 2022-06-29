@@ -22,7 +22,9 @@ const CustomerListScreen = () => {
                     ['Address', ':', 'address|text'],
                     ['Status', ':', 'isActive|status'],
                 ]}
+                editRoute="Customer Entry"
             />
+
         </Fragment>
     )
 }

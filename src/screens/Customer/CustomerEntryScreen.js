@@ -1,15 +1,46 @@
 /*eslint-disable*/
 
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {CommonEntryScreen} from '../../settings/ComponentLib';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {customFetch} from '../../settings/networking';
 
 
-const CustomerEntryScreen = () => {
+const CustomerEntryScreen = ({route}) => {
 
-    //const [stId, setId] = useState(0);
+    let id = route.params?.id
+
+    const [stId, setId] = useState(0);
     const [stCustomerName, setCustomerName] = useState('');
     const [stMobile, setMobile] = useState('');
     const [stAddress, setAddress] = useState('');
+
+    useFocusEffect(() => {
+
+            if (id) {
+                customFetch({
+                    url: 'Customar/Get/'+id,
+                    callbackResult: (result)=>{
+
+                        const {address, mobile, name} = result.model;
+
+                        setId(id)
+                        setAddress( address )
+                        setMobile( mobile )
+                        setCustomerName( name )
+                    }
+                });
+
+            }
+
+            return () => {
+                if (route.params) {
+                    route.params = undefined;
+                }
+            };
+        }
+    );
+
 
 
     return (
@@ -21,7 +52,7 @@ const CustomerEntryScreen = () => {
                         name: 'id',
                         dbName: 'id',
                         type: 'hide',
-                        value: 0,
+                        value: stId,
                     },
                     {
                         name: 'isActive',
