@@ -10,14 +10,22 @@ const PurchaseListScreen = () => {
 
             <CustomDataTable
                 type="Purchase"
-                tableHead={['category', 'Amount', 'type']}
+                tableHead={['category', 'Amount', 'Type', 'Action']}
                 tableDB={[
                     'category|text',
                     'amount|taka',
-                    'type|centerText'
+                    'type|centerText',
+                    'id|action'
                 ]}
+                modalData={
+                    [
+                        ['Category',  ':', 'categoryId|text'],
+                        ['Amount',  ':', 'paidAmount|taka'],
+                    ]
+                }
                 searchPlaceholder="Seller name, Category name..."
             />
+
 
             {/*<CommonListScreen
                 type="Purchase"

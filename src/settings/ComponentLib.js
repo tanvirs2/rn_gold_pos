@@ -24,6 +24,7 @@ import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import IconButton from '../components/IconButton/IconButton';
+import {ActiveStatusShow} from './ComponentLib2';
 
 export const LocalInput = ({inputProps}) => {
 
@@ -36,7 +37,7 @@ export const LocalInput = ({inputProps}) => {
     );
 }
 
-export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, tableCallback}) => {
+export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, tableCallback, modalData}) => {
 
     //const navigation = useNavigation();
 
@@ -51,13 +52,13 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
     });
 
     const [stLoader, setLoader] = useState(false);
-    const [stProductModal, setProductModal] = useState([
-        ['', ':', ''],
-    ]);
+    const [stProductModal, setProductModal] = useState(modalData);
 
     useEffect(()=>{
 
         setLoader(true);
+
+        //console.log(stIdForModal);
 
         customFetch({
             url: url + stIdForModal,
@@ -66,15 +67,48 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
 
                 let productModel = result.model;
 
-                tableCallback(setProductModal, productModel);
+                //console.log(productModel['categoryId']);
+                //console.log(modalData[1][2].split('|'));
+
+                let table = modalData.map((data)=>{
+                    return modalTable(data[0], productModel[ data[2].split('|')[0] ], data[2].split('|')[1]);
+                });
+
+                //console.log(table);
+
+                setProductModal(table);
 
                 setLoader(false);
+
+                //tableCallback(setProductModal, productModel);
+
             },
             navigation,
         })
 
 
     }, [])
+
+    const modalTable = (header, data, type) => {
+
+        let modifiedText = '';
+
+        switch (type) {
+            case 'text':
+                modifiedText = [header, ':', data];
+                break;
+            case 'taka':
+                modifiedText = [header, ':', taka + data];
+                break;
+            case 'status':
+                modifiedText = [header, ':', <ActiveStatusShow status={data}/>];
+                break;
+            default:
+                modifiedText = [header, ':', data];
+        }
+
+        return modifiedText;
+    }
 
     return (
         <Modal
@@ -130,7 +164,7 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, url, ta
     );
 }
 
-export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder}) => {
+export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder, modalData}) => {
 
     const styles = StyleSheet.create({
         container: {backgroundColor: '#fff'},
@@ -200,46 +234,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                 break;
                             case 'status':
                                 processedData = (
-                                    <View style={{alignItems:'center'}}>
-                                        {data[name] ?
-                                        <View style={{
-                                            flexDirection: 'row', backgroundColor: 'green',
-                                            justifyContent: 'center',
-                                            alignItems: 'center', borderRadius: 3, padding: 2
-                                        }}>
-
-                                            <View>
-                                                <Text style={{
-                                                    color: '#fff',
-                                                    fontSize: 10,
-                                                }}> Active </Text>
-                                            </View>
-
-                                            <View>
-                                                <View style={{
-                                                    width: 10,
-                                                    height: 10,
-                                                    backgroundColor: '#fff',
-                                                    borderRadius: 3,
-                                                    marginTop:1,
-                                                    marginRight: 1,
-                                                }}/>
-                                            </View>
-                                        </View>
-                                        :
-                                        <View style={{flexDirection:'row',
-                                            justifyContent: 'center',
-                                            alignItems: 'center', borderRadius:3,
-                                            borderColor: '#000', borderWidth: 1, padding:2
-                                        }}>
-                                            <View>
-                                                <View style={{width:10, height:10, backgroundColor:'#000', borderRadius:3}}/>
-                                            </View>
-                                            <View>
-                                                <Text style={{fontSize:8}}> Deactive </Text>
-                                            </View>
-                                        </View>}
-                                </View>
+                                    <ActiveStatusShow status={data[name]}/>
                                 );
                                 break;
                             case 'date':
@@ -361,7 +356,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
 
 
                             {
-                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url="Sale/Get/"/>
+                                modalVisible && <DetailsModal setModalVisible={setModalVisible} stIdForModal={stIdForModal} url={`${type}/Get/`} modalData={modalData}/>
                             }
 
                             <Table borderStyle={{borderWidth: 1, borderColor: '#f1f1f1'}}>
@@ -377,29 +372,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                             {rowData.map((cellData, cellIndex) => (
                                                 <Cell
                                                     key={cellIndex}
-                                                    data={
-                                                        (()=>{
-                                                            switch (cellIndex) {
-
-                                                                case 4:
-                                                                    return (
-                                                                        <Fragment>
-                                                                            <Pressable onPress={()=>{
-                                                                                setModalVisible(true)
-                                                                                setIdForModal(cellData);
-                                                                            }} style={{alignItems:'center'}}>
-
-                                                                                <Ionicons name="ellipsis-vertical" size={24} color="#000"/>
-
-                                                                            </Pressable>
-
-                                                                        </Fragment>
-                                                                    );
-                                                                default:
-                                                                    return cellData;
-                                                            }
-                                                        })()
-                                                    }
+                                                    data={cellData}
                                                     textStyle={styles.text}
                                                 />
                                             ))}

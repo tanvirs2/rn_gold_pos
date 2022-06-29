@@ -1,7 +1,5 @@
-/*eslint-disable*/
-
 import React, {Fragment} from 'react';
-import {CommonListScreen, CustomDataTable} from '../../settings/ComponentLib';
+import {CustomDataTable} from '../../settings/ComponentLib';
 
 const CustomerListScreen = () => {
 
@@ -10,13 +8,20 @@ const CustomerListScreen = () => {
 
             <CustomDataTable
                 type="Customar"
-                tableHead={['Customer Name', 'Is Active', 'Action']}
+                tableHead={['Customer Name', 'Status', 'Action']}
+                searchPlaceholder="Customer Name..."
                 tableDB={[
                     'name|text',
                     'isActive|status',
                     'id|action'
                 ]}
-                searchPlaceholder="Customer Name..."
+                modalData={[
+                    ['ID', ':', 'id|text'],
+                    ['Name', ':', 'name|text'],
+                    ['Mobile', ':', 'mobile|text'],
+                    ['Address', ':', 'address|text'],
+                    ['Status', ':', 'isActive|status'],
+                ]}
             />
         </Fragment>
     )

@@ -168,11 +168,6 @@ const menuObject = {
             mainIcon: 'settings',
             subMenu: [
                 {
-                    name: 'VAT/TAX',
-                    icon: '',
-                    route: '',
-                },
-                {
                     name: 'Category Entry',
                     icon: '',
                     route: 'Product Category Entry',
@@ -183,13 +178,9 @@ const menuObject = {
                     route: 'Product Categories',
                 },
                 {
-                    name: 'Carats',
-                    icon: '',
-                    route: '',
-                },{
                     name: 'Users',
                     icon: '',
-                    route: '',
+                    route: 'Users',
                 },
 
             ],
