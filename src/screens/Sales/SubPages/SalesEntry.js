@@ -29,7 +29,7 @@ import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import moment from 'moment';
 import {taka} from '../../../assets/symbols';
-import {TransactionalInput} from '../../../settings/ComponentLib';
+import {LocalSelect, TransactionalInput} from '../../../settings/ComponentLib';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -40,7 +40,7 @@ export const SubComponentForInput = ({title, ...props}) => (
 
 
 
-export default function SalesEntry() {
+export default function SalesEntry({type}) {
 
     const navigation = useNavigation();
     const {height, width} = useWindowDimensions();
@@ -52,6 +52,11 @@ export default function SalesEntry() {
         BarcodeFormat.CODE_128, // You can only specify a particular format
     ]);
 
+    /*Start WholeSales*/
+    const [stCustomerId, setCustomerId] = useState(null);
+    const [stCustomerList, setCustomerList] = useState([]);
+    /*End WholeSales*/
+
     const [stConfirmModalVisible, setConfirmModalVisible] = useState(false);
     const [stLoader, setLoader] = useState(false);
     const [stScannedBarcode, setScannedBarcode] = useState([]);
@@ -59,9 +64,9 @@ export default function SalesEntry() {
     const [hasPermission, setHasPermission] = useState(false);
     const [isScanned, setIsScanned] = useState(false);
 
-    const [stCustomerName, setCustomerName] = useState();
-    const [stMobileNumber, setMobileNumber] = useState();
-    const [stAddress, setAddress] = useState();
+    const [stCustomerName, setCustomerName] = useState(null);
+    const [stMobileNumber, setMobileNumber] = useState(null);
+    const [stAddress, setAddress] = useState(null);
     const [stComment, setComment] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [stSubTotal, setSubTotal] = useState(0);
@@ -168,8 +173,14 @@ export default function SalesEntry() {
 
         checkCameraPermissionFirst();
 
+        customFetch({
+            url: 'Customar/GetAll?pageIndex=0&pageSize=2000',
+            callbackResult: (result)=>{
+                setCustomerList(result.data)
+            }
+        });
 
-    }, []);
+    }, [stCustomerId]);
 
 
     const toggleActiveState = async () => {
@@ -178,17 +189,7 @@ export default function SalesEntry() {
             setIsScanned(true);
             setModalVisible(false)
 
-            //alert('ddddaaa')
 
-            /*barcodes.map((barcode, idx) => {
-                    //console.log(barcode.displayValue)
-                    return (
-                        <Text key={idx} style={{color:'red', fontSize: 50}}>
-                            {barcode.displayValue}
-                        </Text>
-                    )
-                }
-            )*/
 
             // setBarcode('');
             barcodes.forEach((scannedBarcode) => {
@@ -233,7 +234,6 @@ export default function SalesEntry() {
 
     const collection = collect(stTable);
 
-    //console.log(collection);
 
     const brTable = collection.count() > 0;
 
@@ -250,17 +250,6 @@ export default function SalesEntry() {
         );
     }
 
-    /*const TransactionalInput = ({stValue, setValue}) => {
-
-        return <TextInput
-            keyboardType="numeric"
-            placeholder="............"
-            placeholderTextColor="#f00"
-            style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
-            value={stValue}
-            onChangeText={setValue}
-        />
-    }*/
 
     const ConfirmModal = () => {
 
@@ -286,24 +275,28 @@ export default function SalesEntry() {
             /**/
             setLoader(true);
 
+            let body = {
+                'id': 0,
+                'shopId': 1,
+                'customerId': stCustomerId,
+                'categoryId': stCustomerId ? 15102 : 15101,
+                'cname': stCustomerName,
+                'cmobile': stMobileNumber,
+                'caddress': stAddress,
+                'totalAmount': stPayable,
+                'vatAmount': stVatCost,
+                'paidAmount': stPaid,
+                'dueAmount': stDue,
+                'comment': stComment,
+                'productList': [
+                    ...stProductList,
+                ],
+            };
+
             customFetch({
                 url: 'Sale/Upsert',
                 method: 'POST',
-                body: {
-                    "id": 0,
-                    "shopId": 1,
-                    "cname": stCustomerName,
-                    "cmobile": stMobileNumber,
-                    "caddress": stAddress,
-                    "totalAmount": stPayable,
-                    "vatAmount": stVatCost,
-                    "paidAmount": stPaid,
-                    "dueAmount": stDue,
-                    "comment": stComment,
-                    "productList": [
-                        ...stProductList
-                    ]
-                },
+                body,
                 callbackResult: insertedId => {
 
                     /* Child request */
@@ -549,26 +542,43 @@ export default function SalesEntry() {
             <LoaderViewScreen viewThisComp={stLoader}/>
 
             <View>
+                {
+                    type === 'WholeSales' ?
+                        <View style={styles.container}>
+                            <LocalSelect
+                                data={stCustomerList}
+                                selectProps={{
+                                    value: stCustomerId,
+                                    setValue: setCustomerId,
+                                    placeholder: 'Select Customer',
+                                }}
+                            />
+                        </View>
+                        :
+                        <View>
+                            <SubComponentForInput
+                            title="Customer Name *"
+                            placeholder="Customer Name"
+                            value={stCustomerName}
+                            setValue={setCustomerName}
+                            />
+                            <SubComponentForInput
+                                title="Mobile Number *"
+                                placeholder="Mobile Number"
+                                value={stMobileNumber}
+                                setValue={setMobileNumber}
+                                keyboardType="numeric"
+                            />
+                            <SubComponentForInput
+                                title="Address *"
+                                placeholder="Address"
+                                value={stAddress}
+                                setValue={setAddress}
+                            />
+                    </View>
+                }
 
-                <SubComponentForInput
-                    title="Customer Name *"
-                    placeholder="Customer Name"
-                    value={stCustomerName}
-                    setValue={setCustomerName}
-                />
-                <SubComponentForInput
-                    title="Mobile Number *"
-                    placeholder="Mobile Number"
-                    value={stMobileNumber}
-                    setValue={setMobileNumber}
-                    keyboardType="numeric"
-                />
-                <SubComponentForInput
-                    title="Address *"
-                    placeholder="Address"
-                    value={stAddress}
-                    setValue={setAddress}
-                />
+
                 <SubComponentForInput
                     title="Comment"
                     value={stComment}
@@ -670,7 +680,7 @@ export default function SalesEntry() {
                 </View>
 
 
-                {stCustomerName ? <View style={styles.container}>
+                {stCustomerName || stCustomerId ? <View style={styles.container}>
 
                     <Text>Barcode</Text>
 
@@ -757,6 +767,8 @@ export default function SalesEntry() {
                                     setBarcode('')
                                     setProductList([])
                                     setTable([])
+                                    setCustomerId(null);
+                                    setCustomerList([]);
                                 }}
                             />
                         </View>

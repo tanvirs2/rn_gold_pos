@@ -15,15 +15,50 @@ const Tab = createMaterialTopTabNavigator();
 function SalesEntry() {
     return (
         <View>
-            <SalesEntryPage/>
+            <SalesEntryPage type="SalesEntry"/>
         </View>
     );
 }
 
 function WholeSales() {
+
+    /*
+* {
+    "id": 0,
+    "code": "I-637921314512826742",
+    "shopId": null,
+    "customerId": 63,
+    "cname": null,
+    "cmobile": null,
+    "caddress": null,
+    "totalAmount": 22.2,
+    "vatAmount": 11,
+    "paidAmount": 11,
+    "dueAmount": 11.2,
+    "typeId": null,
+    "categoryId": 15102,
+    "comment": "asdad",
+    "approveBy": null,
+    "productList": [
+        {
+            "productId": 76,
+            "code": "637914134365123426",
+            "name": "Ttttt",
+            "description": "Dd",
+            "isStock": true,
+            "grade": "18k",
+            "category": "Ring",
+            "weight": 2,
+            "price": "10",
+            "ptotal": 20,
+            "discountAmount": 0
+        }
+    ]
+}*/
+
     return (
         <View>
-            <SalesEntryPage/>
+            <SalesEntryPage type="WholeSales"/>
         </View>
     );
 }
@@ -31,7 +66,7 @@ function WholeSales() {
 function Gift() {
     return (
         <View>
-            <SalesEntryPage/>
+            <SalesEntryPage type="Gift"/>
         </View>
     );
 }

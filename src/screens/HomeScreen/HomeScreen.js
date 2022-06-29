@@ -7,7 +7,6 @@ import {taka} from '../../assets/symbols';
 
 
 
-
 const HomeScreen = () => {
 
     const [stInfoBadgesData, setInfoBadgesData] = useState([
@@ -60,7 +59,7 @@ const HomeScreen = () => {
           <Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
             Manager
           </Text>
-            
+
           <View
             style={{
               flexDirection: 'row',
