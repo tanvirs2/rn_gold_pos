@@ -189,8 +189,6 @@ export default function SalesEntry({type}) {
             setIsScanned(true);
             setModalVisible(false)
 
-
-
             // setBarcode('');
             barcodes.forEach((scannedBarcode) => {
                 if (scannedBarcode.rawValue !== '') {

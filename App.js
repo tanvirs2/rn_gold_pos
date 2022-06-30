@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import Naviga_T from './src/TestComponent/Naviga_T';
 //import SampleScreen from './src/screens/SampleScreen/SampleScreen';
 import loaderContext from './src/contexts/loaderContext';
+import FlashMessage from 'react-native-flash-message';
 
 const initState = false;
 const reducer = (state, action) => {
@@ -37,7 +38,9 @@ const App = () => {
   return (
       <loaderContext.Provider value={{loaderDispatch: loaderDispatchMethod, loader: loaderState}}>
 
-        <Navigation />
+          <Navigation />
+
+          <FlashMessage position="top" />
 
       </loaderContext.Provider>
   );

@@ -25,6 +25,7 @@ import DatePicker from 'react-native-date-picker';
 import SelectDropdown from 'react-native-select-dropdown';
 import IconButton from '../components/IconButton/IconButton';
 import {ActiveStatusShow} from './ComponentLib2';
+import {showMessage} from 'react-native-flash-message';
 
 export const LocalInput = ({inputProps}) => {
 
@@ -69,7 +70,7 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
 
                 let productModel = result.model;
 
-                //console.log(productModel['categoryId']);
+                //console.log(productModel);
                 //console.log(modalData[1][2].split('|'));
 
                 let table = modalData.map((data)=>{
@@ -216,7 +217,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
 
         setLoader(true);
 
-        console.log(stSearchValue)
+        //console.log(stSearchValue)
 
         customFetch({
             url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${stSearchValue}`,
@@ -653,24 +654,8 @@ export const CommonEntryScreen = (props) => {
 
     const [stLoader, setLoader] = useState(false);
 
-    const [stIfArrayType, setIfArrayType] = useState(['', '']);
-
     const {type, inputs, btnName, btnPress} = props;
 
-    //console.log(typeof btnPress)
-
-    /*let myObj = {};
-
-    inputs.forEach((currentVal, index) => {
-        myObj[currentVal.dbName] = currentVal.value;
-        //console.log(currentVal.dbName);
-    });
-
-    console.log(myObj);
-
-    console.log(object);
-
-    console.log(bodyMapped)*/
 
     const dataSave = async () => {
 
@@ -698,6 +683,11 @@ export const CommonEntryScreen = (props) => {
                     if (currentVal.setValue) {
                         currentVal.setValue(null);
                     }
+                });
+
+                showMessage({
+                    message: "Successfully save data",
+                    type: "success",
                 });
             },
             navigation

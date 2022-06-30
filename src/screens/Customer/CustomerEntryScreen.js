@@ -1,8 +1,8 @@
 /*eslint-disable*/
 
-import React, {Fragment, useCallback, useEffect, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {CommonEntryScreen} from '../../settings/ComponentLib';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {customFetch} from '../../settings/networking';
 
 
@@ -30,7 +30,6 @@ const CustomerEntryScreen = ({route}) => {
                         setCustomerName( name )
                     }
                 });
-
             }
 
             return () => {

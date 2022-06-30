@@ -13,9 +13,7 @@ import {LocalInput, LocalSelect} from '../../../settings/ComponentLib';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
 import {taka} from '../../../assets/symbols';
-
-
-
+import {showMessage} from 'react-native-flash-message';
 
 
 const ProductEntryScreen = () => {
@@ -52,6 +50,26 @@ const ProductEntryScreen = () => {
     const [st_isActive, set_isActive] = useState('');
     const [st_description, set_description] = useState('');
 
+    const resetInputs = () => {
+        set_name('');
+        set_buyingPrice('');
+        set_sellingPrice('');
+        set_weight('');
+        set_grade('');
+        set_category('');
+        set_isStock('');
+        set_isActive('');
+        set_description('');
+        setProductDependency({
+            grades:[],
+            categories: [],
+            types: [],
+            status: [],
+            stock: [],
+        });
+
+        setRefreshing(prevState => !prevState);
+    }
 
     useEffect(()=>{
         setLoader(true);
@@ -112,40 +130,16 @@ const ProductEntryScreen = () => {
             },
             callbackResult: (result)=>{
                 setLoader(false);
-                console.log(result);
+                showMessage({
+                    message: "Successfully save data",
+                    type: "success",
+                });
+                resetInputs();
+                //console.log(result);
             },
             navigation
         });
 
-        /*fetch(apiUrl + `Product/Upsert`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/Json',
-                'Authorization': `Bearer ${await loginToken()}`,
-            },
-            body: JSON.stringify({
-                "id": st_id,                        //0,
-                "typeId": st_typeId,                //0,
-                //"code": "123456",                 // should be unique
-
-                "name": st_name,                    // "string",
-                "buyingPrice": st_buyingPrice,      // 0,
-                "sellingPrice": st_sellingPrice,    // 0,
-                "weight": st_weight,                // 0,
-                "gradeId": st_gradeId,              // 0,
-                "grade": st_grade,                  // "string",
-                "categoryId": st_categoryId,        // 0,
-                "category": st_category,            // "string",
-                "isStock": st_isStock !== 'No',              // true,
-                "isActive": st_isActive !== 'No',            // true,
-                "description": st_description,      // "string"
-            }),
-        })
-            .then(response=>response.json())
-            .then(res=>{
-                //console.log(res);
-                setLoader(false);
-            })*/
     }
 
     return (

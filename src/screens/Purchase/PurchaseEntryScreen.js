@@ -7,6 +7,7 @@ import {Rows, Table} from 'react-native-table-component';
 import CustomButton from '../../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
 import {taka} from '../../assets/symbols';
+import {showMessage} from 'react-native-flash-message';
 
 const PurchaseEntryScreen = ({type}) => {
 
@@ -195,7 +196,11 @@ const PurchaseEntryScreen = ({type}) => {
             },
             callbackResult: (result)=>{
                 setLoader(false);
-                console.log('result---->', result);
+                showMessage({
+                    message: "Successfully save data",
+                    type: "success",
+                });
+                //console.log('result---->', result);
             },
             navigation
         });
