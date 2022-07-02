@@ -115,6 +115,7 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
 
     const editData = () => {
         setModalVisible(prevState => !prevState);
+        console.log(stIdForModal);
         navigation.navigate(editRoute, {
             id: stIdForModal,
         });
@@ -654,7 +655,7 @@ export const CommonEntryScreen = (props) => {
 
     const [stLoader, setLoader] = useState(false);
 
-    const {type, inputs, btnName, btnPress} = props;
+    const {type, inputs, btnName, btnPress, afterSaveInputs} = props;
 
 
     const dataSave = async () => {
@@ -686,9 +687,13 @@ export const CommonEntryScreen = (props) => {
                 });
 
                 showMessage({
-                    message: "Successfully save data",
+                    message: `"${type}" Successfully save data`,
                     type: "success",
                 });
+
+                if (typeof afterSaveInputs === 'function') {
+                    afterSaveInputs();
+                }
             },
             navigation
         });

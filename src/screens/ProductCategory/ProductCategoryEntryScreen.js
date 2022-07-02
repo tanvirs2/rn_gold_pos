@@ -1,78 +1,64 @@
 /*eslint-disable*/
 
-import React, {useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoaderViewScreen from '../../components/LoaderView/LoaderViewScreen';
-import {ScrollView, Text, View} from 'react-native';
-import CustomButton from '../../components/CustomButton';
-import {apiUrl} from '../../settings/networking';
-import {globalButtonColor} from '../../settings/color';
-import {LocalInput} from '../../settings/ComponentLib';
+import React, {Fragment, useState} from 'react';
+import {customFetch} from '../../settings/networking';
+import {CommonEntryScreen} from '../../settings/ComponentLib';
+import {useFocusEffect} from '@react-navigation/native';
 
 
-const ProductCategoryEntryScreen = () => {
+const ProductCategoryEntryScreen = ({route}) => {
 
-    const [stLoader, setLoader] = useState(false);
+    let id = route.params?.id
 
     const [stId, setId] = useState(0);
     const [stCategoryName, setCategoryName] = useState('');
 
-    const dataSave = async () => {
-        setLoader(true);
+    useFocusEffect(() => {
 
-        let loginToken = await AsyncStorage.getItem('@storage_token');
+            if (id) {
+                customFetch({
+                    url: 'ProductCategory/Get/'+id,
+                    callbackResult: (result)=>{
 
-        fetch(apiUrl + `ProductCategory/Upsert`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'authorization': `Bearer ${loginToken}`,
-            },
-            body: JSON.stringify({
-                "id": stId,
-                "name": stCategoryName,
-                "isActive": true
-            })
-        })
-            .then(response => response.json())
-            .then(result => {
-                setId(0);
-                setLoader(false);
+                        const {name} = result.model;
 
-                console.log(result);
+                        setId(id)
+                        setCategoryName( name )
+                    }
+                });
+            }
 
-            })
-    }
+            return () => {
+                if (route.params) {
+                    route.params = undefined;
+                }
+            };
+        });
 
     return (
-        <View>
-
-            <LoaderViewScreen viewThisComp={stLoader}/>
-
-            <ScrollView>
-                <View style={{marginTop:30,padding:20}}>
-
-                    <LocalInput inputProps={{
+        <Fragment>
+            <CommonEntryScreen
+                type="ProductCategory"
+                inputs={[
+                    {
+                        name: 'id',
+                        dbName: 'id',
+                        type: 'hide',
+                        value: stId,
+                    },
+                    {
+                        name: 'Category Name',
+                        dbName: 'name',
+                        type: 'text',
                         value: stCategoryName,
-                        setValue: setCategoryName,
-                        placeholder: 'Category Name',
-                    }}/>
-
-
-
-                    <View style={{marginTop:50}}>
-
-                        <CustomButton
-                            text="Add"
-                            bgColor={globalButtonColor}
-                            onPress={dataSave}
-                        />
-
-                    </View>
-
-                </View>
-            </ScrollView>
-        </View>
+                        setValue: setCategoryName
+                    }
+                ]}
+                afterSaveInputs={()=>{
+                    setId(0);
+                }}
+            />
+        </Fragment>
     );
 }
 
