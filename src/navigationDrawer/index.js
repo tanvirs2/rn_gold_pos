@@ -149,17 +149,21 @@ const DrawerNavigation = () => {
           <Drawer.Screen name="Invoice" component={InvoiceScreen} />
           <Drawer.Screen name="Deposit & Withdraw List" component={DepositAndWithdraw} />
           <Drawer.Screen name="Deposit & Withdraw Entry" component={DepositAndWithdrawEntry} />
+          <Drawer.Screen name="Deposit & Withdraw Edit" component={DepositAndWithdrawEntry} />
           <Drawer.Screen name="Product List" component={ProductListScreen} />
           <Drawer.Screen name="Stock Entry" component={ProductEntryScreen} />
           <Drawer.Screen name="Expense Entry" component={ExpenseEntryScreen} />
+          <Drawer.Screen name="Expense Edit" component={ExpenseEntryScreen} />
           <Drawer.Screen name="Expense List" component={ExpenseListScreen} />
           <Drawer.Screen name="Product Categories" component={ProductCategoryListScreen} />
           <Drawer.Screen name="Product Category Entry" component={ProductCategoryEntryScreen} />
+          <Drawer.Screen name="Product Category Edit" component={ProductCategoryEntryScreen} />
           <Drawer.Screen name="List Of Sales" component={TabListOfSales} />
           <Drawer.Screen name="Product Details Invoice" component={ProductDetailsInvoiceScreen} />
           <Drawer.Screen name="Due Receive List" component={DueBillsReceivedListScreen} />
           <Drawer.Screen name="Due Receive Entry" component={DueBillsReceivedEntryScreen} />
           <Drawer.Screen name="Customer Entry" component={CustomerEntryScreen} />
+          <Drawer.Screen name="Customer Edit" component={CustomerEntryScreen} />
           <Drawer.Screen name="Customer List" component={CustomerListScreen} />
           <Drawer.Screen name="Purchase Entry" component={PurchaseEntryTab} />
           <Drawer.Screen name="Purchase List" component={PurchaseListTab} />

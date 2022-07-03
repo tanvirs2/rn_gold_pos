@@ -46,8 +46,7 @@ const ExpenseEntryScreen = ({route}) => {
                     route.params = undefined;
                 }
             };
-        }
-    );
+    });
 
     return (
         <Fragment>

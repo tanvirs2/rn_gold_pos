@@ -24,7 +24,7 @@ const ExpenseListScreen = () => {
                     ['Amount', ':', 'amount|taka'],
                     ['Date', ':', 'date|date'],
                 ]}
-                editRoute="Expense Entry"
+                editRoute="Expense Edit"
             />
         </Fragment>
     )

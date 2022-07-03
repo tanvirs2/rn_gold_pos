@@ -40,11 +40,11 @@ const menuObject = {
             ],
         },
 
-        {
+        /*{
             mainMenuLabel: 'Stock Search',
             mainIcon: 'file-tray-full',
             subMenu: [],
-        },
+        },*/
 
         {
             mainMenuLabel: 'Due Received',
@@ -123,13 +123,7 @@ const menuObject = {
                     name: 'Product List',
                     icon: '',
                     route: 'Product List',
-                },
-                {
-                    name: 'Product Categories',
-                    icon: '',
-                    route: 'Product Categories',
-                },
-
+                }
             ],
         },{
             mainMenuLabel: 'CRM',

@@ -3,37 +3,45 @@
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {TransactionalEntryScreen} from '../../../settings/ComponentLib';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
 
 
-const DepositEntryScreen = () => {
+const DepositEntryScreen = ({id}) => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Deposit"/>
+            <TransactionalEntryScreen type="Deposit" id={id}/>
         </Fragment>
     );
 }
 
-const WithdrawEntryScreen = () => {
+const WithdrawEntryScreen = ({id}) => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Withdraw"/>
+            <TransactionalEntryScreen type="Withdraw" id={id}/>
         </Fragment>
     );
 }
 
-const DepositAndWithdrawEntry = () => {
+const DepositAndWithdrawEntry = ({route}) => {
 
-
+    let id = route.params?.id
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Deposit Entry" component={DepositEntryScreen}/>
-            <Tab.Screen name="Withdraw Entry" component={WithdrawEntryScreen}/>
+
+            <Tab.Screen name="Deposit Entry">
+                {props => <DepositEntryScreen {...props} id={id ? id: 0}/>}
+            </Tab.Screen>
+
+            <Tab.Screen name="Withdraw Entry">
+                {props => <WithdrawEntryScreen {...props} id={id ? id: 0}/>}
+            </Tab.Screen>
+
         </Tab.Navigator>
     );
 }

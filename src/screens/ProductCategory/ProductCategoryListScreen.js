@@ -46,7 +46,7 @@ const ProductCategoryListScreen = () => {
                     ['Name', ':', 'name|text'],
                     ['Status', ':', 'isActive|status'],
                 ]}
-                editRoute="Product Category Entry"
+                editRoute="Product Category Edit"
             />
 
         </Fragment>

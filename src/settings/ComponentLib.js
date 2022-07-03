@@ -17,7 +17,7 @@ import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
 import {Cell, Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import CustomButton from '../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from './color';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import loaderContext from '../contexts/loaderContext';
 import {taka} from '../assets/symbols';
 import moment from 'moment';
@@ -118,10 +118,18 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
 
     const editData = () => {
         setModalVisible(prevState => !prevState);
-        console.log(stIdForModal);
-        navigation.navigate(editRoute, {
-            id: stIdForModal,
-        });
+        console.log(stIdForModal, typeof editRoute, typeof [], typeof {});
+
+        if (typeof editRoute === 'object') {
+            navigation.navigate(editRoute.main, {
+                id: stIdForModal,
+                screen: editRoute.child,
+            });
+        } else {
+            navigation.navigate(editRoute, {
+                id: stIdForModal
+            });
+        }
     }
 
     return (
@@ -908,107 +916,35 @@ export const TransactionalInput = ({stValue, setValue}) => {
 
 export const TransactionalListScreen = ({type, tableHead}) => {
 
-    const navigation = useNavigation();
-
-    const styles = StyleSheet.create({
-        container: { flex: 1, padding: 16, paddingTop: 30 },
-        head: { height: 60, backgroundColor: '#cccccc' },
-        text: { margin: 6, fontWeight:'bold' },
-        cell: { margin: 6 }
-    });
-
-    const isFocused = useIsFocused();
-
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
-    const [stDeposits, setDeposits] = useState({
-        tableHead, //['Deposit Name', 'Amount', 'Comment', 'Date']
-        tableData: [
-            ['', '', '', ''],
-        ]
-    })
-
-    const loadContext = useContext(loaderContext);
-
-    useEffect( ()=>{
-
-        loadContext.loaderDispatch('loading');
-
-        customFetch({
-            url: type+'/GetAll?pageIndex=0&pageSize=200',
-            method: 'GET',
-            callbackResult: (result)=>{
-                loadContext.loaderDispatch('loaded');
-
-                let listArray = result.data.map((data)=>{
-
-                    return [
-                        data.name,
-
-                        `${taka} ${data.amount}`,
-
-                        data.description,
-
-                        moment(data.date).format('MMMM Do'),
-                    ];
-                })
-
-
-
-                setDeposits((prevState)=>{
-                    return {
-                        ...prevState,
-                        tableData: [
-                            ...listArray
-                        ]
-                    };
-                })
-            },
-            navigation,
-            callbackError: (err)=>{
-                loadContext.loaderDispatch('loaded');
-            }
-        });
-
-    }, [isFocused]);
-
     return (
-        <View>
-
-            <ScrollView>
-                
-
-                <View>
-                    {loadContext.loader && <View style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(196,196,196,0.72)',
-                        zIndex: 1,
-                    }}>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <ActivityIndicator size="large" color="#0000ff"/>
-                        </View>
-                    </View>}
-
-                    <View style={styles.container}>
-
-                        <Table>
-                            <Row data={stDeposits.tableHead} style={styles.head} textStyle={styles.text}/>
-                            <Rows data={stDeposits.tableData} textStyle={styles.cell}/>
-                        </Table>
-
-                    </View>
-                </View>
-            </ScrollView>
-
-        </View>
+        <Fragment>
+            <CustomDataTable
+                type={type}
+                searchPlaceholder={`${type} Name...`}
+                tableHead={tableHead}
+                tableDB={[
+                    'name|text',
+                    'amount|taka',
+                    'description|text',
+                    'date|date',
+                    'id|action'
+                ]}
+                modalData={[
+                    ['ID', ':', 'id|text'],
+                    ['Name', ':', 'name|text'],
+                    ['Amount', ':', 'amount|taka'],
+                    ['Date', ':', 'date|date'],
+                ]}
+                editRoute={{main: 'Deposit & Withdraw Edit', child: `${type} Entry`}}
+            />
+        </Fragment>
     );
 }
 
-export const TransactionalEntryScreen = ({type}) => {
+export const TransactionalEntryScreen = ({type, id}) => {
 
     const navigation = useNavigation();
+    const isFocus = useIsFocused();
 
     const [stLoader, setLoader] = useState(false);
 
@@ -1016,10 +952,77 @@ export const TransactionalEntryScreen = ({type}) => {
     const [stAmount, setAmount] = useState('');
     const [stComment, setComment] = useState('');
     const [stShopId, setShopId] = useState(1);
-    const [stId, setId] = useState(0);
+    const [stId, setId] = useState(id);
 
     const [date, setDate] = useState(new Date())
     const [open, setOpen] = useState(false)
+
+    useFocusEffect(
+        React.useCallback(() => {
+
+            if (id) {
+                customFetch({
+                    url: type+'/Get/'+id,
+                    callbackResult: (result)=>{
+
+                        const {
+                            amount,
+                            date,
+                            comment,
+                            name
+                        } = result.model;
+
+
+                        setId(id)
+                        setCustomerName( name )
+                        setAmount( String(amount) )
+                        //setDate( moment(date).format('Y-MM-DD') )
+                        setComment( comment )
+                    }
+                });
+            }
+
+            return ()=>{
+                setCustomerName('');
+                setAmount('');
+                setComment('');
+                setShopId(1);
+                setId(0);
+
+                setDate(new Date());
+                setOpen(false);
+            }
+
+
+        }, [isFocus])
+    );
+
+    /*useEffect(() => {
+
+        if (id) {
+            customFetch({
+                url: type+'/Get/'+id,
+                callbackResult: (result)=>{
+
+                    const {
+                        amount,
+                        date,
+                        comment,
+                        name
+                    } = result.model;
+
+
+                    setId(id)
+                    setCustomerName( name )
+                    setAmount( String(amount) )
+                    //setDate( moment(date).format('Y-MM-DD') )
+                    setComment( comment )
+                }
+            });
+        }
+
+
+    }, [isFocus]);*/
 
     const dataSave = async () => {
         setLoader(true);

@@ -12,7 +12,7 @@ const DepositListScreen = () => {
     return (
         <Fragment>
             <TransactionalListScreen type="Deposit" tableHead={
-                ['Deposit Name', 'Amount', 'Comment', 'Date']
+                ['Deposit Name', 'Amount', 'Comment', 'Date', 'Action']
             }/>
         </Fragment>
     );
@@ -24,7 +24,7 @@ const WithdrawListScreen = () => {
     return (
         <Fragment>
             <TransactionalListScreen type="Withdraw" tableHead={
-                ['Withdraw Name', 'Amount', 'Comment', 'Date']
+                ['Withdraw Name', 'Amount', 'Comment', 'Date', 'Action']
             }/>
         </Fragment>
     );
