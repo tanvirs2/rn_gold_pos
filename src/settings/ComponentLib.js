@@ -92,6 +92,28 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
 
     }, [])
 
+    const statusToggler = () => {
+        customFetch({
+            url: urlBaseName + '/Upsert',
+            method: 'POST',
+            body: {
+                id: stIdForModal,
+                isActive: false
+            },
+            callbackResult: (result)=>{
+                //setLoader(false);
+                console.log('result---->', result);
+
+                showMessage({
+                    message: `"${type}" Successfully save data`,
+                    type: "success",
+                });
+
+            },
+            navigation
+        });
+    }
+
     const modalTable = (header, data, type) => {
 
         let modifiedText = '';
@@ -107,7 +129,17 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
                 modifiedText = [header, ':', moment(data).format('MMMM Do')];
                 break;
             case 'status':
-                modifiedText = [header, ':', <ActiveStatusShow status={data}/>];
+                modifiedText = [
+                    header, ':',
+                    <TouchableOpacity onPress={()=>{
+                        showMessage({
+                            message: `Change Not Ready yet!`,
+                            type: "danger",
+                        });
+                    }}>
+                        <ActiveStatusShow status={data}/>
+                    </TouchableOpacity>
+                ];
                 break;
             default:
                 modifiedText = [header, ':', data];
