@@ -35,7 +35,7 @@ const ProductCategoryListScreen = () => {
             <CustomDataTable
                 type="ProductCategory"
                 tableHead={['Category', 'Status', 'Action']}
-                searchPlaceholder="Customer Name..."
+                searchPlaceholder="Category Name..."
                 tableDB={[
                     'name|text',
                     'isActive|status',

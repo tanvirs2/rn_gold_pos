@@ -1,13 +1,31 @@
 /*eslint-disable*/
 
 import React, {Fragment} from 'react';
-import {TransactionalListScreen} from '../../settings/ComponentLib';
+import {CustomDataTable, TransactionalListScreen} from '../../settings/ComponentLib';
 
 const ExpenseListScreen = () => {
 
     return (
         <Fragment>
-            <TransactionalListScreen type="Expense" tableHead={['Expense Name', 'Amount', 'Comment', 'Date']}/>
+            <CustomDataTable
+                type="Expense"
+                searchPlaceholder="Expense Name..."
+                tableHead={['Expense Name', 'Amount', 'Comment', 'Date', 'Action']}
+                tableDB={[
+                    'name|text',
+                    'amount|taka',
+                    'description|text',
+                    'date|date',
+                    'id|action'
+                ]}
+                modalData={[
+                    ['ID', ':', 'id|text'],
+                    ['Name', ':', 'name|text'],
+                    ['Amount', ':', 'amount|taka'],
+                    ['Date', ':', 'date|date'],
+                ]}
+                editRoute="Expense Entry"
+            />
         </Fragment>
     )
 }

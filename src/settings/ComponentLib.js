@@ -101,7 +101,10 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
                 modifiedText = [header, ':', data];
                 break;
             case 'taka':
-                modifiedText = [header, ':', taka + data];
+                modifiedText = [header, ':', taka +' '+ data];
+                break;
+            case 'date':
+                modifiedText = [header, ':', moment(data).format('MMMM Do')];
                 break;
             case 'status':
                 modifiedText = [header, ':', <ActiveStatusShow status={data}/>];
