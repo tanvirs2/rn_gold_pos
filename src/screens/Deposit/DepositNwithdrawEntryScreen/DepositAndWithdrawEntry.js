@@ -9,37 +9,38 @@ const Tab = createMaterialTopTabNavigator();
 
 
 
-const DepositEntryScreen = ({id}) => {
+const DepositEntryScreen = ({id, name}) => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Deposit" id={id}/>
+            <TransactionalEntryScreen type="Deposit" id={id} name={name}/>
         </Fragment>
     );
 }
 
-const WithdrawEntryScreen = ({id}) => {
+const WithdrawEntryScreen = ({id, name}) => {
 
     return (
         <Fragment>
-            <TransactionalEntryScreen type="Withdraw" id={id}/>
+            <TransactionalEntryScreen type="Withdraw" id={id} name={name}/>
         </Fragment>
     );
 }
 
 const DepositAndWithdrawEntry = ({route}) => {
 
-    let id = route.params?.id
+    let id = route.params ? route.params.id : 0;
+    let name = route.params ? route.params.name : '';
 
     return (
         <Tab.Navigator>
 
             <Tab.Screen name="Deposit Entry">
-                {props => <DepositEntryScreen {...props} id={id ? id: 0}/>}
+                {props => <DepositEntryScreen {...props} id={id} name={name}/>}
             </Tab.Screen>
 
             <Tab.Screen name="Withdraw Entry">
-                {props => <WithdrawEntryScreen {...props} id={id ? id: 0}/>}
+                {props => <WithdrawEntryScreen {...props} id={id} name={name}/>}
             </Tab.Screen>
 
         </Tab.Navigator>

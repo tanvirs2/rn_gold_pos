@@ -27,7 +27,7 @@ const ExpenseEntryScreen = ({route}) => {
                         const {
                             amount,
                             date,
-                            comment,
+                            description,
                             name
                         } = result.model;
 
@@ -36,7 +36,7 @@ const ExpenseEntryScreen = ({route}) => {
                         setExpenseName( name )
                         setAmount( String(amount) )
                         setDate( date )
-                        setComment( comment )
+                        setComment( description )
                     }
                 });
             }
@@ -94,7 +94,7 @@ const ExpenseEntryScreen = ({route}) => {
                     },
                     {
                         name: 'Comment',
-                        dbName: 'comment',
+                        dbName: 'description',
                         type: 'comment',
                         value: stComment,
                         setValue: setComment

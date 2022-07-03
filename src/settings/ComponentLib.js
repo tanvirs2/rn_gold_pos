@@ -118,11 +118,12 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
 
     const editData = () => {
         setModalVisible(prevState => !prevState);
-        console.log(stIdForModal, typeof editRoute, typeof [], typeof {});
+        //console.log(stIdForModal, typeof editRoute, typeof [], typeof {});
 
         if (typeof editRoute === 'object') {
             navigation.navigate(editRoute.main, {
                 id: stIdForModal,
+                name: editRoute.name,
                 screen: editRoute.child,
             });
         } else {
@@ -232,7 +233,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
         //console.log(stSearchValue)
 
         customFetch({
-            url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${stSearchValue}`,
+            url: `${type}/GetAll?pageIndex=0&pageSize=200&searchValue=${stSearchValue}&sortDirection=desc&sortFieldName=id`,
             method: 'GET',
             callbackResult: (result)=>{
 
@@ -935,35 +936,33 @@ export const TransactionalListScreen = ({type, tableHead}) => {
                     ['Amount', ':', 'amount|taka'],
                     ['Date', ':', 'date|date'],
                 ]}
-                editRoute={{main: 'Deposit & Withdraw Edit', child: `${type} Entry`}}
+                editRoute={{name: type, main: 'Deposit & Withdraw Edit', child: `${type} Entry`}}
             />
         </Fragment>
     );
 }
 
-export const TransactionalEntryScreen = ({type, id}) => {
+export const TransactionalEntryScreen = ({type, id, name}) => {
 
-    const navigation = useNavigation();
     const isFocus = useIsFocused();
 
-    const [stLoader, setLoader] = useState(false);
 
     const [stCustomerName, setCustomerName] = useState('');
     const [stAmount, setAmount] = useState('');
     const [stComment, setComment] = useState('');
-    const [stShopId, setShopId] = useState(1);
     const [stId, setId] = useState(id);
 
     const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
 
     useFocusEffect(
         React.useCallback(() => {
 
-            if (id) {
+            if (id && name === type) {
                 customFetch({
                     url: type+'/Get/'+id,
                     callbackResult: (result)=>{
+
+                        //console.log(type + '/Get/' + id, result);
 
                         const {
                             amount,
@@ -976,7 +975,7 @@ export const TransactionalEntryScreen = ({type, id}) => {
                         setId(id)
                         setCustomerName( name )
                         setAmount( String(amount) )
-                        //setDate( moment(date).format('Y-MM-DD') )
+                        setDate( date )
                         setComment( comment )
                     }
                 });
@@ -986,163 +985,74 @@ export const TransactionalEntryScreen = ({type, id}) => {
                 setCustomerName('');
                 setAmount('');
                 setComment('');
-                setShopId(1);
                 setId(0);
 
                 setDate(new Date());
-                setOpen(false);
             }
 
 
         }, [isFocus])
     );
 
-    /*useEffect(() => {
 
-        if (id) {
-            customFetch({
-                url: type+'/Get/'+id,
-                callbackResult: (result)=>{
-
-                    const {
-                        amount,
-                        date,
-                        comment,
-                        name
-                    } = result.model;
-
-
-                    setId(id)
-                    setCustomerName( name )
-                    setAmount( String(amount) )
-                    //setDate( moment(date).format('Y-MM-DD') )
-                    setComment( comment )
-                }
-            });
-        }
-
-
-    }, [isFocus]);*/
-
-    const dataSave = async () => {
-        setLoader(true);
-
-        customFetch({
-            url: type+'/Upsert',
-            method: 'POST',
-            body: {
-                'id': stId,
-                'description': stComment,
-                'name': stCustomerName,
-                'comment': stComment,
-                'amount': stAmount,
-                'date': moment(date).format('Y-MM-DD'),
-                'shopId': stShopId,
-            },
-            callbackResult: (result)=>{
-                setLoader(false);
-                console.log(result);
-
-                setCustomerName('');
-                setAmount('');
-                setComment('');
-                setShopId(1);
-                setId(0);
-
-                setDate(new Date());
-                setOpen(false);
-            },
-            navigation
-        });
-    }
 
     return (
-        <View>
-
-            <LoaderViewScreen viewThisComp={stLoader}/>
-
-            <ScrollView>
-                <View style={{marginTop:30,padding:20}}>
-                    <View>
-                        <Text style={{fontSize:20, marginBottom:10}}> {type} Name</Text>
-                        <CustomInput
-                            value={stCustomerName}
-                            setValue={setCustomerName}
-                            placeholder={`${type} Name`}
-                        />
-                    </View>
-
-                    <View style={{marginTop:30}}>
-                        <Text style={{fontSize:20, marginBottom:10}}>Amount</Text>
-                        <CustomInput
-                            value={stAmount}
-                            setValue={setAmount}
-                            placeholder="Amount"
-                        />
-                    </View>
-
-                    <View style={{marginTop:30}}>
-
-                        <Text style={{fontSize:20, marginBottom:10}}>Date </Text>
-                        <CustomButton
-                            text={
-                                <Text>
-
-                                    {moment(date).format('Y-MM-DD')}
-
-                                    &nbsp; ( {moment(date).format('MMMM Do')} )
-
-                                    &nbsp;<Ionicons name="calendar-outline" size={24} color="#000"/>
-
-                                </Text>
-                            }
-                            type="border"
-                            onPress={() => {
-                                //console.log(moment(date).format('Y-MM-DD'));
-                                setOpen(true);
-                            }}
-                        />
-
-
-                        <DatePicker
-                            mode="date"
-
-                            modal
-                            open={open}
-                            date={date}
-                            onConfirm={(date) => {
-                                setOpen(false)
-                                setDate(date)
-                            }}
-                            onCancel={() => {
-                                setOpen(false)
-                            }}
-                        />
-                    </View>
-
-                    <View style={{marginTop:30}}>
-                        <Text style={{fontSize:20, marginBottom:10}}>Comment</Text>
-                        <CustomInput
-                            value={stComment}
-                            setValue={setComment}
-                            multiline={true}
-                            numberOfLines={4}
-                        />
-                    </View>
-
-                    <View style={{marginTop:30}}>
-
-                        <CustomButton
-                            text="Add"
-                            bgColor={globalButtonColor}
-                            onPress={dataSave}
-                        />
-
-                    </View>
-
-                </View>
-            </ScrollView>
-        </View>
+        <Fragment>
+            <CommonEntryScreen
+                type={type}
+                inputs={[
+                    {
+                        name: 'id',
+                        dbName: 'id',
+                        type: 'hide',
+                        value: stId,
+                    },
+                    {
+                        name: 'isActive',
+                        dbName: 'isActive',
+                        type: 'hide',
+                        value: true,
+                    },
+                    {
+                        name: 'shopId',
+                        dbName: 'shopId',
+                        type: 'hide',
+                        value: 1
+                    },
+                    {
+                        name: type+' Name',
+                        dbName: 'name',
+                        type: 'text',
+                        value: stCustomerName,
+                        setValue: setCustomerName
+                    },
+                    {
+                        name: 'Amount',
+                        dbName: 'amount',
+                        type: 'numeric',
+                        value: stAmount,
+                        setValue: setAmount
+                    },
+                    {
+                        name: 'Date',
+                        dbName: 'date',
+                        type: 'date',
+                        value: date,
+                        setValue: setDate
+                    },
+                    {
+                        name: 'Comment',
+                        dbName: 'comment',
+                        type: 'comment',
+                        value: stComment,
+                        setValue: setComment
+                    },
+                ]}
+                afterSaveInputs={()=>{
+                    setId(0);
+                }}
+            />
+        </Fragment>
     );
 }
 
@@ -1172,18 +1082,6 @@ export const DeuTransactionalEntryScreen = ({type}) => {
     const dataSave = async () => {
         setLoader(true);
 
-        /*{
-            "id": 0,
-            "name": "string",
-            "invoiceId": 18,
-            "amount": 10,
-            "date": "2022-06-06",
-            "description": "string",
-            "comment": "string",
-            "shopId": 1
-        }*/
-
-
         customFetch({
             url: 'DueBill/Upsert',
             method: 'POST',
@@ -1198,7 +1096,7 @@ export const DeuTransactionalEntryScreen = ({type}) => {
             },
             callbackResult: (result)=>{
                 setLoader(false);
-                console.log(result);
+                //console.log(result);
 
                 setCustomerName('');
                 setAmount('');
@@ -1216,10 +1114,10 @@ export const DeuTransactionalEntryScreen = ({type}) => {
     const getInvoices = () => {
 
         customFetch({
-            url: 'DueBill/Get/2',
+            url: 'DueBill/Get/0',
             callbackResult: (result) => {
                 setInvoicesArray(result.invoiceCodes);
-                console.log(result.invoiceCodes);
+                //console.log(result);
             },
         });
     }
