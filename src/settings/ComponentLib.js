@@ -976,51 +976,7 @@ export const TransactionalListScreen = ({type, tableHead}) => {
         <View>
 
             <ScrollView>
-                <View style={{marginTop:10,padding:20, justifyContent:'center', alignItems:'center'}}>
-
-                    <View>
-                        <Pressable onPress={() => setOpen(true)} >
-                            <View style={{backgroundColor:'#000', paddingHorizontal:10, paddingVertical:5, borderRadius:10, flexDirection:'row', marginTop:1}}>
-
-
-                                <View>
-                                    <Ionicons name="calendar-outline" size={24} color="#fff"/>
-                                </View>
-
-                                <View>
-                                    <Text style={{color: 'gray', fontWeight:'bold', fontSize:15}}> {moment().diff(date, 'days') === 0 ? 'Today':'Day' } &nbsp;</Text>
-                                </View>
-
-                                <View>
-                                    <Text style={{color: '#fff', fontWeight:'bold', fontSize:15}}>{moment(date).format('MMMM Do')} &nbsp;</Text>
-                                </View>
-
-                                <View>
-                                    <Ionicons name="chevron-down-outline" size={20} color="#fff"/>
-                                </View>
-
-
-                            </View>
-                        </Pressable>
-
-
-                        <DatePicker
-                            mode="date"
-
-                            modal
-                            open={open}
-                            date={date}
-                            onConfirm={(date) => {
-                                setOpen(false)
-                                setDate(date)
-                            }}
-                            onCancel={() => {
-                                setOpen(false)
-                            }}
-                        />
-                    </View>
-
-                </View>
+                
 
                 <View>
                     {loadContext.loader && <View style={{
