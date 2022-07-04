@@ -2,8 +2,8 @@
 
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {TransactionalEntryScreen} from '../../../settings/ComponentLib';
-import {useFocusEffect} from '@react-navigation/native';
+//import {TransactionalEntryScreen} from '../../../settings/ComponentLib';
+import {TransactionalEntryScreen} from '../../../settings/ScreenComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
 

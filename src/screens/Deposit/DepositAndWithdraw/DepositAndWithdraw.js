@@ -2,7 +2,8 @@
 
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {TransactionalListScreen} from '../../../settings/ComponentLib';
+import {TransactionalListScreen} from '../../../settings/ScreenComponentLib';
+//import {TransactionalListScreen} from '../../../settings/ComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
 
