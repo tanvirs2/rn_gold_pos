@@ -32,7 +32,7 @@ const HomeScreen = () => {
                     totalDueBill,
                     totalPurchase,
                     totalExpence,
-                } = result;
+                } = result[0];
 
 
                 setInfoBadgesData([

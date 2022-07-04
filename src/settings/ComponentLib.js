@@ -835,6 +835,3 @@ export const TransactionalInput = ({stValue, setValue}) => {
         onChangeText={setValue}
     />
 }
-
-
-

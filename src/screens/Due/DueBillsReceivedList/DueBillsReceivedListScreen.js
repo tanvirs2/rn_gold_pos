@@ -3,7 +3,6 @@
 import React, {Fragment} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {DueTransactionalListScreen} from '../../../settings/ScreenComponentLib';
-//import {DueTransactionalListScreen} from '../../../settings/ComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
 
