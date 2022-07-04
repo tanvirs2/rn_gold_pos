@@ -1,5 +1,5 @@
 import {
-    ActivityIndicator, Alert,
+    Alert,
     Modal,
     Pressable, RefreshControl,
     ScrollView,
@@ -26,199 +26,6 @@ import SelectDropdown from 'react-native-select-dropdown';
 import IconButton from '../components/IconButton/IconButton';
 import {ActiveStatusShow} from './ComponentLib2';
 import {showMessage} from 'react-native-flash-message';
-
-export const LocalInput = ({inputProps}) => {
-
-    return (
-        <View style={{marginTop:30}}>
-            <Text style={{fontSize:20, marginBottom:10}}>{inputProps.placeholder}</Text>
-
-            <CustomInput {...inputProps} />
-        </View>
-    );
-}
-
-export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBaseName, tableCallback, modalData, editRoute}) => {
-
-    //const navigation = useNavigation();
-
-    const styles = StyleSheet.create({
-        container: {backgroundColor: '#fff'},
-        head: {height: 60, backgroundColor: '#f1f8ff'},
-        headText: {margin: 5, width: 60},
-        text: {margin: 6},
-        row: { flexDirection: 'row', backgroundColor: '#ffffff' },
-        btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
-        btnText: { textAlign: 'center', color: '#fff' }
-    });
-
-    const [stLoader, setLoader] = useState(false);
-    const [stProductModal, setProductModal] = useState(modalData);
-
-    useEffect(()=>{
-
-        setLoader(true);
-
-        //console.log(stIdForModal);
-
-        let url = `${urlBaseName}/Get/${stIdForModal}`;
-
-        customFetch({
-            url,
-            method:'GET',
-            callbackResult: (result)=>{
-
-                let productModel = result.model;
-
-                //console.log(productModel);
-                //console.log(modalData[1][2].split('|'));
-
-                let table = modalData.map((data)=>{
-                    return modalTable(data[0], productModel[ data[2].split('|')[0] ], data[2].split('|')[1]);
-                });
-
-                //console.log(table);
-
-                setProductModal(table);
-
-                setLoader(false);
-
-                //tableCallback(setProductModal, productModel);
-
-            },
-            navigation,
-        })
-
-
-    }, [])
-
-    const statusToggler = () => {
-        customFetch({
-            url: urlBaseName + '/Upsert',
-            method: 'POST',
-            body: {
-                id: stIdForModal,
-                isActive: false
-            },
-            callbackResult: (result)=>{
-                //setLoader(false);
-                console.log('result---->', result);
-
-                showMessage({
-                    message: `"${type}" Successfully save data`,
-                    type: "success",
-                });
-
-            },
-            navigation
-        });
-    }
-
-    const modalTable = (header, data, type) => {
-
-        let modifiedText = '';
-
-        switch (type) {
-            case 'text':
-                modifiedText = [header, ':', data];
-                break;
-            case 'taka':
-                modifiedText = [header, ':', taka +' '+ data];
-                break;
-            case 'date':
-                modifiedText = [header, ':', moment(data).format('MMMM Do')];
-                break;
-            case 'status':
-                modifiedText = [
-                    header, ':',
-                    <TouchableOpacity onPress={()=>{
-                        showMessage({
-                            message: `Change Not Ready yet!`,
-                            type: "danger",
-                        });
-                    }}>
-                        <ActiveStatusShow status={data}/>
-                    </TouchableOpacity>
-                ];
-                break;
-            default:
-                modifiedText = [header, ':', data];
-        }
-
-        return modifiedText;
-    }
-
-    const editData = () => {
-        setModalVisible(prevState => !prevState);
-        //console.log(stIdForModal, typeof editRoute, typeof [], typeof {});
-
-        if (typeof editRoute === 'object') {
-            navigation.navigate(editRoute.main, {
-                id: stIdForModal,
-                name: editRoute.name,
-                screen: editRoute.child,
-            });
-        } else {
-            navigation.navigate(editRoute, {
-                id: stIdForModal
-            });
-        }
-    }
-
-    return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={true}
-            onRequestClose={() => {
-                setModalVisible(prevState => !prevState);
-            }}
-        >
-            <View style={{
-                width: '100%', height:'100%',
-                backgroundColor: 'rgba(222,222,222,0.34)',
-                justifyContent:'center',
-                alignItems:'center'
-            }}
-            >
-                <Pressable onPress={() => setModalVisible(prevState => !prevState)} style={{width: '90%', justifyContent:'center', alignItems:'flex-end'}}>
-                    <Ionicons name="close-circle" size={24} color="#000" style={{backgroundColor:'#fff', borderRadius: 60}}/>
-                </Pressable>
-
-                <View style={{width: '80%', height:'63%',
-                    borderWidth: 1,
-                    borderColor: '#c5c5c5',
-                    backgroundColor: '#fff',
-                    borderRadius: 5,
-                    padding: 10,
-                    filter: 'blur',
-                    shadowColor: '#000',
-                    elevation: 30
-                }}>
-
-                    <View style={{position: 'absolute', width: '100%', height: '100%', margin:10}}>
-                        <LoaderViewScreen viewThisComp={stLoader}/>
-                    </View>
-
-
-
-                    <Table>
-                        <Rows data={stProductModal} textStyle={styles.text}/>
-                    </Table>
-
-                    <View style={{margin:40}}>
-                        {editRoute && <CustomButton
-                            text="Edit"
-                            bgColor={globalButtonColor}
-                            onPress={editData}
-                        />}
-                    </View>
-
-                </View>
-            </View>
-        </Modal>
-    );
-}
 
 export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, type, searchPlaceholder, modalData, editRoute}) => {
 
@@ -447,88 +254,6 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
         </View>
     );
 };
-
-
-const GenericInput = ({name, type, value, setValue}) => {
-    const [stAmount, setAmount] = useState()
-
-    return (
-        <Fragment>
-            <Text style={{fontSize: 20, marginBottom: 10}}> {name} </Text>
-
-            <CustomInput
-                value={value}
-                setValue={setValue}
-                placeholder={name}
-                keyboardType={type}
-            />
-        </Fragment>
-    );
-}
-
-const GenericCommentInput = ({name, value, setValue}) => {
-    const [stAmount, setAmount] = useState()
-
-    return (
-        <Fragment>
-            <Text style={{fontSize:20, marginBottom:10}}>{name}</Text>
-            <CustomInput
-                value={value}
-                setValue={setValue}
-                multiline={true}
-                numberOfLines={4}
-                placeholder={name}
-            />
-        </Fragment>
-    );
-}
-
-const DateField = ({name, value, setValue}) => {
-
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
-
-
-    return (
-        <Fragment>
-            <Text style={{fontSize:20, marginBottom:10}}> {name} </Text>
-            <CustomButton
-                text={
-                    <Text>
-
-                        {moment(date).format('Y-MM-DD')}
-
-                        &nbsp; ( {moment(date).format('MMMM Do')} )
-
-                        &nbsp;<Ionicons name="calendar-outline" size={24} color="#000"/>
-
-                    </Text>
-                }
-                type="border"
-                onPress={() => {
-                    //console.log(moment(date).format('Y-MM-DD'));
-                    setOpen(true);
-                }}
-            />
-
-
-            <DatePicker
-                mode="date"
-
-                modal
-                open={open}
-                date={date}
-                onConfirm={(date) => {
-                    setOpen(false)
-                    setDate(date)
-                }}
-                onCancel={() => {
-                    setOpen(false)
-                }}
-            />
-        </Fragment>
-    );
-}
 
 export const CommonEntryScreen = (props) => {
 
@@ -771,19 +496,268 @@ export const CommonEntryScreen = (props) => {
     );
 }
 
+export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBaseName, tableCallback, modalData, editRoute}) => {
 
-export const TransactionalInput = ({stValue, setValue}) => {
+    //const navigation = useNavigation();
 
-    return <TextInput
-        keyboardType="numeric"
-        placeholder="............"
-        placeholderTextColor="#f00"
-        style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
-        value={stValue}
-        onChangeText={setValue}
-    />
+    const styles = StyleSheet.create({
+        container: {backgroundColor: '#fff'},
+        head: {height: 60, backgroundColor: '#f1f8ff'},
+        headText: {margin: 5, width: 60},
+        text: {margin: 6},
+        row: { flexDirection: 'row', backgroundColor: '#ffffff' },
+        btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
+        btnText: { textAlign: 'center', color: '#fff' }
+    });
+
+    const [stLoader, setLoader] = useState(false);
+    const [stProductModal, setProductModal] = useState(modalData);
+
+    useEffect(()=>{
+
+        setLoader(true);
+
+        //console.log(stIdForModal);
+
+        let url = `${urlBaseName}/Get/${stIdForModal}`;
+
+        customFetch({
+            url,
+            method:'GET',
+            callbackResult: (result)=>{
+
+                let productModel = result.model;
+
+                //console.log(productModel);
+                //console.log(modalData[1][2].split('|'));
+
+                let table = modalData.map((data)=>{
+                    return modalTable(data[0], productModel[ data[2].split('|')[0] ], data[2].split('|')[1]);
+                });
+
+                //console.log(table);
+
+                setProductModal(table);
+
+                setLoader(false);
+
+                //tableCallback(setProductModal, productModel);
+
+            },
+            navigation,
+        })
+
+
+    }, [])
+
+    const statusToggler = () => {
+        customFetch({
+            url: urlBaseName + '/Upsert',
+            method: 'POST',
+            body: {
+                id: stIdForModal,
+                isActive: false
+            },
+            callbackResult: (result)=>{
+                //setLoader(false);
+                console.log('result---->', result);
+
+                showMessage({
+                    message: `"${type}" Successfully save data`,
+                    type: "success",
+                });
+
+            },
+            navigation
+        });
+    }
+
+    const modalTable = (header, data, type) => {
+
+        let modifiedText = '';
+
+        switch (type) {
+            case 'text':
+                modifiedText = [header, ':', data];
+                break;
+            case 'taka':
+                modifiedText = [header, ':', taka +' '+ data];
+                break;
+            case 'date':
+                modifiedText = [header, ':', moment(data).format('MMMM Do')];
+                break;
+            case 'status':
+                modifiedText = [
+                    header, ':',
+                    <TouchableOpacity onPress={()=>{
+                        showMessage({
+                            message: `Change Not Ready yet!`,
+                            type: "danger",
+                        });
+                    }}>
+                        <ActiveStatusShow status={data}/>
+                    </TouchableOpacity>
+                ];
+                break;
+            default:
+                modifiedText = [header, ':', data];
+        }
+
+        return modifiedText;
+    }
+
+    const editData = () => {
+        setModalVisible(prevState => !prevState);
+        //console.log(stIdForModal, typeof editRoute, typeof [], typeof {});
+
+        if (typeof editRoute === 'object') {
+            navigation.navigate(editRoute.main, {
+                id: stIdForModal,
+                name: editRoute.name,
+                screen: editRoute.child,
+            });
+        } else {
+            navigation.navigate(editRoute, {
+                id: stIdForModal
+            });
+        }
+    }
+
+    return (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={true}
+            onRequestClose={() => {
+                setModalVisible(prevState => !prevState);
+            }}
+        >
+            <View style={{
+                width: '100%', height:'100%',
+                backgroundColor: 'rgba(222,222,222,0.34)',
+                justifyContent:'center',
+                alignItems:'center'
+            }}
+            >
+                <Pressable onPress={() => setModalVisible(prevState => !prevState)} style={{width: '90%', justifyContent:'center', alignItems:'flex-end'}}>
+                    <Ionicons name="close-circle" size={24} color="#000" style={{backgroundColor:'#fff', borderRadius: 60}}/>
+                </Pressable>
+
+                <View style={{width: '80%', height:'63%',
+                    borderWidth: 1,
+                    borderColor: '#c5c5c5',
+                    backgroundColor: '#fff',
+                    borderRadius: 5,
+                    padding: 10,
+                    filter: 'blur',
+                    shadowColor: '#000',
+                    elevation: 30
+                }}>
+
+                    <View style={{position: 'absolute', width: '100%', height: '100%', margin:10}}>
+                        <LoaderViewScreen viewThisComp={stLoader}/>
+                    </View>
+
+
+
+                    <Table>
+                        <Rows data={stProductModal} textStyle={styles.text}/>
+                    </Table>
+
+                    <View style={{margin:40}}>
+                        {editRoute && <CustomButton
+                            text="Edit"
+                            bgColor={globalButtonColor}
+                            onPress={editData}
+                        />}
+                    </View>
+
+                </View>
+            </View>
+        </Modal>
+    );
 }
 
+export const DateField = ({name, value, setValue}) => {
+
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+
+
+    return (
+        <Fragment>
+            <Text style={{fontSize:20, marginBottom:10}}> {name} </Text>
+            <CustomButton
+                text={
+                    <Text>
+
+                        {moment(date).format('Y-MM-DD')}
+
+                        &nbsp; ( {moment(date).format('MMMM Do')} )
+
+                        &nbsp;<Ionicons name="calendar-outline" size={24} color="#000"/>
+
+                    </Text>
+                }
+                type="border"
+                onPress={() => {
+                    //console.log(moment(date).format('Y-MM-DD'));
+                    setOpen(true);
+                }}
+            />
+
+
+            <DatePicker
+                mode="date"
+
+                modal
+                open={open}
+                date={date}
+                onConfirm={(date) => {
+                    setOpen(false)
+                    setDate(date)
+                }}
+                onCancel={() => {
+                    setOpen(false)
+                }}
+            />
+        </Fragment>
+    );
+}
+
+export const GenericInput = ({name, type, value, setValue}) => {
+    const [stAmount, setAmount] = useState()
+
+    return (
+        <Fragment>
+            <Text style={{fontSize: 20, marginBottom: 10}}> {name} </Text>
+
+            <CustomInput
+                value={value}
+                setValue={setValue}
+                placeholder={name}
+                keyboardType={type}
+            />
+        </Fragment>
+    );
+}
+
+export const GenericCommentInput = ({name, value, setValue}) => {
+    const [stAmount, setAmount] = useState()
+
+    return (
+        <Fragment>
+            <Text style={{fontSize:20, marginBottom:10}}>{name}</Text>
+            <CustomInput
+                value={value}
+                setValue={setValue}
+                multiline={true}
+                numberOfLines={4}
+                placeholder={name}
+            />
+        </Fragment>
+    );
+}
 
 export const LocalSelect = ({selectProps, data}) => {
 
@@ -837,6 +811,29 @@ export const LocalSelect = ({selectProps, data}) => {
             </View>
         </View>
     );
+}
+
+export const LocalInput = ({inputProps}) => {
+
+    return (
+        <View style={{marginTop:30}}>
+            <Text style={{fontSize:20, marginBottom:10}}>{inputProps.placeholder}</Text>
+
+            <CustomInput {...inputProps} />
+        </View>
+    );
+}
+
+export const TransactionalInput = ({stValue, setValue}) => {
+
+    return <TextInput
+        keyboardType="numeric"
+        placeholder="............"
+        placeholderTextColor="#f00"
+        style={{padding: 0, color: '#0048ff', fontWeight:'bold'}}
+        value={stValue}
+        onChangeText={setValue}
+    />
 }
 
 
