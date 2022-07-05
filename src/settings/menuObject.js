@@ -29,10 +29,6 @@ const menuObject = {
                     route: 'Sales',
                 },
                 {
-                    name: 'Sell Return',
-                    icon: '',
-                    route: '',
-                }, {
                     name: 'List of sales',
                     icon: '',
                     route: 'List Of Sales',
