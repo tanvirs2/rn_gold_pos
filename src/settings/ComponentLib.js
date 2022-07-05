@@ -10,7 +10,7 @@ import {
     View,
 } from 'react-native';
 import CustomInput from '../components/CustomInput';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {customFetch} from './networking';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
@@ -354,6 +354,7 @@ export const CommonEntryScreen = (props) => {
                     data={inpObj.selectOptions}
                     selectProps={{
                         setValue: inpObj.setValue,
+                        selectedData: inpObj.selectedData,
                         value: inpObj.value,
                         placeholder: inpObj.name,
                     }}
@@ -763,6 +764,15 @@ export const LocalSelect = ({selectProps, data}) => {
 
     const [stDropdownOpen, setDropdownOpen] = useState(false);
 
+    const dropdownRef = useRef({});
+
+    useEffect(()=>{
+
+        dropdownRef.current.reset()
+
+        //console.log('--->',selectProps.selectedData)
+
+    }, [])
 
     return (
         <View style={{marginTop:30}}>
@@ -775,6 +785,7 @@ export const LocalSelect = ({selectProps, data}) => {
             }}>
 
                 <SelectDropdown
+                    ref={dropdownRef}
                     onFocus={()=>{
                         setDropdownOpen(true);
                         //console.log(data);
@@ -806,6 +817,7 @@ export const LocalSelect = ({selectProps, data}) => {
                         // if data array is an array of objects then return item.property to represent item in dropdown
                         return item.name;
                     }}
+                    defaultValueByIndex={selectProps.selectedData}
                 />
 
             </View>

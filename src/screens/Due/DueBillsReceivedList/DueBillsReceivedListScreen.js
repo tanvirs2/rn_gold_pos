@@ -1,7 +1,8 @@
 /*eslint-disable*/
 
 import React, {Fragment} from 'react';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {CustomDataTable} from '../../../settings/ComponentLib';
+/*import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {DueTransactionalListScreen} from '../../../settings/ScreenComponentLib';
 
 const Tab = createMaterialTopTabNavigator();
@@ -18,28 +19,47 @@ const RetailListScreen = () => {
     );
 }
 
-const WholesaleListScreen = () => {
 
 
-    return (
-        <Fragment>
-            <DueTransactionalListScreen type="Wholesale" tableHead={
-                ['Name', 'Date', 'Category', 'Amount', 'Comment']
-            }/>
-        </Fragment>
-    );
-}
-
-const DueBillsReceivedListScreen = () => {
-
+export const DueBillsReceivedListScreen = () => {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Retail List" component={RetailListScreen}/>
             <Tab.Screen name="Wholesale List" component={WholesaleListScreen}/>
         </Tab.Navigator>
     );
-};
+};*/
+
+const WholesaleListScreen = () => {
 
 
+    return (
+        <Fragment>
+            <CustomDataTable
+                type="DueBill"
+                searchPlaceholder="Due Bill Name..."
+                tableHead={['Name', 'Date', 'Category', 'Amount', 'Comment']}
+                tableDB={[
+                    'name|text',
+                    'date|date',
+                    'amount|taka',
+                    'amount|taka',
+                    'description|text',
+                    'id|action'
+                ]}
+                modalData={[
+                    ['ID', ':', 'id|text'],
+                    ['Name', ':', 'name|text'],
+                    ['Amount', ':', 'amount|taka'],
+                    ['Date', ':', 'date|date'],
+                    ['Comment', ':', 'comment|text'],
+                ]}
+                editRoute="Due Receive Edit"
+            />
+        </Fragment>
 
-export default DueBillsReceivedListScreen;
+    );
+}
+
+
+export default WholesaleListScreen;
