@@ -152,6 +152,7 @@ const DrawerNavigation = () => {
           <Drawer.Screen name="Deposit & Withdraw Edit" component={DepositAndWithdrawEntry} />
           <Drawer.Screen name="Product List" component={ProductListScreen} />
           <Drawer.Screen name="Stock Entry" component={ProductEntryScreen} />
+          <Drawer.Screen name="Stock Edit" component={ProductEntryScreen} />
           <Drawer.Screen name="Expense Entry" component={ExpenseEntryScreen} />
           <Drawer.Screen name="Expense Edit" component={ExpenseEntryScreen} />
           <Drawer.Screen name="Expense List" component={ExpenseListScreen} />

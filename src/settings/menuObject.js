@@ -137,7 +137,8 @@ const menuObject = {
                 },
 
             ],
-        },{
+        }
+        /*,{
             mainMenuLabel: 'Report',
             mainIcon: 'newspaper',
             subMenu: [
@@ -153,7 +154,8 @@ const menuObject = {
                 },
 
             ],
-        },{
+        }*/,
+        {
             mainMenuLabel: 'Settings',
             mainIcon: 'settings',
             subMenu: [

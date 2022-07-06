@@ -43,7 +43,6 @@ const WholesaleListScreen = () => {
                     'name|text',
                     'date|date',
                     'amount|taka',
-                    'amount|taka',
                     'description|text',
                     'id|action'
                 ]}

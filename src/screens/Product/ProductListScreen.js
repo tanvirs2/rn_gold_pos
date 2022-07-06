@@ -1,6 +1,5 @@
 /*eslint-disable*/
 import React, {Fragment} from 'react';
-
 import {CustomDataTable} from '../../settings/ComponentLib';
 
 
@@ -27,6 +26,7 @@ const ProductListScreen = () => {
                 ['Description', ':', 'description|text'],
                 ['Status', ':', 'isActive|status'],
             ]}
+            editRoute="Stock Edit"
         />
     </Fragment>
   );

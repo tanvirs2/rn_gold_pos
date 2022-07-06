@@ -9,16 +9,19 @@ import loginToken from '../../../settings/loginToken';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import SelectDropdown from 'react-native-select-dropdown';
 
-import {LocalInput, LocalSelect} from '../../../settings/ComponentLib';
+import {CommonEntryScreen, LocalInput, LocalSelect} from '../../../settings/ComponentLib';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import {taka} from '../../../assets/symbols';
 import {showMessage} from 'react-native-flash-message';
 
 
-const ProductEntryScreen = () => {
+const ProductEntryScreen = ({route}) => {
+
+    let id = route.params?.id
 
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
     const [stLoader, setLoader] = useState(false);
     const [stRefreshing, setRefreshing] = useState(false);
@@ -44,6 +47,8 @@ const ProductEntryScreen = () => {
     const [st_weight, set_weight] = useState('');
     const [st_gradeId, set_gradeId] = useState(0);
     const [st_grade, set_grade] = useState('');
+    const [st_SelectedGrade, set_SelectedGrade] = useState('');
+    const [st_SelectedCategory, set_SelectedCategory] = useState('');
     const [st_categoryId, set_categoryId] = useState(0);
     const [st_category, set_category] = useState('');
     const [st_isStock, set_isStock] = useState('');
@@ -72,6 +77,7 @@ const ProductEntryScreen = () => {
     }
 
     useEffect(()=>{
+        //alert('a')
         setLoader(true);
 
         customFetch({
@@ -101,10 +107,122 @@ const ProductEntryScreen = () => {
             navigation
         });
 
-    },[stRefreshing])
+    },[isFocused, stRefreshing])
 
+    useEffect(() => {
+
+            //alert('b')
+
+            if (id) {
+                customFetch({
+                    url: 'Product/Get/'+id,
+                    callbackResult: (result)=>{
+
+
+                        //console.log(result.model)
+
+                        /*console.log(result.model.invoiceId, stInvoicesArray.find((elm, index)=>{
+                            if (elm.id === result.model.invoiceId) {
+                                return index;
+                            }
+                        }))*/
+
+                        /*
+                        {
+                        "name": "Wweee",
+                        "buyingPrice": 4444,
+                        "sellingPrice": 411,
+                        "weight": 7
+                        "grade": "21k",
+                        "categoryId": 47,
+                        "isStock": true,
+                        "isActive": true,
+                        "category": null,
+                        "description": "Weettt",
+
+                        "code": "P-637926987899012620",
+                        "gradeId": 14802,
+                        "id": 128,
+                        "typeId": null,
+                        }*/
+
+                        /*
+
+                        [{"id": 14801, "isDefault": false, "name": "18k", "valueOne": null, "valueThree": null, "valueTwo": null}, {"id": 14802, "isDefault": false, "name": "21k", "valueOne": null, "valueThree": null, "valueTwo": null}, {"id": 14803, "isDefault": false, "name": "22k", "valueOne": null, "valueThree": null, "valueTwo": null}, {"id": 14804, "isDefault": false, "name": "Diamond", "valueOne": null, "valueThree": null, "valueTwo": null}]
+
+                        * */
+
+                        /*
+                        name
+                        buyingPrice
+                        sellingPrice
+                        weight
+                        gradeId
+                        grade
+                        categoryId
+                        category
+                        isStock
+                        isActive
+                        description*/
+
+                        const {
+                            name,
+                            buyingPrice,
+                            sellingPrice,
+                            weight,
+                            grade,
+                            categoryId,
+                            isStock,
+                            isActive,
+                            description
+                        } = result.model;
+
+                        /*stProductDependency
+                        -grades
+                        -categories
+                        -status
+                        -stock*/
+
+                        /*console.log(
+                            result.model,
+                            stProductDependency.categories[2].name,
+                            categoryId,
+                            stProductDependency.categories.findIndex(elm=>elm.id === categoryId)
+                        )*/
+
+                        set_SelectedGrade(stProductDependency.grades.findIndex(elm=>elm.name === grade))
+                        set_SelectedCategory(stProductDependency.categories.findIndex(elm=>elm.id === categoryId))
+
+                        set_name( name )
+                        set_buyingPrice( String(buyingPrice) )
+                        set_sellingPrice( String(sellingPrice) )
+                        set_weight( String(weight) )
+                        set_grade( grade )
+                        set_category( categoryId )
+                        set_isStock( isStock )
+                        set_isActive( isActive )
+                        set_description( description )
+                        //setSelectedInvoice( stInvoicesArray.findIndex(elm=>elm.id === result.model.invoiceId) );
+                    }
+                });
+            }
+
+            return () => {
+                if (route.params) {
+                    route.params = undefined;
+                }
+            };
+        }, [stProductDependency]);
 
     const insertData = async () => {
+
+        /*console.log(
+        'st_gradeId: ', st_gradeId,
+        'st_grade: ', st_grade,
+        'st_categoryId: ', st_categoryId,
+        'st_category: ', st_category
+    )
+        return 0;*/
 
         setLoader(true);
 
@@ -144,128 +262,104 @@ const ProductEntryScreen = () => {
 
     return (
         <Fragment>
-
-            <LoaderViewScreen viewThisComp={stLoader}/>
-
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={false}
-                        onRefresh={()=>{
-                            setRefreshing(prevState => !prevState);
-                        }}
-                    />
-                }
-            >
-
-            <View style={{padding:20}}>
-
-
-                <LocalInput inputProps={
+            <CommonEntryScreen
+                type="Product"
+                inputs={[
                     {
+                        name: 'id',
+                        dbName: 'id',
+                        type: 'hide',
+                        value: st_id,
+                    },
+                    {
+                        name: 'isActive',
+                        dbName: 'isActive',
+                        type: 'hide',
+                        value: true,
+                    },
+                    {
+                        name: 'shopId',
+                        dbName: 'shopId',
+                        type: 'hide',
+                        value: 1
+                    },
+                    {
+                        name: 'Product’s Name',
+                        dbName: 'name',
+                        type: 'text',
                         value: st_name,
-                        setValue: set_name,
-                        placeholder: 'Product’s Name',
-                    }
-                }/>
+                        setValue: set_name
+                    },
 
-                <LocalInput inputProps={
                     {
+                        name: 'Buying Price',
+                        dbName: 'buyingPrice',
+                        type: 'numeric',
                         value: st_buyingPrice,
-                        setValue: set_buyingPrice,
-                        placeholder: 'Buying Price',
-                    }
-                }/>
-
-                <LocalInput inputProps={
+                        setValue: set_buyingPrice
+                    },
                     {
+                        name: 'Selling Price',
+                        dbName: 'sellingPrice',
+                        type: 'numeric',
                         value: st_sellingPrice,
-                        setValue: set_sellingPrice,
-                        placeholder: 'Selling Price',
-                    }
-                }/>
-
-                <LocalInput inputProps={
+                        setValue: set_sellingPrice
+                    },
                     {
+                        name: 'Weight (gm)',
+                        dbName: 'weight',
+                        type: 'numeric',
                         value: st_weight,
-                        setValue: set_weight,
-                        placeholder: 'Weight (gm)',
-                    }
-                }/>
+                        setValue: set_weight
+                    },
 
-
-                <LocalSelect
-                    data={stProductDependency.grades}
-                    selectProps={{
-                        value: st_grade,
-                        setValue: set_grade,
-                        placeholder: 'Karat',
-                    }}
-                />
-
-                <LocalSelect
-                    data={stProductDependency.categories}
-                    selectProps={{
-                        value: st_category,
-                        setValue: set_category,
-                        placeholder: 'Category',
-                    }}
-                />
-
-
-                <LocalSelect
-                    data={stProductDependency.stock}
-                    selectProps={{
-                        value: st_isStock,
-                        setValue: set_isStock,
-                        placeholder: 'In Stock',
-                    }
-                }/>
-
-                <LocalSelect
-                    data={stProductDependency.status}
-                    selectProps={{
-                        value: st_isActive,
-                        setValue: set_isActive,
-                        placeholder: 'Status',
-                    }
-                }/>
-
-                <LocalSelect
-                    data={stProductDependency.types}
-                    selectProps={{
-                        value: stProductName,
-                        setValue: setProductName,
-                        placeholder: 'TAX Effect',
-                    }
-                }/>
-
-                <LocalInput inputProps={
                     {
+                        name: 'Karat',
+                        selectOptions: stProductDependency.grades,
+                        selectedData: st_SelectedGrade,
+                        dbName: 'grade',
+                        type: 'select',
+                        value: st_grade,
+                        setValue: set_grade
+                    },{
+                        name: 'Category',
+                        selectOptions: stProductDependency.categories,
+                        selectedData: st_SelectedCategory,
+                        dbName: 'category',
+                        type: 'select',
+                        value: st_category,
+                        setValue: set_category
+                    },{
+                        name: 'In Stock',
+                        selectOptions: stProductDependency.stock,
+                        selectedData: false,
+                        dbName: 'isStock',
+                        type: 'select',
+                        value: st_isStock,
+                        setValue: set_isStock
+                    },{
+                        name: 'Status',
+                        selectOptions: stProductDependency.status,
+                        selectedData: false,
+                        dbName: 'isActive',
+                        type: 'select',
+                        value: st_isActive,
+                        setValue: set_isActive
+                    },
+                    {
+                        name: 'Description',
+                        dbName: 'description',
+                        type: 'comment',
                         value: st_description,
-                        setValue: set_description,
-                        placeholder: 'Description',
-                    }
-                }/>
-
-
-                {/*Button*/}
-
-
-                <View style={{marginTop:30}}>
-
-                    <CustomButton
-                        text="Save"
-                        bgColor="gold"
-                        onPress={insertData}
-                    />
-
-                </View>
-
-            </View>
-        </ScrollView>
+                        setValue: set_description
+                    },
+                ]}
+                afterSaveInputs={()=>{
+                    set_id(0);
+                    resetInputs();
+                }}
+            />
         </Fragment>
-
     );
 }
 
