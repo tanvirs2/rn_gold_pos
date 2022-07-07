@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
+import {dynamicGlobalBackgroundColor, dynamicGlobalTextColor} from '../../settings/color';
 
 
 
@@ -53,12 +54,12 @@ const HomeScreen = () => {
     <SafeAreaView>
       <ScrollView>
         <View style={style.container}>
-          <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10}}>
+          <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10, color: dynamicGlobalTextColor}}>
             Welcome Back!
           </Text>
-          <Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
+          {/*<Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
             Manager
-          </Text>
+          </Text>*/}
 
           <View
             style={{
@@ -104,13 +105,14 @@ const InfoBadge = ({label, value, iconName}) => {
       <Text style={{fontSize: 15, fontWeight: 'bold', color: '#6b6565'}}>
         {label}
       </Text>
-      <Text style={{fontSize: 25, fontWeight: 'bold'}}>{value}</Text>
+      <Text style={{fontSize: 25, fontWeight: 'bold', color: '#000'}}>{value}</Text>
     </View>
   );
 };
 
 const style = StyleSheet.create({
   container: {
+      backgroundColor: dynamicGlobalBackgroundColor,
     alignItems: 'center',
     justifyContent: 'center',
   },

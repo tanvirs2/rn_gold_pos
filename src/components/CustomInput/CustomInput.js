@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {dynamicGlobalTextColor} from '../../settings/color';
 
 export default function CustomInput({
   value,
@@ -15,6 +16,7 @@ export default function CustomInput({
   return (
     <View style={[styles.container, inputStyle]}>
       {multiline ? <TextInput
+          placeholderTextColor="#646464FF"
           placeholder={placeholder}
           value={value}
           onChangeText={setValue}
@@ -23,6 +25,7 @@ export default function CustomInput({
           multiline={multiline}
           numberOfLines={numberOfLines}
       /> : <TextInput
+          placeholderTextColor="#646464FF"
               placeholder={placeholder}
               value={value}
               onChangeText={setValue}
@@ -52,5 +55,6 @@ const styles = StyleSheet.create({
   input: {
     height: 35,
     padding: 8,
+    color: '#000'
   },
 });

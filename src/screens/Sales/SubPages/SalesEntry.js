@@ -23,7 +23,7 @@ import {RNHoleView} from 'react-native-hole-view';
 import CustomInput from '../../../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../../components/CustomButton';
-import {globalBackgroundColor, globalButtonColor} from '../../../settings/color';
+import {dynamicGlobalTextColor, globalBackgroundColor, globalButtonColor} from '../../../settings/color';
 import {customFetch} from '../../../settings/networking';
 import collect from 'collect.js';
 import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
@@ -33,7 +33,7 @@ import {LocalSelect, TransactionalInput} from '../../../settings/ComponentLib';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
-        <Text style={{fontSize:18, marginBottom:3}}>{title}</Text>
+        <Text style={{fontSize:18, marginBottom:3, color: '#000'}}>{title}</Text>
         <CustomInput {...props} />
     </View>
 );

@@ -143,7 +143,7 @@ const DrawerNavigation = () => {
   return (
       <Drawer.Navigator
           drawerContent={props => <CustomDrawerContent {...props} />}
-          screenOptions={{headerShown: true}}>
+          screenOptions={{headerShown: true, cardStyle: { backgroundColor: 'red' }}}>
           <Drawer.Screen name="Home" component={HomeScreen} />
           <Drawer.Screen name="Sales" component={Sales} />
           <Drawer.Screen name="Invoice" component={InvoiceScreen} />

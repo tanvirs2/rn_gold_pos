@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderViewScreen from '../components/LoaderView/LoaderViewScreen';
 import {Cell, Row, Rows, Table, TableWrapper} from 'react-native-table-component';
 import CustomButton from '../components/CustomButton';
-import {globalBackgroundColor, globalButtonColor} from './color';
+import {dynamicGlobalTextColor, globalBackgroundColor, globalButtonColor} from './color';
 import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import loaderContext from '../contexts/loaderContext';
 import {taka} from '../assets/symbols';
@@ -32,8 +32,8 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
     const styles = StyleSheet.create({
         container: {backgroundColor: '#fff'},
         head: {height: 60, backgroundColor: '#f1f8ff'},
-        headText: {margin: 5, textAlign: 'center'},
-        text: {margin: 6},
+        headText: {margin: 5, textAlign: 'center', color: '#000'},
+        text: {margin: 6, color: '#000'},
         row: { flexDirection: 'row', backgroundColor: '#ffffff' },
         btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
         btnText: { textAlign: 'center', color: '#fff' }
@@ -505,7 +505,7 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
         container: {backgroundColor: '#fff'},
         head: {height: 60, backgroundColor: '#f1f8ff'},
         headText: {margin: 5, width: 60},
-        text: {margin: 6},
+        text: {margin: 6, color: '#000'},
         row: { flexDirection: 'row', backgroundColor: '#ffffff' },
         btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 },
         btnText: { textAlign: 'center', color: '#fff' }
@@ -591,10 +591,10 @@ export const DetailsModal = ({setModalVisible, stIdForModal, navigation, urlBase
                 modifiedText = [
                     header, ':',
                     <TouchableOpacity onPress={()=>{
-                        showMessage({
+                        /*showMessage({
                             message: `Change Not Ready yet!`,
                             type: "danger",
-                        });
+                        });*/
                     }}>
                         <ActiveStatusShow status={data}/>
                     </TouchableOpacity>
@@ -687,7 +687,7 @@ export const DateField = ({name, value, setValue}) => {
 
     return (
         <Fragment>
-            <Text style={{fontSize:20, marginBottom:10}}> {name} </Text>
+            <Text style={{fontSize:20, marginBottom:10, color: '#000'}}> {name} </Text>
             <CustomButton
                 text={
                     <Text>
@@ -731,7 +731,7 @@ export const GenericInput = ({name, type, value, setValue}) => {
 
     return (
         <Fragment>
-            <Text style={{fontSize: 20, marginBottom: 10}}> {name} </Text>
+            <Text style={{fontSize: 20, marginBottom: 10, color: '#000'}}> {name} </Text>
 
             <CustomInput
                 value={value}
@@ -748,7 +748,7 @@ export const GenericCommentInput = ({name, value, setValue}) => {
 
     return (
         <Fragment>
-            <Text style={{fontSize:20, marginBottom:10}}>{name}</Text>
+            <Text style={{fontSize:20, marginBottom:10, color: '#000'}}>{name}</Text>
             <CustomInput
                 value={value}
                 setValue={setValue}
@@ -776,7 +776,7 @@ export const LocalSelect = ({selectProps, data}) => {
 
     return (
         <View style={{marginTop:30}}>
-            <Text style={{fontSize:20, marginBottom:10}}>{selectProps.placeholder}</Text>
+            <Text style={{fontSize:20, marginBottom:10, color: '#000'}}>{selectProps.placeholder}</Text>
 
             <View style={{
                 borderRadius:5,
