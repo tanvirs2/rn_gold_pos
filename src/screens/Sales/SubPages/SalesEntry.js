@@ -30,6 +30,7 @@ import LoaderViewScreen from '../../../components/LoaderView/LoaderViewScreen';
 import moment from 'moment';
 import {taka} from '../../../assets/symbols';
 import {LocalSelect, TransactionalInput} from '../../../settings/ComponentLib';
+import {checkCameraPermissionFirst} from '../../../settings/ComponentLib2';
 
 export const SubComponentForInput = ({title, ...props}) => (
     <View style={styles.container}>
@@ -153,25 +154,13 @@ export default function SalesEntry({type}) {
 
     /**************** Start Camera Function *****************/
 
-    const checkCameraPermissionFirst = async () => {
-        let status = await Camera.getCameraPermissionStatus();
-        //alert(status);
-        if (status !== 'authorized') {
-            await Camera.requestCameraPermission();
-            status = await Camera.getCameraPermissionStatus();
-            if (status === 'denied') {
-                alert(
-                    'You will not be able to scan if you do not allow camera access',
-                );
-            }
-        }
 
-        setHasPermission(status === 'authorized');
-    };
 
     useEffect(()=>{
 
-        checkCameraPermissionFirst();
+        (async ()=>{
+            await checkCameraPermissionFirst(setHasPermission);
+        })()
 
         customFetch({
             url: 'Customar/GetAll?pageIndex=0&pageSize=2000',

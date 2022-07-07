@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
-import {dynamicGlobalBackgroundColor, dynamicGlobalTextColor} from '../../settings/color';
+import {checkCameraPermissionFirst} from '../../settings/ComponentLib2';
 
 
 
@@ -22,6 +22,12 @@ const HomeScreen = () => {
     ]);
 
     useEffect(()=>{
+
+        (async ()=>{
+            await checkCameraPermissionFirst();
+        })()
+
+
         customFetch({
             url: 'Dashboard/GetAllDailySummery',
             callbackResult: (result) => {

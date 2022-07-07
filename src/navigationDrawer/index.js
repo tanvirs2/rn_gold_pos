@@ -49,7 +49,7 @@ function CustomDrawerContent(props) {
 
     let homeMenu = [
         {
-            'label': 'Home',
+            'label': 'Dashboard',
             'items': [
                 {
                     'label': 'Home',
@@ -66,6 +66,7 @@ function CustomDrawerContent(props) {
 
     useEffect(()=>{
         (async ()=>{
+            //alert('ddddd')
             let menuObjectFromStorage = await AsyncStorage.getItem('@menuObject');
             let mainMenuFromDB = JSON.parse(menuObjectFromStorage).menuItems[0].items;
             //console.log([...mainMenuFromDB])

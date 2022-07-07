@@ -18,7 +18,7 @@ Camera
 */
 
 export const iconMapping = {
-    'Home'              : 'home',
+    'Dashboard'         : 'color-filter',
     'Sell & Purchase'   : 'reader',
     'Deposit & Withdraw': 'card',
     'Expense'           : 'cash',
@@ -51,7 +51,7 @@ export const routeMapping = {
         name: 'List of sales',
         icon: '',
         route: 'List Of Sales',
-    }, ],
+    }],
 
     '/admin/pos/duebills': [
         {
@@ -310,7 +310,6 @@ const menuObject2 = {
     ],
 };
 
-//console.log(menuObject2)
 
 const menuObject = {
     menuItems: [

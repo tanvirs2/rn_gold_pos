@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+import {Camera} from 'react-native-vision-camera';
 
 export const ActiveStatusShow = ({status}) => {
 
@@ -46,3 +47,21 @@ export const ActiveStatusShow = ({status}) => {
         </View>
     );
 }
+
+export const checkCameraPermissionFirst = async (setHasPermission=null) => {
+    let status = await Camera.getCameraPermissionStatus();
+    //alert(status);
+    if (status !== 'authorized') {
+        await Camera.requestCameraPermission();
+        status = await Camera.getCameraPermissionStatus();
+        if (status === 'denied') {
+            alert(
+                'You will not be able to scan if you do not allow camera access',
+            );
+        }
+    }
+    if (typeof setHasPermission === 'function') {
+        setHasPermission(status === 'authorized');
+    }
+
+};
