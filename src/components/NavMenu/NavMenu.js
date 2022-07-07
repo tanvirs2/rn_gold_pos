@@ -6,6 +6,7 @@ import {DrawerItem} from '@react-navigation/drawer';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {globalBackgroundColor, globalBlackColor, globalButtonColor} from '../../settings/color';
+import {iconMapping, routeMapping} from '../../settings/menuObject';
 
 const SubCustomDrawerItem = ({label, route}) => {
     const navigation = useNavigation();
@@ -80,33 +81,44 @@ const NavMenu = ({mainMenu}) => {
 
     const [isCollapsed, isSetCollapsed] = useState(true);
 
-    //console.log(!!mainMenu.subMenu[0]);
+    //console.log(!!mainMenu.subMenu[0], iconMapping[mainMenu.icon] ? iconMapping[mainMenu.icon]: 'nai');
+
+
 
     return (
         <Fragment>
             <CustomDrawerItem
-                label={mainMenu.mainMenuLabel}
+                label={mainMenu.label}
                 icon={
                     <Ionicons
-                        name={isCollapsed ? `${mainMenu.mainIcon}-outline` : mainMenu.mainIcon}
+                        name={isCollapsed ? `${iconMapping[mainMenu.label]}-outline` : iconMapping[mainMenu.label]}
                         size={24}
                         color={globalButtonColor}
                     />
                 }
                 isSetCollapsed={isSetCollapsed}
                 isCollapsed={isCollapsed}
-                dropdown={!!mainMenu.subMenu[0]}
+                dropdown={!!mainMenu.items[0]}
             />
 
 
             <Collapsible collapsed={isCollapsed}>
                 <View>
                     {
-                        mainMenu.subMenu.map((subMenu, subMenuIndex) => {
+                        mainMenu.items.map((subMenu, subMenuIndex) => {
+
+                            //console.log(routeMapping[subMenu.url]);
 
                             return (
                                 <Fragment key={subMenuIndex}>
-                                    <SubCustomDrawerItem label={subMenu.name} route={subMenu.route}/>
+                                    {
+                                        routeMapping[subMenu.url].map((menChild, index)=>{
+                                            return (
+                                                <SubCustomDrawerItem key={index} label={menChild.name} route={menChild.route}/>
+                                            );
+                                        })
+                                    }
+
                                 </Fragment>
                             );
                         })
@@ -117,5 +129,7 @@ const NavMenu = ({mainMenu}) => {
         </Fragment>
     );
 };
+
+//{subMenu.route}
 
 export default NavMenu;

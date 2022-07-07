@@ -54,7 +54,7 @@ const HomeScreen = () => {
     <SafeAreaView>
       <ScrollView>
         <View style={style.container}>
-          <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10, color: dynamicGlobalTextColor}}>
+          <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10, color: '#000'}}>
             Welcome Back!
           </Text>
           {/*<Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
@@ -112,7 +112,6 @@ const InfoBadge = ({label, value, iconName}) => {
 
 const style = StyleSheet.create({
   container: {
-      backgroundColor: dynamicGlobalBackgroundColor,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,5 +1,5 @@
 
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {View, Text, Image, useWindowDimensions, TouchableOpacity, ToastAndroid, ImageBackground} from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen';
@@ -47,8 +47,31 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
 
+    let homeMenu = [
+        {
+            'label': 'Home',
+            'items': [
+                {
+                    'label': 'Home',
+                    'url': '/home',
+                },
+            ],
+        },
+    ];
+
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
+
+    const [stMenuObject, setMenuObject] = useState(homeMenu); //
+
+    useEffect(()=>{
+        (async ()=>{
+            let menuObjectFromStorage = await AsyncStorage.getItem('@menuObject');
+            let mainMenuFromDB = JSON.parse(menuObjectFromStorage).menuItems[0].items;
+            //console.log([...mainMenuFromDB])
+            setMenuObject(homeMenu.concat(mainMenuFromDB));
+        })()
+    }, []);
 
     return (
         <Fragment>
@@ -89,7 +112,7 @@ function CustomDrawerContent(props) {
                     </View>*/}
 
                 {
-                    menuObject.menuItems.map((mainMenu, mainMenuIndex) => {
+                    stMenuObject.map((mainMenu, mainMenuIndex) => {
 
                         return (
                             <NavMenu key={mainMenuIndex} mainMenu={mainMenu}/>

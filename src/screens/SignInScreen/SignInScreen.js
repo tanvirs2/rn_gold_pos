@@ -15,7 +15,7 @@ import logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import {apiUrl} from '../../settings/networking';
+import {apiUrl, customFetch} from '../../settings/networking';
 import loaderContext from '../../contexts/loaderContext';
 import {globalBlackColor, globalButtonColor} from '../../settings/color';
 import golden_ratio_image_hd from '../../../assets/images/golden_ratio_hd.jpg';
@@ -83,6 +83,176 @@ export default function SignInScreen({route}) {
 
           await storeToken(json.accessToken);
 
+          let menuObj123 = [
+            {
+              "appMenuId": 0,
+              "parentId": null,
+              "rightId": null,
+              "label": "Sell & Purchase",
+              "icon": "inventory",
+              "url": null,
+              "tooltip": null,
+              "widget": null,
+              "items": [
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Purchase",
+                  "icon": "",
+                  "url": "/admin/pos/purchases",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                },
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Sales",
+                  "icon": "",
+                  "url": "/admin/pos/sales",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                },
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Due Bill",
+                  "icon": "",
+                  "url": "/admin/pos/duebills",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                }
+              ]
+            },
+            {
+              "appMenuId": 0,
+              "parentId": null,
+              "rightId": null,
+              "label": "Deposit & Withdraw",
+              "icon": "inventory",
+              "url": null,
+              "tooltip": null,
+              "widget": null,
+              "items": [
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Deposit",
+                  "icon": "",
+                  "url": "/admin/pos/deposits",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                },
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Withdraw",
+                  "icon": "",
+                  "url": "/admin/pos/withdraws",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                }
+              ]
+            },
+            {
+              "appMenuId": 0,
+              "parentId": null,
+              "rightId": null,
+              "label": "Expense",
+              "icon": "inventory",
+              "url": null,
+              "tooltip": null,
+              "widget": null,
+              "items": [
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Expense List",
+                  "icon": "",
+                  "url": "/admin/pos/expenses",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                }
+              ]
+            },
+            {
+              "appMenuId": 0,
+              "parentId": null,
+              "rightId": null,
+              "label": "Inventory",
+              "icon": "inventory",
+              "url": null,
+              "tooltip": null,
+              "widget": null,
+              "items": [
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Product List",
+                  "icon": "inventory",
+                  "url": "/admin/pos/products",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                },
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Product Category List",
+                  "icon": "inventory",
+                  "url": "/admin/pos/product-categories",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                }
+              ]
+            },
+            {
+              "appMenuId": 0,
+              "parentId": null,
+              "rightId": null,
+              "label": "CRM",
+              "icon": "crm",
+              "url": null,
+              "tooltip": null,
+              "widget": null,
+              "items": [
+                {
+                  "appMenuId": 0,
+                  "parentId": null,
+                  "rightId": null,
+                  "label": "Customer List",
+                  "icon": "",
+                  "url": "/admin/pos/customers",
+                  "tooltip": null,
+                  "widget": null,
+                  "items": []
+                }
+              ]
+            }
+          ]
+
+          customFetch({
+            url: 'ApplicationSettings/GetConfigurationMenuSettings',
+            callbackResult: async (result) => {
+              //console.log(result);
+              await AsyncStorage.setItem('@menuObject', JSON.stringify(result))
+            },
+          })
+
           navigation.navigate('DrawerNavigation');
         }
 
@@ -138,8 +308,9 @@ export default function SignInScreen({route}) {
             //backgroundColor:'red'
           }} onPress={()=>{
             //alert('dd')
-            setUsername('admin');
-            setPassword('Admin@1');
+
+            setUsername('Salesman');
+            setPassword('Salesman@1');
           }}/>
 
         <Image
