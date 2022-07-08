@@ -310,7 +310,6 @@ const menuObject2 = {
     ],
 };
 
-
 const menuObject = {
     menuItems: [
         {
@@ -476,4 +475,4 @@ const menuObject = {
     ],
 };
 
-export default menuObject3;
+//export default menuObject3;

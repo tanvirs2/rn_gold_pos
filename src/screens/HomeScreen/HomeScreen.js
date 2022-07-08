@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
 import {checkCameraPermissionFirst} from '../../settings/ComponentLib2';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -21,10 +22,16 @@ const HomeScreen = () => {
         {value: '000', iconName: 'podium-outline', label: 'Total Profit'},
     ]);
 
+    const [stUser, setUser] = useState({username: '', userRole: ''});
+
     useEffect(()=>{
 
         (async ()=>{
             await checkCameraPermissionFirst();
+
+            let menuObjectFromStorage = await AsyncStorage.getItem('@menuObject');
+            let {username, userRole} = JSON.parse(menuObjectFromStorage); //username userRole
+            setUser({username, userRole})
         })()
 
 
@@ -63,29 +70,47 @@ const HomeScreen = () => {
           <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10, color: '#000'}}>
             Welcome Back!
           </Text>
-          {/*<Text style={{fontSize: 25, marginTop: 10, color: '#525151'}}>
-            Manager
-          </Text>*/}
 
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-            }}>
-            {stInfoBadgesData.map(({value, iconName, label}, index) => {
-              return (
-                <InfoBadge
-                  key={index}
-                  value={value}
-                  iconName={iconName}
-                  label={label}
-                />
-              );
-            })}
-          </View>
+            <Text style={{fontSize: 28, marginTop: 5, color: '#525151'}}>
+              {stUser.username}
+            </Text>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: '#966c30'}}>
+              Role : {stUser.userRole}
+            </Text>
+
+            {
+                stUser.userRole === 'Admin' || stUser.userRole === 'Manager' ? <View
+                    style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                    }}>
+                    {stInfoBadgesData.map(({value, iconName, label}, index) => {
+                        return (
+                            <InfoBadge
+                                key={index}
+                                value={value}
+                                iconName={iconName}
+                                label={label}
+                            />
+                        );
+                    })}
+                </View> :
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                        }}>
+                        
+                    </View>
+            }
+
+
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -37,13 +37,15 @@ const SubCustomDrawerItem = ({label, route}) => {
 
 const CustomDrawerItem = ({label, isSetCollapsed, isCollapsed, icon, dropdown = true}) => {
 
-    //console.log(dropdown)
+    //console.log(dropdown) Dashboard
+
+    const backgroundColor = label === 'Dashboard' ? 'rgba(44,1,0,0.8)' : isCollapsed?'#3D3D3DCC': '#000';
 
     return (
         <DrawerItem
             label={label}
             style={{
-                backgroundColor: isCollapsed?'#3D3D3DCC': '#000',
+                backgroundColor: backgroundColor,
             }}
             labelStyle={{
                 position: 'absolute',
