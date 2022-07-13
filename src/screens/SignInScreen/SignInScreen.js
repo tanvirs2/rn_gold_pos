@@ -5,7 +5,7 @@ import {
   View,
   Image,
   useWindowDimensions,
-  ScrollView, ImageBackground, Pressable, Text, Alert,
+  ScrollView, ImageBackground, Pressable, Text, Alert, Button,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -27,10 +27,10 @@ export default function SignInScreen({route}) {
 
   //console.log('screenMiddle', screenMiddle)
 
-  //const [username, setUsername] = useState(); //'admin'
-  //const [password, setPassword] = useState(); //'Admin@1'
-  const [username, setUsername] = useState('admin'); //'admin'
-  const [password, setPassword] = useState('Admin@1'); //'Admin@1'
+  const [username, setUsername] = useState(); //'admin'
+  const [password, setPassword] = useState(); //'Admin@1'
+  //const [username, setUsername] = useState('admin'); //'admin'
+  //const [password, setPassword] = useState('Admin@1'); //'Admin@1'
   //const [stMenu, setMenu] = useState({}); //'Admin@1'
 
   useEffect(()=>{
@@ -136,11 +136,22 @@ export default function SignInScreen({route}) {
   }
 
 
+  const setRolePassword = ({id, password}) => {
+    setUsername(id);
+    setPassword(password);
+  }
+
+
   return (
     <SafeAreaView>
       <ImageBackground source={golden_ratio_image_hd} resizeMode="cover" style={{height:'100%'}}>
         <View style={[styles.container, {height, alignItems: 'center'}]}>
 
+          <View style={{position:'absolute', top: 20, flexDirection:'row', zIndex:1}}>
+            <Button title="Admin" color="#841584" onPress={()=>setRolePassword({id: 'admin', password: 'Admin@1'})}/><Text>&nbsp;</Text>
+            <Button title="Manager" color="#841584" onPress={()=>setRolePassword({id: 'manager', password: 'Manager@1'})}/><Text>&nbsp;</Text>
+            <Button title="Sales" color="#841584" onPress={()=>setRolePassword({id: 'Salesman', password: 'Salesman@1'})}/><Text>&nbsp;</Text>
+          </View>
 
           <Pressable style={{position: 'absolute', top:89, left:94,height: 30, width:30,
             zIndex:10,
@@ -148,8 +159,8 @@ export default function SignInScreen({route}) {
           }} onPress={()=>{
             //alert('dd')
 
-            setUsername('Salesman');
-            setPassword('Salesman@1');
+            //setUsername('Salesman');
+            //setPassword('Salesman@1');
           }}/>
 
         <Image

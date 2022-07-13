@@ -6,6 +6,7 @@ import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
 import {checkCameraPermissionFirst} from '../../settings/ComponentLib2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 
 
@@ -24,6 +25,12 @@ const HomeScreen = () => {
 
     const [stUser, setUser] = useState({username: '', userRole: ''});
 
+    useFocusEffect(()=>{
+
+        dashboardDataFace();
+
+    });
+
     useEffect(()=>{
 
         (async ()=>{
@@ -34,7 +41,11 @@ const HomeScreen = () => {
             setUser({username, userRole})
         })()
 
+        dashboardDataFace();
 
+    }, []);
+
+    const dashboardDataFace = () => {
         customFetch({
             url: 'Dashboard/GetAllDailySummery',
             callbackResult: (result) => {
@@ -61,7 +72,7 @@ const HomeScreen = () => {
                 ])
             },
         });
-    }, []);
+    }
 
   return (
     <SafeAreaView>
@@ -106,7 +117,7 @@ const HomeScreen = () => {
                             alignItems: 'center',
                             width: '100%',
                         }}>
-                        
+
                     </View>
             }
 
