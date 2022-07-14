@@ -760,7 +760,7 @@ export const GenericCommentInput = ({name, value, setValue}) => {
     );
 }
 
-export const LocalSelect = ({selectProps, data}) => {
+export const LocalSelect = ({selectProps, data, buttonTextAfterSelection}) => {
 
     const [stDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -776,7 +776,7 @@ export const LocalSelect = ({selectProps, data}) => {
 
     return (
         <View style={{marginTop:30}}>
-            <Text style={{fontSize:20, marginBottom:10, color: '#000'}}>{selectProps.placeholder}</Text>
+            <Text style={[{fontSize:20, marginBottom:10, color: '#000', textAlign:selectProps.placeholderAlign}]}>{selectProps.placeholder}</Text>
 
             <View style={{
                 borderRadius:5,
@@ -804,17 +804,28 @@ export const LocalSelect = ({selectProps, data}) => {
                     />}
                     data={data}
                     onSelect={(selectedItem, index) => {
-                        //console.log(selectedItem.name, index);
+                        //console.log(selectedItem.shopName, index);
                         selectProps.setValue(selectedItem.id)
+
+                        if (buttonTextAfterSelection) {
+                            selectProps.setValue(index)
+                        }
                     }}
                     buttonTextAfterSelection={(selectedItem, index) => {
+                        //console.log(selectedItem, index);
                         // text represented after item is selected
                         // if data array is an array of objects then return selectedItem.property to render after item is selected
+                        if (buttonTextAfterSelection) {
+                            return selectedItem[buttonTextAfterSelection];
+                        }
                         return selectedItem.name;
                     }}
                     rowTextForSelection={(item, index) => {
                         // text represented for each item in dropdown
                         // if data array is an array of objects then return item.property to represent item in dropdown
+                        if (buttonTextAfterSelection) {
+                            return item[buttonTextAfterSelection];
+                        }
                         return item.name;
                     }}
                     defaultValueByIndex={selectProps.selectedData}

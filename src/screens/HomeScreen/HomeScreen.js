@@ -6,30 +6,22 @@ import {customFetch} from '../../settings/networking';
 import {taka} from '../../assets/symbols';
 import {checkCameraPermissionFirst} from '../../settings/ComponentLib2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
+import {LocalSelect} from '../../settings/ComponentLib';
+
 
 
 
 const HomeScreen = () => {
 
-    const [stInfoBadgesData, setInfoBadgesData] = useState([
-        {value: '000', iconName: 'reader-outline', label: 'Total Sale'},
-        {value: '000', iconName: 'card-outline', label: 'Total Deposit'},
-        {value: '000', iconName: 'wallet-outline', label: 'Total Withdrawn'},
-        {value: '000', iconName: 'thumbs-down-outline', label: 'Total Due Receive'},
-        {value: '000', iconName: 'cart-outline', label: 'Total Purchase'},
-        {value: '000', iconName: 'receipt-outline', label: 'Total Sale Return'},
-        {value: '000', iconName: 'cash-outline', label: 'Total Expense'},
-        {value: '000', iconName: 'podium-outline', label: 'Total Profit'},
-    ]);
+    const useFocus = useIsFocused();
+
+    const [stGetAllDailySummery, setGetAllDailySummery] = useState([]);
+    const [stShopNameIndex, setShopNameIndex] = useState(0);
+    const [stInfoBadgesData, setInfoBadgesData] = useState([]);
 
     const [stUser, setUser] = useState({username: '', userRole: ''});
 
-    useFocusEffect(()=>{
-
-        dashboardDataFace();
-
-    });
 
     useEffect(()=>{
 
@@ -43,35 +35,54 @@ const HomeScreen = () => {
 
         dashboardDataFace();
 
-    }, []);
+        if (stGetAllDailySummery.length > 0) {
+            infoBadgesPopulate(stGetAllDailySummery[stShopNameIndex])
+        }
+
+
+    }, [useFocus, stShopNameIndex]);
+
 
     const dashboardDataFace = () => {
         customFetch({
             url: 'Dashboard/GetAllDailySummery',
             callbackResult: (result) => {
 
-                const {
-                    totalSale,
-                    totalDeposite,
-                    totalWithdraw,
-                    totalDueBill,
-                    totalPurchase,
-                    totalExpence,
-                } = result[0];
+                //console.log(result);
 
-
-                setInfoBadgesData([
-                    {value: `${taka}${totalSale}`, iconName: 'reader-outline', label: 'Total Sale'},
-                    {value: `${taka}${totalDeposite}`, iconName: 'card-outline', label: 'Total Deposit'},
-                    {value: `${taka}${totalWithdraw}`, iconName: 'wallet-outline', label: 'Total Withdrawn'},
-                    {value: `${taka}${totalDueBill}`, iconName: 'thumbs-down-outline', label: 'Total Due Bill'},
-                    {value: `${taka}${totalPurchase}`, iconName: 'cart-outline', label: 'Total Purchase'},
-                    {value: `${taka}${totalExpence}`, iconName: 'cash-outline', label: 'Total Expense'},
-                    {value: `${taka}0`, iconName: 'receipt-outline', label: 'Total Sale Return'},
-                    {value: `${taka}0`, iconName: 'podium-outline', label: 'Total Profit'},
-                ])
+                setGetAllDailySummery(result);
+                /*
+                * {"shopName": "New Apan Jewellers", "totalDeposite": 0, "totalDueBill": 0, "totalExpence": 0, "totalPurchase": 0, "totalSale": 0, "totalWithdraw": 0}
+                * */
+                infoBadgesPopulate(result[stShopNameIndex])
             },
         });
+    }
+
+    const infoBadgesPopulate = (result) => {
+
+        //console.log('-----', stGetAllDailySummery);
+
+        const {
+            totalDeposite,
+            totalDueBill,
+            totalExpence,
+            totalPurchase,
+            totalSale,
+            totalWithdraw,
+        } = result;
+
+
+        setInfoBadgesData([
+            {value: `${taka}${totalSale}`, iconName: 'reader-outline', label: 'Total Sale'},
+            {value: `${taka}${totalDeposite}`, iconName: 'card-outline', label: 'Total Deposit'},
+            {value: `${taka}${totalWithdraw}`, iconName: 'wallet-outline', label: 'Total Withdrawn'},
+            {value: `${taka}${totalDueBill}`, iconName: 'thumbs-down-outline', label: 'Total Due Bill'},
+            {value: `${taka}${totalPurchase}`, iconName: 'cart-outline', label: 'Total Purchase'},
+            {value: `${taka}${totalExpence}`, iconName: 'cash-outline', label: 'Total Expense'},
+            {value: `${taka}0`, iconName: 'receipt-outline', label: 'Total Sale Return'},
+            {value: `${taka}0`, iconName: 'podium-outline', label: 'Total Profit'},
+        ])
     }
 
   return (
@@ -98,6 +109,20 @@ const HomeScreen = () => {
                         alignItems: 'center',
                         width: '100%',
                     }}>
+
+                    <View style={{width: '80%'}}>
+                        <LocalSelect
+                            data={stGetAllDailySummery}
+                            buttonTextAfterSelection="shopName"
+                            selectProps={{
+                                value: 0,
+                                setValue: setShopNameIndex,
+                                placeholder: 'Select Shop',
+                                placeholderAlign: 'center'
+                            }}
+                        />
+                    </View>
+
                     {stInfoBadgesData.map(({value, iconName, label}, index) => {
                         return (
                             <InfoBadge

@@ -27,13 +27,22 @@ export default function SignInScreen({route}) {
 
   //console.log('screenMiddle', screenMiddle)
 
+
+
   const [username, setUsername] = useState(); //'admin'
   const [password, setPassword] = useState(); //'Admin@1'
   //const [username, setUsername] = useState('admin'); //'admin'
   //const [password, setPassword] = useState('Admin@1'); //'Admin@1'
   //const [stMenu, setMenu] = useState({}); //'Admin@1'
 
+
+
   useEffect(()=>{
+
+    if (__DEV__) {
+      setUsername('admin'); //'admin'
+      setPassword('Admin@1'); //'Admin@1'
+    }
 
     return ()=>{
       /*setUsername(null)
@@ -140,6 +149,8 @@ export default function SignInScreen({route}) {
     setUsername(id);
     setPassword(password);
   }
+
+
 
 
   return (
