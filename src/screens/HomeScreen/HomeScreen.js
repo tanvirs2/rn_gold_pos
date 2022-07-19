@@ -18,7 +18,16 @@ const HomeScreen = () => {
 
     const [stGetAllDailySummery, setGetAllDailySummery] = useState([]);
     const [stShopNameIndex, setShopNameIndex] = useState(0);
-    const [stInfoBadgesData, setInfoBadgesData] = useState([]);
+    const [stInfoBadgesData, setInfoBadgesData] = useState([
+        {value: '000', iconName: 'reader-outline', label: 'Total Sale'},
+        {value: '000', iconName: 'card-outline', label: 'Total Deposit'},
+        {value: '000', iconName: 'wallet-outline', label: 'Total Withdrawn'},
+        {value: '000', iconName: 'thumbs-down-outline', label: 'Total Due Receive'},
+        {value: '000', iconName: 'cart-outline', label: 'Total Purchase'},
+        {value: '000', iconName: 'receipt-outline', label: 'Total Sale Return'},
+        {value: '000', iconName: 'cash-outline', label: 'Total Expense'},
+        {value: '000', iconName: 'podium-outline', label: 'Total Profit'},
+    ]);
 
     const [stUser, setUser] = useState({username: '', userRole: ''});
 
@@ -33,14 +42,17 @@ const HomeScreen = () => {
             setUser({username, userRole})
         })()
 
+    }, []);
+
+    useEffect(()=>{
         dashboardDataFace();
+    }, [useFocus]);
 
+    useEffect(()=>{
         if (stGetAllDailySummery.length > 0) {
-            infoBadgesPopulate(stGetAllDailySummery[stShopNameIndex])
+            infoBadgesPopulate( stGetAllDailySummery[ stShopNameIndex ] )
         }
-
-
-    }, [useFocus, stShopNameIndex]);
+    }, [stShopNameIndex]);
 
 
     const dashboardDataFace = () => {
@@ -80,8 +92,8 @@ const HomeScreen = () => {
             {value: `${taka}${totalDueBill}`, iconName: 'thumbs-down-outline', label: 'Total Due Bill'},
             {value: `${taka}${totalPurchase}`, iconName: 'cart-outline', label: 'Total Purchase'},
             {value: `${taka}${totalExpence}`, iconName: 'cash-outline', label: 'Total Expense'},
-            {value: `${taka}0`, iconName: 'receipt-outline', label: 'Total Sale Return'},
-            {value: `${taka}0`, iconName: 'podium-outline', label: 'Total Profit'},
+            /*{value: `${taka}0`, iconName: 'receipt-outline', label: 'Total Sale Return'},
+            {value: `${taka}0`, iconName: 'podium-outline', label: 'Total Profit'},*/
         ])
     }
 

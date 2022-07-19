@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {
     Alert,
@@ -40,6 +40,83 @@ export const SubComponentForInput = ({title, ...props}) => (
 );
 
 
+const inputForPrice = (textT = 0) => {
+
+    console.log(textT);
+
+    let obj = {myVar:0};
+
+    return {
+        InpTest: ()=> {
+            const [stPrice, setPrice] = useState();
+
+            //alert('d')
+
+            useEffect(()=>{
+                obj.myVar = stPrice;
+
+                setPrice(textT);
+
+            }, [textT]);
+
+
+            return (
+                <Fragment>
+                    <TextInput onChangeText={inputForPrice} keyboardType="numeric"/>
+                </Fragment>);
+        },
+        inpVal: textT,
+    };
+}
+
+
+const ProductTableComponent = ({elm, productFromBarcode, setSubTotalComp, compIndex}) => {
+
+    let result = productFromBarcode[compIndex];
+
+    const [stPrice, setPrice] = useState(result.sellingPrice);
+
+    useEffect(()=>{
+
+        priceChange(stPrice)
+
+    }, []);
+
+    const priceChange = (text) => {
+
+        setSubTotalComp(prevState => {
+
+            prevState[compIndex] = Number(text);
+
+            return prevState;
+        });
+    }
+
+
+    return (
+        <View style={styles.productDetailsBorder}>
+
+            <View style={{marginBottom: 20}}>
+
+                <Table>
+                    <Rows data={
+                        [
+                            ['Product’s Name',  ':', result.name],
+                            ['Comment',         ':', result.description],
+                            ['Karat',           ':', result.grade],
+                            ['category',        ':', result.category],
+                            ['Weight',          ':', result.weight],
+                            ['Price',           ':', <TextInput placeholderTextColor="red" placeholder="..." value={String(stPrice)} onEndEditing={event=>priceChange(event.nativeEvent.text)} onChangeText={setPrice} keyboardType="numeric"/>], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
+                            ['Barcode',         ':', result.code],
+                        ]
+                    } textStyle={styles.text}/>
+                </Table>
+
+            </View>
+
+        </View>
+    );
+};
 
 export default function SalesEntry({type}) {
 
@@ -70,9 +147,10 @@ export default function SalesEntry({type}) {
     const [stAddress, setAddress] = useState(null);
     const [stComment, setComment] = useState();
     const [modalVisible, setModalVisible] = useState(false);
-    const [stSubTotal, setSubTotal] = useState(0);
+    const [stSubTotal, setSubTotal] = useState([]);
 
     const [stProductList, setProductList] = useState([]);
+    const [stProductFromBarcode, setProductFromBarcode] = useState([]);
 
     const [stTable, setTable] = useState([
         /*{
@@ -108,23 +186,53 @@ export default function SalesEntry({type}) {
 
                     if (result?.code) {
 
-                        setProductList(prevState => [...prevState, {id: 0, productId: result.id}]);
+                        const Inp = inputForPrice();
+
+                        //console.log('GetProductByCode',inputForPrice().inpVal);
+
+                        /*
+                        * "productList": [
+                                {
+                                  "id": 0,
+                                  "productId": 0,
+                                  "code": "string",
+                                  "name": "string",
+                                  "description": "string",
+                                  "isStock": true,
+                                  "grade": "string",
+                                  "category": "string",
+                                  "weight": 0,
+                                  "price": 0,
+                                  "ptotal": 0,
+                                  "discountAmount": 0
+                                }
+                              ]
+                        * */
+
+
 
                         setScannedBarcode(prevState => [...prevState, barcode]);
 
-                        setSubTotal(prevState => prevState + Number(result.sellingPrice));
+                        //setSubTotal(prevState => prevState + Number(result.sellingPrice));
+
+                        setProductFromBarcode(prevState => [...prevState, result])
 
                         setTable(prevState => {
+
+                            setProductList(prevState => [...prevState, {id: 0, productId: result.id}]);
+
+                            //console.log('----GetProductByCode', stProductList);
+
                             return [
                                 ...prevState,
                                 {
                                     table: [
                                         ['Product’s Name',  ':', result.name],
-                                        ['Comment',     ':', result.description],
+                                        ['Comment',         ':', result.description],
                                         ['Karat',           ':', result.grade],
                                         ['category',        ':', result.category],
                                         ['Weight',          ':', result.weight],
-                                        ['Price',       ':', result.sellingPrice],
+                                        ['Price',           ':', ''], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
                                         ['Barcode',         ':', result.code],
                                     ]
                                 }
@@ -158,15 +266,20 @@ export default function SalesEntry({type}) {
 
     useEffect(()=>{
 
-        (async ()=>{
+        (async () => {
             await checkCameraPermissionFirst(setHasPermission);
-        })()
+        })();
+
+        if (__DEV__) {
+            setCustomerName('Test');
+            setBarcode('P-637895491821048620');
+        }
 
         customFetch({
             url: 'Customar/GetAll?pageIndex=0&pageSize=2000',
             callbackResult: (result)=>{
                 setCustomerList(result.data)
-            }
+            },
         });
 
     }, [stCustomerId]);
@@ -250,9 +363,11 @@ export default function SalesEntry({type}) {
 
         useEffect(()=>{
 
-            setVatCost((stVAT / 100) * stSubTotal);
+            //collect(stSubTotal).sum()
 
-            setPayable((stVatCost + stSubTotal) - stDiscount)
+            setVatCost((stVAT / 100) * collect(stSubTotal).sum());
+
+            setPayable((stVatCost + collect(stSubTotal).sum()) - stDiscount)
 
         },[stVatCost])
 
@@ -307,7 +422,7 @@ export default function SalesEntry({type}) {
                                 cname :         stCustomerName,
                                 cmobile :       stMobileNumber,
                                 caddress :      stAddress,
-                                subTotal :      stSubTotal,
+                                subTotal :      collect(stSubTotal).sum(),
                                 totalAmount :   stPayable,
                                 vatPercent :    stVAT,
                                 vatAmount :     stVatCost,
@@ -402,7 +517,7 @@ export default function SalesEntry({type}) {
 
                                                         <Table>
                                                             <Rows data={[
-                                                                ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
+                                                                ['Sub Total', ':', `${taka} ${collect(stSubTotal).sum()}/=`],
                                                                 [`VAT ${stVAT}%`,
                                                                     <View style={{flexDirection:'row'}}>
                                                                         <View style={{flex:1}}>
@@ -414,7 +529,7 @@ export default function SalesEntry({type}) {
                                                                                 stValue={stVAT}
                                                                                 setValue={VAT_val=>{
 
-                                                                                    setVatCost(((VAT_val / 100) * stSubTotal).toFixed(2));
+                                                                                    setVatCost(((VAT_val / 100) * collect(stSubTotal).sum()).toFixed(2));
                                                                                     setVAT(VAT_val);
 
                                                                                 }}
@@ -723,17 +838,9 @@ export default function SalesEntry({type}) {
 
                     {
                         stTable.map((elm, index) => (
-                            <View key={index} style={styles.productDetailsBorder}>
-
-                                <View style={{marginBottom: 20}}>
-
-                                    <Table>
-                                        <Rows data={elm.table} textStyle={styles.text}/>
-                                    </Table>
-
-                                </View>
-
-                            </View>
+                            <Fragment key={index}>
+                                <ProductTableComponent compIndex={index} elm={elm} productFromBarcode={stProductFromBarcode} setSubTotalComp={setSubTotal}/>
+                            </Fragment>
                         ))
                     }
 
