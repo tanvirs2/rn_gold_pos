@@ -70,7 +70,7 @@ const inputForPrice = (textT = 0) => {
 }
 
 
-const ProductTableComponent = ({elm, productFromBarcode, setSubTotalComp, compIndex}) => {
+const ProductTableComponent = ({productFromBarcode, setSubTotalComp, setTable, compIndex}) => {
 
     let result = productFromBarcode[compIndex];
 
@@ -84,9 +84,20 @@ const ProductTableComponent = ({elm, productFromBarcode, setSubTotalComp, compIn
 
     const priceChange = (text) => {
 
+        text = Number(text);
+
         setSubTotalComp(prevState => {
 
-            prevState[compIndex] = Number(text);
+            prevState[compIndex] = text;
+
+            return prevState;
+        });
+
+        setTable(prevState=> {
+
+            prevState[compIndex].table[5][2] = text; // price data append here
+
+            //console.log('=====');
 
             return prevState;
         });
@@ -106,7 +117,7 @@ const ProductTableComponent = ({elm, productFromBarcode, setSubTotalComp, compIn
                             ['Karat',           ':', result.grade],
                             ['category',        ':', result.category],
                             ['Weight',          ':', result.weight],
-                            ['Price',           ':', <TextInput placeholderTextColor="red" placeholder="..." value={String(stPrice)} onEndEditing={event=>priceChange(event.nativeEvent.text)} onChangeText={setPrice} keyboardType="numeric"/>], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
+                            ['Price',           ':', <TextInput placeholderTextColor="red" placeholder="........." value={String(stPrice)} onEndEditing={event=>priceChange(event.nativeEvent.text)} onChangeText={setPrice} keyboardType="numeric"/>], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
                             ['Barcode',         ':', result.code],
                         ]
                     } textStyle={styles.text}/>
@@ -221,7 +232,8 @@ export default function SalesEntry({type}) {
 
                             setProductList(prevState => [...prevState, {id: 0, productId: result.id}]);
 
-                            //console.log('----GetProductByCode', stProductList);
+                            console.log('----GetProductByCode', prevState, stSubTotal);
+
 
                             return [
                                 ...prevState,
@@ -232,7 +244,7 @@ export default function SalesEntry({type}) {
                                         ['Karat',           ':', result.grade],
                                         ['category',        ':', result.category],
                                         ['Weight',          ':', result.weight],
-                                        ['Price',           ':', ''], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
+                                        ['Price',           ':', stSubTotal[0]], //result.sellingPrice <TextInput value={result.sellingPrice} keyboardType="numeric"/>
                                         ['Barcode',         ':', result.code],
                                     ]
                                 }
@@ -839,7 +851,7 @@ export default function SalesEntry({type}) {
                     {
                         stTable.map((elm, index) => (
                             <Fragment key={index}>
-                                <ProductTableComponent compIndex={index} elm={elm} productFromBarcode={stProductFromBarcode} setSubTotalComp={setSubTotal}/>
+                                <ProductTableComponent compIndex={index} productFromBarcode={stProductFromBarcode} setSubTotalComp={setSubTotal} setTable={setTable} />
                             </Fragment>
                         ))
                     }
