@@ -129,7 +129,7 @@ const ProductTableComponent = ({productFromBarcode, setSubTotalComp, setTable, c
     );
 };
 
-export default function SalesEntry({type}) {
+function SalesEntry({type}) {
 
     const navigation = useNavigation();
     const {height, width} = useWindowDimensions();
@@ -232,7 +232,7 @@ export default function SalesEntry({type}) {
 
                             setProductList(prevState => [...prevState, {id: 0, productId: result.id}]);
 
-                            console.log('----GetProductByCode', prevState, stSubTotal);
+                            //console.log('----GetProductByCode', prevState, stSubTotal);
 
 
                             return [
@@ -286,6 +286,14 @@ export default function SalesEntry({type}) {
             setCustomerName('Test');
             setBarcode('P-637895491821048620');
         }
+
+        const customer = collect(stCustomerList).firstWhere('id', stCustomerId)?.name;
+
+        if (customer) {
+            setCustomerName(customer)
+        }
+
+        //console.log('=-=-=-',collect(stCustomerList).firstWhere('id', stCustomerId));
 
         customFetch({
             url: 'Customar/GetAll?pageIndex=0&pageSize=2000',
@@ -473,7 +481,7 @@ export default function SalesEntry({type}) {
                                     <View>
 
                                         <View>
-                                            <Text style={{fontWeight:'bold', fontSize:30, color:'#9b3a00' }}>Preview</Text>
+                                            <Text style={{fontWeight:'bold', fontSize:30, color:'#9b3a00' }}>Sales Preview</Text>
                                         </View>
 
                                         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
@@ -851,7 +859,12 @@ export default function SalesEntry({type}) {
                     {
                         stTable.map((elm, index) => (
                             <Fragment key={index}>
-                                <ProductTableComponent compIndex={index} productFromBarcode={stProductFromBarcode} setSubTotalComp={setSubTotal} setTable={setTable} />
+                                <ProductTableComponent
+                                    compIndex={index}
+                                    productFromBarcode={stProductFromBarcode}
+                                    setSubTotalComp={setSubTotal}
+                                    setTable={setTable}
+                                />
                             </Fragment>
                         ))
                     }
@@ -1012,4 +1025,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
 });
+
+export default SalesEntry;
 
