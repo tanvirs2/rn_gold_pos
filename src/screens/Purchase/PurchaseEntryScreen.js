@@ -108,8 +108,8 @@ const PurchaseEntryScreen = ({type}) => {
     const resetPrInputs = () => {
         setPr_name('')
         setPr_description('')
-        setPr_category('')
-        setPr_grade('')
+        //setPr_category('')
+        //setPr_grade('')
         setPr_weight('')
         setPr_price('')
     }
@@ -186,7 +186,7 @@ const PurchaseEntryScreen = ({type}) => {
                 cname: stCustomerName,
                 cmobile: stMobile,
                 caddress: stAddress,
-                categoryId: 15001,
+                categoryId: type === 'newGold' ? 15001 : 15002,
                 totalAmount: stPayable,
                 vatAmount: stVatCost,
                 paidAmount: stPaid,
@@ -200,7 +200,19 @@ const PurchaseEntryScreen = ({type}) => {
                     message: "Successfully save data",
                     type: "success",
                 });
-                //console.log('result---->', result);
+                console.log('result---->', result, {
+                    id: 0,
+                    cname: stCustomerName,
+                    cmobile: stMobile,
+                    caddress: stAddress,
+                    categoryId: type === 'newGold' ? 15001 : 15002,
+                    totalAmount: stPayable,
+                    vatAmount: stVatCost,
+                    paidAmount: stPaid,
+                    dueAmount: stDue,
+
+                    productList: stProductsArr
+                });
             },
             navigation
         });
@@ -352,163 +364,169 @@ const PurchaseEntryScreen = ({type}) => {
                 </View>
 
 
-                <View style={{margin:30}}>
+                {
+                    stProductsArr.length > 0 && <Fragment>
+                        <View style={{margin:30}}>
 
-                    <View style={{}}>
-
-                        <View style={{marginBottom: 10}}>
-
-                            <Table>
-                                <Rows data={[
-                                    ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
-                                    [`VAT ${stVAT}%`,
-                                        <View style={{flexDirection:'row'}}>
-                                            <View style={{flex:1}}>
-                                                <Text>:</Text>
-                                            </View>
-
-                                            <View style={{flex:5}}>
-                                                <TransactionalInput
-                                                    stValue={stVAT}
-                                                    setValue={VAT_val=>{
-
-                                                        setVatCost(((VAT_val / 100) * stSubTotal).toFixed(2));
-                                                        setVAT(VAT_val);
-
-                                                    }}
-                                                />
-                                            </View>
-
-                                        </View>,
-                                        `${taka} ${stVatCost}/=`
-                                    ],
-                                ]
-                                } />
-                            </Table>
-
-
-                        </View>
-
-
-                        {/******* amountTable-2 ******/}
-                        <View>
                             <View style={{}}>
 
-                                <View style={{marginBottom: 20}}>
-
-                                    <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
+                                <View style={{marginBottom: 10}}>
 
                                     <Table>
                                         <Rows data={[
-                                            ['Payable ', ':', `${taka} ${stPayable}/=`],
-                                            ['Paid', ':',
-                                                <TransactionalInput
-                                                    stValue={stPaid}
-                                                    setValue={paidVal=>{
-                                                        setPaid(paidVal);
-                                                        setDue((stPayable - paidVal).toFixed(2));
-                                                    }}
-                                                />
+                                            ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
+                                            [`VAT ${stVAT}%`,
+                                                <View style={{flexDirection:'row'}}>
+                                                    <View style={{flex:1}}>
+                                                        <Text>:</Text>
+                                                    </View>
+
+                                                    <View style={{flex:5}}>
+                                                        <TransactionalInput
+                                                            stValue={stVAT}
+                                                            setValue={VAT_val=>{
+
+                                                                setVatCost(((VAT_val / 100) * stSubTotal).toFixed(2));
+                                                                setVAT(VAT_val);
+
+                                                            }}
+                                                        />
+                                                    </View>
+
+                                                </View>,
+                                                `${taka} ${stVatCost}/=`
                                             ],
-                                            ['Due Amount', ':', `${taka} ${stDue}/=`],
-                                        ]} />
+                                        ]
+                                        } />
                                     </Table>
 
+
+                                </View>
+
+
+                                {/******* amountTable-2 ******/}
+                                <View>
+                                    <View style={{}}>
+
+                                        <View style={{marginBottom: 20}}>
+
+                                            <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
+
+                                            <Table>
+                                                <Rows data={[
+                                                    ['Payable ', ':', `${taka} ${stPayable}/=`],
+                                                    ['Paid', ':',
+                                                        <TransactionalInput
+                                                            stValue={stPaid}
+                                                            setValue={paidVal=>{
+                                                                setPaid(paidVal);
+                                                                setDue((stPayable - paidVal).toFixed(2));
+                                                            }}
+                                                        />
+                                                    ],
+                                                    ['Due Amount', ':', `${taka} ${stDue}/=`],
+                                                ]} />
+                                            </Table>
+
+                                        </View>
+
+                                    </View>
                                 </View>
 
                             </View>
                         </View>
 
-                    </View>
-                </View>
+                        <View style={[styles.container, styles.borderBox,  {backgroundColor: '#fdf2e6'}]}>
 
-                <View style={[styles.container, styles.borderBox,  {backgroundColor: '#fdf2e6'}]}>
+                            <Text style={styles.fontBold}>Product Detail</Text>
 
-                    <Text style={styles.fontBold}>Product Detail</Text>
+                            {
+                                stProductsArr.map((elm, index) => (
+                                    <View key={index} style={styles.productDetailsBorder}>
+                                        <View style={{width: '100%', backgroundColor:globalBackgroundColor, padding:5, paddingLeft:15, borderRadius:5}}>
+                                            <Text style={{color: '#000', fontWeight:'bold', fontSize:17}}>Item {index+1}</Text>
+                                        </View>
+                                        <View style={{marginBottom: 20}}>
 
-                    {
-                        stProductsArr.map((elm, index) => (
-                            <View key={index} style={styles.productDetailsBorder}>
-                                <View style={{width: '100%', backgroundColor:globalBackgroundColor, padding:5, paddingLeft:15, borderRadius:5}}>
-                                    <Text style={{color: '#000', fontWeight:'bold', fontSize:17}}>Item {index+1}</Text>
+                                            <Table>
+                                                <Rows data={[
+                                                    ['Product’s Name',  ':', elm.name],
+                                                    ['Comment',         ':', elm.description],
+                                                    ['Karat',           ':', elm.grade],
+                                                    ['category',        ':', elm.category],
+                                                    ['Weight',          ':', elm.weight],
+                                                    ['Price',           ':', elm.price],
+                                                    ['Barcode',         ':', 'result.code'],
+                                                ]} textStyle={styles.text}/>
+                                            </Table>
+
+                                        </View>
+
+                                    </View>
+                                ))
+                            }
+
+                            <View style={{flexDirection:'row'}}>
+                                <View style={{flex:1, margin:10}}>
+                                    <CustomButton
+                                        text="Reset"
+                                        bgColor="#9f4c5b"
+                                        onPress={() => {
+                                            Vibration.vibrate(100);
+
+                                            setCustomerName('')
+                                            setMobile('')
+                                            setAddress('')
+
+                                            //setTable([])
+                                            setProductsArr([]);
+
+                                            setSubTotal(0);
+                                            setPayable(0);
+                                            setVAT(15)
+                                            setPaid(0);
+                                            setDue(0);
+
+                                            resetPrInputs()
+                                        }}
+                                    />
                                 </View>
-                                <View style={{marginBottom: 20}}>
 
-                                    <Table>
-                                        <Rows data={[
-                                            ['Product’s Name',  ':', elm.name],
-                                            ['Comment',         ':', elm.description],
-                                            ['Karat',           ':', elm.grade],
-                                            ['category',        ':', elm.category],
-                                            ['Weight',          ':', elm.weight],
-                                            ['Price',           ':', elm.price],
-                                            ['Barcode',         ':', 'result.code'],
-                                        ]} textStyle={styles.text}/>
-                                    </Table>
 
-                                </View>
+                                {stProductsArr.length > 0 && <View style={{flex: 1, margin: 10}}>
+                                    <CustomButton
+                                        text="Save"
+                                        bgColor={globalButtonColor}
+                                        onPress={() => {
+                                            Vibration.vibrate(1000);
 
+                                            saveData();
+
+                                            setCustomerName('')
+                                            setMobile('')
+                                            setAddress('')
+
+                                            //setTable([])
+                                            setProductsArr([]);
+
+                                            setSubTotal(0);
+                                            setPayable(0);
+                                            setVAT(15)
+                                            setPaid(0);
+                                            setDue(0);
+
+                                            resetPrInputs()
+                                            /*setConfirmModalVisible(true);*/
+                                        }}
+                                    />
+                                </View>}
                             </View>
-                        ))
-                    }
 
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{flex:1, margin:10}}>
-                            <CustomButton
-                                text="Reset"
-                                bgColor="#9f4c5b"
-                                onPress={() => {
-                                    Vibration.vibrate(100);
-
-                                    setCustomerName('')
-                                    setMobile('')
-                                    setAddress('')
-
-                                    //setTable([])
-                                    setProductsArr([]);
-
-                                    setSubTotal(0);
-                                    setPayable(0);
-                                    setVAT(15)
-                                    setPaid(0);
-                                    setDue(0);
-
-                                    resetPrInputs()
-                                }}
-                            />
                         </View>
+                    </Fragment>
+                }
 
 
-                        {stProductsArr.length > 0 && <View style={{flex: 1, margin: 10}}>
-                            <CustomButton
-                                text="Save"
-                                bgColor={globalButtonColor}
-                                onPress={() => {
-                                    Vibration.vibrate(1000);
-
-                                    saveData();
-
-                                    setCustomerName('')
-                                    setMobile('')
-                                    setAddress('')
-
-                                    //setTable([])
-                                    setProductsArr([]);
-
-                                    setSubTotal(0);
-                                    setPayable(0);
-                                    setVAT(15)
-                                    setPaid(0);
-                                    setDue(0);
-
-                                    resetPrInputs()
-                                    /*setConfirmModalVisible(true);*/
-                                }}
-                            />
-                        </View>}
-                    </View>
-
-                </View>
             </ScrollView>
 
         </Fragment>
