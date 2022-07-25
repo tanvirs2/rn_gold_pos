@@ -12,9 +12,8 @@ const ListOfSales = () => {
             <CustomDataTable
                 type="Sale"
                 searchPlaceholder="Sale Name, Category..."
-                tableHead={['Product', 'Category', 'Amount', 'Invoice No.', 'Action']}
+                tableHead={['Category', 'Amount', 'Invoice No.', 'Action']}
                 tableDB={[
-                    'id|text',
                     'category|text',
                     'amount|taka',
                     'code|text',

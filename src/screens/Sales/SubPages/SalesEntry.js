@@ -438,6 +438,7 @@ function SalesEntry({type}) {
                             navigation.navigate('Invoice', {
                                 id :            0,
                                 shopId :        1,
+                                type :          type,
                                 invoiceNo :     resultChild.model.code,
                                 cname :         stCustomerName,
                                 cmobile :       stMobileNumber,
@@ -482,6 +483,7 @@ function SalesEntry({type}) {
 
                                         <View>
                                             <Text style={{fontWeight:'bold', fontSize:30, color:'#9b3a00' }}>Sales Preview</Text>
+                                            <Text style={{fontStyle:'italic', fontSize:20, color:'red' }}>{type}</Text>
                                         </View>
 
                                         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>

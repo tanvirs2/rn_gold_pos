@@ -70,6 +70,7 @@ const InvoiceScreen = ({route}) => {
 
                   <View style={{ marginTop: 25}}>
                       <Text style={{fontWeight:'bold', fontSize:30}}>Sales Invoice</Text>
+                      <Text style={{fontStyle:'italic', fontSize:20, color:'red' }}>{stInvoiceData?.type}</Text>
                   </View>
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom:19}}>
