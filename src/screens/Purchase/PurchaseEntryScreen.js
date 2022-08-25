@@ -373,7 +373,7 @@ const PurchaseEntryScreen = ({type}) => {
                                 <View style={{marginBottom: 10}}>
 
                                     <Table>
-                                        <Rows data={[
+                                        <Rows textStyle={styles.text} data={[
                                             ['Sub Total', ':', `${taka} ${stSubTotal}/=`],
                                             [`VAT ${stVAT}%`,
                                                 <View style={{flexDirection:'row'}}>
@@ -413,7 +413,7 @@ const PurchaseEntryScreen = ({type}) => {
                                             <View style={{borderColor: '#000', borderBottomWidth:1, marginBottom:10}}/>
 
                                             <Table>
-                                                <Rows data={[
+                                                <Rows textStyle={styles.text} data={[
                                                     ['Payable ', ':', `${taka} ${stPayable}/=`],
                                                     ['Paid', ':',
                                                         <TransactionalInput
@@ -438,7 +438,7 @@ const PurchaseEntryScreen = ({type}) => {
 
                         <View style={[styles.container, styles.borderBox,  {backgroundColor: '#fdf2e6'}]}>
 
-                            <Text style={styles.fontBold}>Product Detail</Text>
+                            <Text style={[styles.fontBold, {color:'#000'}]}>Product Detail</Text>
 
                             {
                                 stProductsArr.map((elm, index) => (
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     productDetailsBorder: {borderWidth: 1, borderRadius: 5, borderColor: '#676666', padding: 15, marginBottom: 10, backgroundColor: '#fff'},
     flexRow: {flex: 1, flexDirection: 'row', justifyContent: 'center', padding: 10},
     fontBold: {fontSize: 18, fontWeight: 'bold', marginBottom: 10},
-    text: {margin: 6},
+    text: {margin: 6, color: '#000'},
 
 
 

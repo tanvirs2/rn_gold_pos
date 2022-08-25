@@ -234,6 +234,7 @@ export const CustomDataTable = ({searchValue, toggleBtn, tableHead, tableDB, typ
                                         <TableWrapper key={index} style={styles.row}>
                                             {rowData.map((cellData, cellIndex) => (
                                                 <Cell
+                                                    selectable
                                                     key={cellIndex}
                                                     data={cellData}
                                                     textStyle={styles.text}

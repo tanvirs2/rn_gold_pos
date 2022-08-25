@@ -31,4 +31,4 @@ const PurchaseListTab = () => {
     );
 }
 
-export default PurchaseListTab;
+export default NewGold;

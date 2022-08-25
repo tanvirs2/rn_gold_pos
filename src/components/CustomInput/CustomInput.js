@@ -24,6 +24,7 @@ export default function CustomInput({
           keyboardType={keyboardType}
           multiline={multiline}
           numberOfLines={numberOfLines}
+          style={[styles.inputMultiple]}
       /> : <TextInput
           placeholderTextColor="#646464FF"
               placeholder={placeholder}
@@ -55,6 +56,10 @@ const styles = StyleSheet.create({
   input: {
     height: 35,
     padding: 8,
+    color: '#000'
+  },
+
+  inputMultiple: {
     color: '#000'
   },
 });

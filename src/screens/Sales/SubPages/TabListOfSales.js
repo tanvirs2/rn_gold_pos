@@ -46,4 +46,4 @@ const TabListOfSales = () => {
 };
 
 
-export default TabListOfSales;
+export default SalesEntry;

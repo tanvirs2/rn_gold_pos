@@ -819,7 +819,7 @@ function SalesEntry({type}) {
                                     style={styles.barcodeInput}
                                     placeholder="Input Manually"
                                     value={barcode}
-                                    onChange={e => setBarcode(e.target.value)}
+                                    onChangeText={setBarcode}
                                 />
 
                             </View>
@@ -943,6 +943,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         height: 50,
         padding: 10,
+        color: '#000'
     },
 
     addButton: {
