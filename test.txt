@@ -1,0 +1,198 @@
+{
+"approveBy": null,
+"caddress": "Road: 03 (Priyanka City) ,
+sector: 12, House: 08,
+Uttara, Dhaka",
+"categoryId": 15001,
+"cmobile": "01625286551",
+"cname": "Numaan Hussain",
+"code": "637896871579065527",
+"dueAmount": 198015,
+"id": 40,
+"paidAmount": 2000,
+"productList":
+[{"category": 11, "code": "637896876674007366", "description": "gold chain", "discountAmount": null, "grade": 14802, "id": 50, "isStock": null, "name": "chain", "price": 2000, "productId": 35, "ptotal": 0, "weight": 100}], "totalAmount": 200015, "typeId": 14902, "vatAmount": 15}
+
+
+
+let menuObj123 = {
+            "applicationName": null,
+            "username": "Admin",
+            "profileImgPath": null,
+            "userRole": "Admin",
+            "lastLoginInfos": [],
+            "currentLoginTime": null,
+            "menuItems": [
+              {
+                "appMenuId": 0,
+                "parentId": null,
+                "rightId": null,
+                "label": "Gold POS",
+                "icon": "stock",
+                "url": null,
+                "tooltip": null,
+                "widget": null,
+                "items": [
+                  {
+                    "appMenuId": 0,
+                    "parentId": null,
+                    "rightId": null,
+                    "label": "Sell & Purchase",
+                    "icon": "inventory",
+                    "url": null,
+                    "tooltip": null,
+                    "widget": null,
+                    "items": [
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Purchase",
+                        "icon": "",
+                        "url": "/admin/pos/purchases",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      },
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Sales",
+                        "icon": "",
+                        "url": "/admin/pos/sales",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      },
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Due Bill",
+                        "icon": "",
+                        "url": "/admin/pos/duebills",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      }
+                    ]
+                  },
+                  {
+                    "appMenuId": 0,
+                    "parentId": null,
+                    "rightId": null,
+                    "label": "Deposit & Withdraw",
+                    "icon": "inventory",
+                    "url": null,
+                    "tooltip": null,
+                    "widget": null,
+                    "items": [
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Deposit",
+                        "icon": "",
+                        "url": "/admin/pos/deposits",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      },
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Withdraw",
+                        "icon": "",
+                        "url": "/admin/pos/withdraws",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      }
+                    ]
+                  },
+                  {
+                    "appMenuId": 0,
+                    "parentId": null,
+                    "rightId": null,
+                    "label": "Expense",
+                    "icon": "inventory",
+                    "url": null,
+                    "tooltip": null,
+                    "widget": null,
+                    "items": [
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Expense List",
+                        "icon": "",
+                        "url": "/admin/pos/expenses",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      }
+                    ]
+                  },
+                  {
+                    "appMenuId": 0,
+                    "parentId": null,
+                    "rightId": null,
+                    "label": "Inventory",
+                    "icon": "inventory",
+                    "url": null,
+                    "tooltip": null,
+                    "widget": null,
+                    "items": [
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Product List",
+                        "icon": "inventory",
+                        "url": "/admin/pos/products",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      },
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Product Category List",
+                        "icon": "inventory",
+                        "url": "/admin/pos/product-categories",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      }
+                    ]
+                  },
+                  {
+                    "appMenuId": 0,
+                    "parentId": null,
+                    "rightId": null,
+                    "label": "CRM",
+                    "icon": "crm",
+                    "url": null,
+                    "tooltip": null,
+                    "widget": null,
+                    "items": [
+                      {
+                        "appMenuId": 0,
+                        "parentId": null,
+                        "rightId": null,
+                        "label": "Customer List",
+                        "icon": "",
+                        "url": "/admin/pos/customers",
+                        "tooltip": null,
+                        "widget": null,
+                        "items": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
