@@ -11,6 +11,7 @@ import moment from 'moment';
 import {taka} from '../../../assets/symbols';
 import {globalBackgroundColor} from '../../../settings/color';
 import RNPrint from 'react-native-print';
+import {printInvoiceHtmlWithValue} from '../../../TestComponent/printHTMLs';
 
 const InvoiceScreen = ({route}) => {
 
@@ -45,11 +46,11 @@ const InvoiceScreen = ({route}) => {
         console.log(route.params);
     },[isFocused]);
 
-    const printThisSale = async () => {
+    const printThisSale = async (printObject) => {
 
         //setLoader(true);
         await RNPrint.print({
-            html: '<h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3>'
+            html: printInvoiceHtmlWithValue({customerName:'testName'})
         })
 
     };
@@ -182,7 +183,7 @@ const InvoiceScreen = ({route}) => {
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical:10}}>
                       <View>
-                          <IconButton name="print" color="#000" onPress={printThisSale}/>
+                          <IconButton name="print" color="#000" onPress={()=>printThisSale({id: 'ddd'})}/>
                       </View>
                       <View>
                           <TouchableOpacity>

@@ -8,6 +8,7 @@ import {checkCameraPermissionFirst} from '../../settings/ComponentLib2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {LocalSelect} from '../../settings/ComponentLib';
+import RNPrintExample from '../../TestComponent/Naviga_T';
 
 
 
@@ -104,6 +105,8 @@ const HomeScreen = () => {
           <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 10, color: '#000'}}>
             Welcome Back!
           </Text>
+
+            <RNPrintExample/>
 
             <Text style={{fontSize: 28, marginTop: 5, color: '#525151'}}>
               {stUser.username}

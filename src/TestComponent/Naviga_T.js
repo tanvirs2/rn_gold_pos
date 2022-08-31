@@ -11,8 +11,8 @@ import {
     View
 } from 'react-native';
 
-
 import RNPrint from 'react-native-print';
+import { printInvoiceHtmlWithValue} from './printHTMLs';
 
 export default class RNPrintExample extends Component {
     state = {
@@ -21,8 +21,9 @@ export default class RNPrintExample extends Component {
 
     async printHTML() {
         await RNPrint.print({
-            html: '<h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3>'
+            html: printInvoiceHtmlWithValue({customerName:'abc'})
         })
+
     }
 
     render() {
