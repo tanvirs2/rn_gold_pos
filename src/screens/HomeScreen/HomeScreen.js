@@ -106,8 +106,6 @@ const HomeScreen = () => {
             Welcome Back!
           </Text>
 
-            <RNPrintExample/>
-
             <Text style={{fontSize: 28, marginTop: 5, color: '#525151'}}>
               {stUser.username}
             </Text>

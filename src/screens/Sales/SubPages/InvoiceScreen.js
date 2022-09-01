@@ -46,11 +46,11 @@ const InvoiceScreen = ({route}) => {
         console.log(route.params);
     },[isFocused]);
 
-    const printThisSale = async (printObject) => {
+    const printThisSale = async () => {
 
         //setLoader(true);
         await RNPrint.print({
-            html: printInvoiceHtmlWithValue({customerName:'testName'})
+            html: printInvoiceHtmlWithValue(stInvoiceData)
         })
 
     };
@@ -183,7 +183,7 @@ const InvoiceScreen = ({route}) => {
 
                   <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginVertical:10}}>
                       <View>
-                          <IconButton name="print" color="#000" onPress={()=>printThisSale({id: 'ddd'})}/>
+                          <IconButton name="print" color="#000" onPress={printThisSale}/>
                       </View>
                       <View>
                           <TouchableOpacity>
