@@ -8,6 +8,8 @@ import CustomButton from '../../components/CustomButton';
 import {globalBackgroundColor, globalButtonColor} from '../../settings/color';
 import {taka} from '../../assets/symbols';
 import {showMessage} from 'react-native-flash-message';
+import RNPrint from 'react-native-print';
+import {printPurchaseInvoiceHtml} from '../../TestComponent/printHTMLs';
 
 const PurchaseEntryScreen = ({type}) => {
 
@@ -497,8 +499,26 @@ const PurchaseEntryScreen = ({type}) => {
                                     <CustomButton
                                         text="Save"
                                         bgColor={globalButtonColor}
-                                        onPress={() => {
+                                        onPress={async () => {
                                             Vibration.vibrate(1000);
+
+                                            await RNPrint.print({
+                                                html: printPurchaseInvoiceHtml({
+                                                    cname: stCustomerName,
+                                                    cmobile: stMobile,
+                                                    caddress: stAddress,
+                                                    categoryId: type === 'newGold' ? 15001 : 15002,
+                                                    type: type,
+                                                    subTotal: stSubTotal,
+                                                    vatPercent: stVAT,
+                                                    totalAmount: stPayable,
+                                                    vatAmount: stVatCost,
+                                                    paidAmount: stPaid,
+                                                    dueAmount: stDue,
+
+                                                    productList: stProductsArr
+                                                })
+                                            })
 
                                             saveData();
 
@@ -506,7 +526,6 @@ const PurchaseEntryScreen = ({type}) => {
                                             setMobile('')
                                             setAddress('')
 
-                                            //setTable([])
                                             setProductsArr([]);
 
                                             setSubTotal(0);
@@ -516,7 +535,7 @@ const PurchaseEntryScreen = ({type}) => {
                                             setDue(0);
 
                                             resetPrInputs()
-                                            /*setConfirmModalVisible(true);*/
+
                                         }}
                                     />
                                 </View>}

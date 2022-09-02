@@ -284,7 +284,7 @@ function SalesEntry({type}) {
 
         if (__DEV__) {
             setCustomerName('Test');
-            setBarcode('P-637895491821048620');
+            setBarcode('637962949753896287');
         }
 
         const customer = collect(stCustomerList).firstWhere('id', stCustomerId)?.name;
